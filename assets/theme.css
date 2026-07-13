@@ -291,38 +291,41 @@ a:focus-visible, button:focus-visible {
   display: block;
 }
 
-.header-top-row {
-  border-bottom: 1px solid #F3F4F6;
-  padding: 12px 0;
-  background: #ffffff;
-}
-.header-inner-top {
+.header-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   max-width: var(--max-w);
   margin: 0 auto;
   padding: 0 var(--gutter);
-  gap: var(--sp-6);
+  gap: 30px;
 }
-.header-logo {
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--ink);
-  letter-spacing: -0.03em;
+.header-logo-container {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
+  justify-content: center;
+  padding: 4px 0;
 }
 .header-logo__img {
-  max-height: 55px;
+  max-height: 90px;
   width: auto;
   object-fit: contain;
   display: block;
 }
 .header-logo svg { color: var(--primary); }
 
+.header-right-stacked {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 12px;
+}
+.header-right-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
 .header-search-form {
   position: relative;
   flex-grow: 1;
@@ -408,20 +411,9 @@ a:focus-visible, button:focus-visible {
   box-shadow: 0 4px 8px rgba(255, 126, 32, 0.25);
 }
 
-.header-bottom-row {
-  padding: 10px 0;
-  background: #ffffff;
-  border-top: 1px solid #F3F4F6;
+.header-right-bottom-row {
   display: flex;
-  justify-content: center;
-}
-.header-inner-bottom {
-  max-width: var(--max-w);
-  width: 100%;
-  margin: 0 auto;
-  padding: 0 var(--gutter);
-  display: flex;
-  justify-content: center;
+  align-items: center;
 }
 .header-nav {
   display: flex;
@@ -432,18 +424,13 @@ a:focus-visible, button:focus-visible {
   border-radius: 9999px;
   border: 1px solid #E0F2FE;
 }
-@media (max-width: 1023px) {
-  .header-bottom-row { display: none; }
-  .header-search-form { display: none; }
-  .header-action-item span { display: none; }
-}
 .header-nav__link {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  height: 40px;
+  height: 36px;
   padding: 0 14px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--ink);
   border-radius: var(--r-sm);
@@ -453,6 +440,13 @@ a:focus-visible, button:focus-visible {
 .header-nav__link:hover {
   color: var(--primary);
   background: var(--bg-subtle);
+}
+
+@media (max-width: 1023px) {
+  .header-right-bottom-row { display: none; }
+  .header-search-form { display: none; }
+  .header-action-item span { display: none; }
+  .header-logo__img { max-height: 50px; }
 }
 
 

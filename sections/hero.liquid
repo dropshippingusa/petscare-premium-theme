@@ -15,7 +15,7 @@
     <!-- Left column: Dog Image -->
     <div class="hero__visual hero__visual--left">
       <img
-        src="https://cdn.shopify.com/s/files/1/0086/0795/7054/files/CLH_for_dogs.webp?v=1742375228"
+        src="{{ 'hero-dog.png' | asset_url }}"
         alt="Dog Selection"
         class="hero__img"
         loading="eager"
@@ -74,7 +74,7 @@
         >
       {%- else -%}
         <img
-          src="https://cdn.shopify.com/s/files/1/0086/0795/7054/files/cat_toys_79bf694c-2c5c-4f18-8cac-626ccf76c503.webp?v=1742375228"
+          src="{{ 'hero-cat.png' | asset_url }}"
           alt="Cat Selection"
           class="hero__img"
           loading="eager"

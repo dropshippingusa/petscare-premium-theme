@@ -12,17 +12,17 @@
 {%- comment -%} HUFT Redesign style sync comment {%- endcomment -%}
 <section class="hero-section" aria-label="Hero banner">
   <div class="hero hero--three-col">
-    <!-- Left column: Dog Image -->
-    <div class="hero__visual hero__visual--left">
+    <!-- Left column: Dog Image Link -->
+    <a href="{{ cta_secondary_url | default: '/collections/dogs' }}" class="hero__visual hero__visual--left" aria-label="Shop Dogs">
       <img
-        src="{{ 'hero-dog.png' | asset_url }}"
-        alt="Dog Selection"
+        src="https://cdn.shopify.com/s/files/1/0086/0795/7054/files/banner_for_dogs.jpg?v=1742363190"
+        alt="Shop Dogs"
         class="hero__img"
         loading="eager"
         width="400"
         height="400"
       >
-    </div>
+    </a>
 
     <!-- Middle column: Text content -->
     <div class="hero__content hero__content--middle">
@@ -61,12 +61,12 @@
       </div>
     </div>
 
-    <!-- Right column: Cat Image -->
-    <div class="hero__visual hero__visual--right">
+    <!-- Right column: Cat Image Link -->
+    <a href="/collections/cats" class="hero__visual hero__visual--right" aria-label="Shop Cats">
       {%- if hero_image != blank -%}
         <img
           src="{{ hero_image | image_url: width: 600 }}"
-          alt="{{ hero_image.alt | default: 'Cat Selection' }}"
+          alt="{{ hero_image.alt | default: 'Shop Cats' }}"
           class="hero__img"
           loading="eager"
           width="400"
@@ -74,15 +74,15 @@
         >
       {%- else -%}
         <img
-          src="{{ 'hero-cat.png' | asset_url }}"
-          alt="Cat Selection"
+          src="https://cdn.shopify.com/s/files/1/0086/0795/7054/files/banner_for_cats.jpg?v=1742363190"
+          alt="Shop Cats"
           class="hero__img"
           loading="eager"
           width="400"
           height="400"
         >
       {%- endif -%}
-    </div>
+    </a>
   </div>
 </section>
 

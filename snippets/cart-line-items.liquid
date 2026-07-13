@@ -1,0 +1,68 @@
+{%- comment -%}
+  Cart Line Items Snippet
+  Rendered by AJAX after cart mutations. Called by theme.js PetsCare.cart._renderLines()
+  BUT also rendered server-side for the initial cart drawer state.
+{%- endcomment -%}
+
+{%- if cart.item_count == 0 -%}
+  <div class="cart-empty">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <path d="M16 10a4 4 0 01-8 0"/>
+    </svg>
+    <p>Your bag is empty</p>
+    <a href="/collections/all" class="btn btn--primary btn--sm" onclick="PetsCare.cart.close()">Start Shopping</a>
+  </div>
+{%- else -%}
+  {%- for item in cart.items -%}
+    <div class="cart-item" data-key="{{ item.key }}">
+      <a href="{{ item.url }}" tabindex="-1">
+        <img
+          src="{{ item.image | image_url: width: 160 }}"
+          alt="{{ item.title | escape }}"
+          width="80" height="80"
+          class="cart-item__img"
+          loading="lazy"
+        >
+      </a>
+      <div class="cart-item__info">
+        <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
+        {%- unless item.product.has_only_default_variant -%}
+          <p class="cart-item__variant">{{ item.variant.title }}</p>
+        {%- endunless -%}
+        {%- if item.selling_plan_allocation -%}
+          <p class="cart-item__variant">{{ item.selling_plan_allocation.selling_plan.name }}</p>
+        {%- endif -%}
+        <div class="cart-item__bottom">
+          <div class="cart-item__qty-control">
+            <button
+              type="button"
+              class="cart-item__qty-btn"
+              onclick="PetsCare.cart.change('{{ item.key }}', {{ item.quantity | minus: 1 }})"
+              aria-label="Decrease quantity of {{ item.product.title | escape }}"
+            >−</button>
+            <span class="cart-item__qty-val" aria-label="Quantity: {{ item.quantity }}">{{ item.quantity }}</span>
+            <button
+              type="button"
+              class="cart-item__qty-btn"
+              onclick="PetsCare.cart.change('{{ item.key }}', {{ item.quantity | plus: 1 }})"
+              aria-label="Increase quantity of {{ item.product.title | escape }}"
+            >+</button>
+          </div>
+          <span class="cart-item__price">{{ item.final_line_price | money }}</span>
+        </div>
+      </div>
+      <button
+        type="button"
+        class="cart-item__remove icon-btn"
+        onclick="PetsCare.cart.change('{{ item.key }}', 0)"
+        aria-label="Remove {{ item.product.title | escape }} from bag"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  {%- endfor -%}
+{%- endif -%}

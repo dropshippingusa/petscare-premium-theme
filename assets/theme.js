@@ -517,16 +517,252 @@ const PetsCare = {
     init() {
       const form = document.getElementById('CollectionFiltersForm');
       if (!form) return;
-      // Auto-submit on change (Shopify URL-based filtering)
-      form.querySelectorAll('input[type="checkbox"], select').forEach(el => {
-        el.addEventListener('change', () => form.submit());
+      // Auto-submit checkboxes
+      form.querySelectorAll('input[type="checkbox"]').forEach(el => {
+        el.addEventListener('change', () => {
+          this._applyFilters(form);
+        });
       });
-      // Mobile filter toggle
-      const toggleBtn = document.getElementById('filter-toggle');
-      const sidebar = document.querySelector('.collection-sidebar');
-      if (toggleBtn && sidebar) {
-        toggleBtn.addEventListener('click', () => sidebar.classList.toggle('is-open'));
-      }
+    },
+
+    _applyFilters(form) {
+      const url = new URL(window.location.href);
+      // Collect checked tags
+      const tags = [...form.querySelectorAll('input[name="filter_tag"]:checked')].map(el => el.value);
+      const availability = form.querySelector('input[name="available"]:checked');
+      const priceMin = form.querySelector('#price-min')?.value;
+      const priceMax = form.querySelector('#price-max')?.value;
+      // Build tag URL path: /collections/handle/tag1+tag2
+      const basePath = window.location.pathname.split('/').filter(p => !p.startsWith('tag')).join('/');
+      let newPath = basePath;
+      if (tags.length) newPath = newPath.replace(/\/$/, '') + '/' + tags.join('+');
+      // Query params for price, availability
+      url.pathname = newPath;
+      if (availability) url.searchParams.set('available', 'true');
+      else url.searchParams.delete('available');
+      if (priceMin) url.searchParams.set('price_min', priceMin);
+      else url.searchParams.delete('price_min');
+      if (priceMax) url.searchParams.set('price_max', priceMax);
+      else url.searchParams.delete('price_max');
+      window.location.href = url.toString();
+    },
+
+    sort(value) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('sort_by', value);
+      window.location.href = url.toString();
+    },
+
+    openMobile() {
+      const sidebar = document.getElementById('collection-sidebar');
+      const backdrop = document.getElementById('sidebar-backdrop');
+      if (sidebar) sidebar.classList.add('is-open');
+      if (backdrop) backdrop.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    },
+
+    closeMobile() {
+      const sidebar = document.getElementById('collection-sidebar');
+      const backdrop = document.getElementById('sidebar-backdrop');
+      if (sidebar) sidebar.classList.remove('is-open');
+      if (backdrop) backdrop.classList.remove('is-open');
+      document.body.style.overflow = '';
+    },
+
+    toggleGroup(btn) {
+      const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
+    }
+  },
+
+  /* ─── PDP ───────────────────────────────────────────────────────────────── */
+  pdp: {
+    init() {
+      this._initGallery();
+      this._initVariants();
+      this._initQtyControls();
+      this._initTabs();
+      this._initStickyAtc();
+      this._initFbt();
+    },
+
+    /* Gallery: thumbnail → main image swap */
+    _initGallery() {
+      const thumbs = document.querySelectorAll('.pdp-thumb');
+      const mainImg = document.getElementById('pdp-main-img');
+      if (!thumbs.length || !mainImg) return;
+
+      thumbs.forEach(thumb => {
+        thumb.addEventListener('click', () => {
+          thumbs.forEach(t => t.classList.remove('is-active'));
+          thumb.classList.add('is-active');
+          const newSrc = thumb.dataset.src;
+          if (newSrc) {
+            // Crossfade
+            mainImg.style.opacity = '0';
+            mainImg.style.transition = 'opacity 180ms ease';
+            setTimeout(() => {
+              mainImg.src = newSrc;
+              mainImg.onload = () => { mainImg.style.opacity = '1'; };
+            }, 180);
+          }
+        });
+      });
+    },
+
+    /* Variant selection — pill click → find matching variant → update price, ATC */
+    _initVariants() {
+      const data = window.PetsCareProductData;
+      if (!data) return;
+
+      const pillGroups = document.querySelectorAll('.variant-pills');
+      const variantIdInput = document.getElementById('pdp-variant-id');
+      const priceEl = document.getElementById('pdp-price');
+      const compareEl = document.getElementById('pdp-compare');
+      const discountEl = document.getElementById('pdp-discount');
+      const atcBtn = document.getElementById('pdp-atc-btn');
+      const stickyPrice = document.getElementById('pdp-sticky-price');
+
+      // Track selected options
+      const selectedOptions = {};
+      document.querySelectorAll('.variant-pill.is-selected').forEach(pill => {
+        selectedOptions[pill.dataset.optionPosition] = pill.dataset.value;
+      });
+
+      pillGroups.forEach(group => {
+        group.querySelectorAll('.variant-pill').forEach(pill => {
+          pill.addEventListener('click', () => {
+            if (pill.classList.contains('is-unavailable')) return;
+
+            // Update selected state in this group
+            group.querySelectorAll('.variant-pill').forEach(p => p.classList.remove('is-selected'));
+            pill.classList.add('is-selected');
+
+            // Update selected label
+            const pos = pill.dataset.optionPosition;
+            selectedOptions[pos] = pill.dataset.value;
+            const labelSpan = document.getElementById('selected-' + pos);
+            if (labelSpan) labelSpan.textContent = pill.dataset.value;
+
+            // Find matching variant
+            const matchedVariant = data.variants.find(v => {
+              return v.options.every((opt, i) => {
+                const optPos = String(i + 1);
+                return !selectedOptions[optPos] || selectedOptions[optPos] === opt;
+              });
+            });
+
+            if (matchedVariant) {
+              // Update hidden input
+              if (variantIdInput) variantIdInput.value = matchedVariant.id;
+
+              // Update price display
+              if (priceEl) priceEl.textContent = PetsCare.utils.formatMoney(matchedVariant.price);
+              if (stickyPrice) stickyPrice.textContent = PetsCare.utils.formatMoney(matchedVariant.price);
+
+              // Update compare/discount
+              if (matchedVariant.compare_at_price > matchedVariant.price) {
+                const pct = Math.round((matchedVariant.compare_at_price - matchedVariant.price) / matchedVariant.compare_at_price * 100);
+                if (compareEl) { compareEl.textContent = PetsCare.utils.formatMoney(matchedVariant.compare_at_price); compareEl.style.display = ''; }
+                if (discountEl) { discountEl.textContent = `-${pct}%`; discountEl.style.display = ''; }
+              } else {
+                if (compareEl) compareEl.style.display = 'none';
+                if (discountEl) discountEl.style.display = 'none';
+              }
+
+              // Update ATC state
+              if (atcBtn) {
+                atcBtn.disabled = !matchedVariant.available;
+                atcBtn.innerHTML = matchedVariant.available
+                  ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>Add to Bag`
+                  : 'Sold Out';
+              }
+
+              // Update URL without reload
+              const url = new URL(window.location.href);
+              url.searchParams.set('variant', matchedVariant.id);
+              history.replaceState({}, '', url.toString());
+            }
+          });
+        });
+      });
+    },
+
+    /* Quantity +/− buttons */
+    _initQtyControls() {
+      const qtyInput = document.getElementById('pdp-qty');
+      if (!qtyInput) return;
+      document.querySelectorAll('[data-qty-change]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const delta = parseInt(btn.dataset.qtyChange, 10);
+          const current = parseInt(qtyInput.value, 10) || 1;
+          const next = Math.max(1, current + delta);
+          qtyInput.value = next;
+        });
+      });
+    },
+
+    /* Tab switching */
+    _initTabs() {
+      const tabBtns = document.querySelectorAll('.pdp-tab-btn');
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          // Deactivate all
+          tabBtns.forEach(b => { b.classList.remove('is-active'); b.setAttribute('aria-selected', 'false'); });
+          document.querySelectorAll('.pdp-tab-panel').forEach(panel => { panel.classList.remove('is-active'); panel.hidden = true; });
+          // Activate clicked
+          btn.classList.add('is-active');
+          btn.setAttribute('aria-selected', 'true');
+          const target = document.getElementById(btn.dataset.tab);
+          if (target) { target.classList.add('is-active'); target.hidden = false; }
+        });
+      });
+    },
+
+    /* Sticky ATC bar — shows when main ATC scrolls out of viewport */
+    _initStickyAtc() {
+      const mainAtc = document.getElementById('pdp-atc-btn');
+      const stickyBar = document.getElementById('pdp-sticky-atc');
+      if (!mainAtc || !stickyBar) return;
+
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          stickyBar.classList.toggle('is-visible', !entry.isIntersecting);
+          stickyBar.setAttribute('aria-hidden', String(entry.isIntersecting));
+        });
+      }, { threshold: 0, rootMargin: '-80px 0px 0px 0px' });
+      observer.observe(mainAtc);
+    },
+
+    /* Frequently Bought Together — checkbox total calculation + bundle add */
+    _initFbt() {
+      const form = document.getElementById('fbt-form');
+      const totalEl = document.getElementById('fbt-total');
+      if (!form || !totalEl) return;
+
+      const updateTotal = () => {
+        let total = 0;
+        form.querySelectorAll('.fbt-item__check').forEach(cb => {
+          if (cb.checked) total += parseInt(cb.dataset.price, 10) || 0;
+        });
+        totalEl.textContent = PetsCare.utils.formatMoney(total);
+      };
+
+      form.querySelectorAll('.fbt-item__check:not(:disabled)').forEach(cb => {
+        cb.addEventListener('change', updateTotal);
+      });
+      updateTotal();
+
+      form.addEventListener('submit', async e => {
+        e.preventDefault();
+        const items = [];
+        form.querySelectorAll('.fbt-item__check:checked').forEach(cb => {
+          if (cb.dataset.variantId) {
+            items.push({ id: parseInt(cb.dataset.variantId, 10), quantity: 1 });
+          }
+        });
+        if (items.length) await PetsCare.cart.add(items, true);
+      });
     }
   },
 

@@ -1,0 +1,300 @@
+{%- liquid
+  assign sort_by = collection.sort_by | default: collection.default_sort_by
+  assign total_products = collection.all_products_count
+  assign current_products = collection.products_count
+-%}
+
+{%- comment -%} Breadcrumb {%- endcomment -%}
+<nav class="breadcrumb-nav" aria-label="Breadcrumb">
+  <div class="container">
+    <ol class="breadcrumb" role="list">
+      <li class="breadcrumb__item"><a href="/">Home</a></li>
+      <li class="breadcrumb__item breadcrumb__sep" aria-hidden="true">/</li>
+      {%- if collection.handle == 'all' -%}
+        <li class="breadcrumb__item breadcrumb__item--current" aria-current="page">All Products</li>
+      {%- else -%}
+        <li class="breadcrumb__item"><a href="/collections">Collections</a></li>
+        <li class="breadcrumb__item breadcrumb__sep" aria-hidden="true">/</li>
+        <li class="breadcrumb__item breadcrumb__item--current" aria-current="page">{{ collection.title }}</li>
+      {%- endif -%}
+    </ol>
+  </div>
+</nav>
+
+{%- comment -%} Collection Hero Banner {%- endcomment -%}
+{%- if collection.image or section.settings.show_banner -%}
+<div class="collection-banner">
+  {%- if collection.image -%}
+    <img
+      src="{{ collection.image | image_url: width: 1400 }}"
+      srcset="{{ collection.image | image_url: width: 800 }} 800w, {{ collection.image | image_url: width: 1400 }} 1400w"
+      sizes="100vw"
+      alt="{{ collection.image.alt | default: collection.title | escape }}"
+      class="collection-banner__img"
+      loading="eager"
+      fetchpriority="high"
+    >
+    <div class="collection-banner__overlay"></div>
+  {%- endif -%}
+  <div class="collection-banner__content container">
+    <h1 class="collection-banner__title">{{ collection.title }}</h1>
+    {%- if collection.description != blank -%}
+      <p class="collection-banner__desc">{{ collection.description | strip_html | truncate: 150 }}</p>
+    {%- endif -%}
+    <p class="collection-banner__count">{{ current_products }} products</p>
+  </div>
+</div>
+{%- else -%}
+<div class="collection-hero-text">
+  <div class="container">
+    <h1 class="collection-title-plain">{{ collection.title }}</h1>
+    {%- if collection.description != blank -%}
+      <p class="collection-desc-plain">{{ collection.description | strip_html | truncate: 180 }}</p>
+    {%- endif -%}
+  </div>
+</div>
+{%- endif -%}
+
+{%- comment -%} Active filters strip {%- endcomment -%}
+{%- if current_tags.size > 0 -%}
+  <div class="active-filters-bar">
+    <div class="container">
+      <div class="active-filters__inner">
+        <span class="active-filters__label">Filtered by:</span>
+        <div class="active-filters__tags">
+          {%- for tag in current_tags -%}
+            <a href="{{ collection.url }}/{{ tag | handle }}" class="active-filter-tag">
+              {{ tag }}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </a>
+          {%- endfor -%}
+        </div>
+        <a href="{{ collection.url }}" class="active-filters__clear">Clear all</a>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{%- comment -%} Main collection layout {%- endcomment -%}
+<div class="collection-layout container">
+
+  {%- comment -%} Sidebar Filters — desktop sticky, mobile off-canvas {%- endcomment -%}
+  <aside class="collection-sidebar" id="collection-sidebar" aria-label="Product filters">
+    <div class="collection-sidebar__header">
+      <h2 class="collection-sidebar__title">Filters</h2>
+      <button type="button" class="icon-btn collection-sidebar__close" onclick="PetsCare.filters.closeMobile()" aria-label="Close filters">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <form id="CollectionFiltersForm" method="get" action="{{ collection.url }}">
+
+      {%- comment -%}
+        Shopify URL-based tag filtering.
+        Tags are grouped by the first word before a colon in the tag name.
+        Example tag: "Pet: Dogs" → group "Pet", value "Dogs"
+        This requires merchants to name tags consistently.
+        Works with Shopify's native /collections/handle/tag URL pattern.
+      {%- endcomment -%}
+
+      {%- comment -%} Availability filter {%- endcomment -%}
+      <div class="filter-group">
+        <button type="button" class="filter-group__title" onclick="PetsCare.filters.toggleGroup(this)" aria-expanded="true">
+          Availability
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="filter-chevron" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="filter-group__body">
+          <label class="filter-option">
+            <input type="checkbox" name="available" value="true" {% if request.params.available == 'true' %}checked{% endif %}>
+            In Stock only
+          </label>
+        </div>
+      </div>
+
+      {%- comment -%} Tag-based filters. Shopify groups tags by prefix (e.g. "Pet: Dogs"). {%- endcomment -%}
+      {%- assign tag_groups = '' -%}
+      {%- for tag in collection.all_tags -%}
+        {%- if tag contains ': ' -%}
+          {%- assign group_name = tag | split: ': ' | first -%}
+          {%- unless tag_groups contains group_name -%}
+            {%- assign tag_groups = tag_groups | append: group_name | append: '|' -%}
+          {%- endunless -%}
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- assign tag_group_array = tag_groups | split: '|' -%}
+      {%- for group in tag_group_array -%}
+        {%- if group != blank -%}
+          <div class="filter-group">
+            <button type="button" class="filter-group__title" onclick="PetsCare.filters.toggleGroup(this)" aria-expanded="true">
+              {{ group }}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="filter-chevron" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="filter-group__body">
+              {%- for tag in collection.all_tags -%}
+                {%- assign tag_prefix = tag | split: ': ' | first -%}
+                {%- if tag_prefix == group -%}
+                  {%- assign tag_value = tag | split: ': ' | last -%}
+                  {%- assign tag_handle = tag | handle -%}
+                  <label class="filter-option">
+                    <input
+                      type="checkbox"
+                      name="filter_tag"
+                      value="{{ tag_handle }}"
+                      {% if current_tags contains tag %}checked{% endif %}
+                    >
+                    {{ tag_value }}
+                    {%- comment -%} Count filtered products for this tag {%- endcomment -%}
+                  </label>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- comment -%} Price range — simple min/max URL params {%- endcomment -%}
+      <div class="filter-group">
+        <button type="button" class="filter-group__title" onclick="PetsCare.filters.toggleGroup(this)" aria-expanded="true">
+          Price
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="filter-chevron" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="filter-group__body">
+          <div class="price-range">
+            <div class="price-range__inputs">
+              <div class="price-range__field">
+                <span class="price-range__currency">$</span>
+                <input type="number" name="price_min" id="price-min" class="price-range__input" placeholder="Min" min="0" value="{{ request.params.price_min }}" aria-label="Minimum price">
+              </div>
+              <span class="price-range__dash">–</span>
+              <div class="price-range__field">
+                <span class="price-range__currency">$</span>
+                <input type="number" name="price_max" id="price-max" class="price-range__input" placeholder="Max" min="0" value="{{ request.params.price_max }}" aria-label="Maximum price">
+              </div>
+            </div>
+            <button type="submit" class="btn btn--secondary btn--sm" style="width:100%;margin-top:10px">Apply</button>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </aside>
+
+  {%- comment -%} Sidebar backdrop for mobile {%- endcomment -%}
+  <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="PetsCare.filters.closeMobile()" aria-hidden="true"></div>
+
+  {%- comment -%} Main content area {%- endcomment -%}
+  <div class="collection-main">
+
+    {%- comment -%} Toolbar: results count + sort + mobile filter button {%- endcomment -%}
+    <div class="collection-toolbar">
+      <div class="collection-toolbar__left">
+        <button type="button" class="btn btn--secondary btn--sm filter-toggle-btn" id="filter-toggle" onclick="PetsCare.filters.openMobile()" aria-label="Open filters" aria-controls="collection-sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+          Filters
+          {%- if current_tags.size > 0 -%}
+            <span class="filter-count-badge">{{ current_tags.size }}</span>
+          {%- endif -%}
+        </button>
+        <p class="collection-count">
+          {%- if current_tags.size > 0 or request.params.price_min != blank -%}
+            {{ current_products }} of {{ total_products }} products
+          {%- else -%}
+            {{ current_products }} products
+          {%- endif -%}
+        </p>
+      </div>
+      <div class="collection-toolbar__right">
+        <div class="sort-wrapper">
+          <label for="sort-select" class="sr-only">Sort products</label>
+          <select
+            id="sort-select"
+            name="sort_by"
+            class="sort-select"
+            onchange="PetsCare.filters.sort(this.value)"
+            aria-label="Sort products by"
+          >
+            {%- for option in collection.sort_options -%}
+              <option value="{{ option.value }}" {% if option.value == sort_by %}selected{% endif %}>
+                {{ option.name }}
+              </option>
+            {%- endfor -%}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    {%- comment -%} Product Grid {%- endcomment -%}
+    {%- if collection.products.size > 0 -%}
+      <div class="product-grid" id="collection-grid">
+        {%- for product in collection.products -%}
+          {%- render 'product-card', product: product -%}
+        {%- endfor -%}
+      </div>
+
+      {%- comment -%} Pagination — Shopify native {%- endcomment -%}
+      {%- if paginate.pages > 1 -%}
+        <nav class="pagination" aria-label="Pagination">
+          {%- if paginate.previous -%}
+            <a href="{{ paginate.previous.url }}" class="pagination__btn" aria-label="Previous page">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+              Prev
+            </a>
+          {%- endif -%}
+          <div class="pagination__pages">
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}
+                <a href="{{ part.url }}" class="pagination__page">{{ part.title }}</a>
+              {%- elsif part.title == paginate.current_page -%}
+                <span class="pagination__page pagination__page--current" aria-current="page">{{ part.title }}</span>
+              {%- else -%}
+                <span class="pagination__ellipsis">{{ part.title }}</span>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+          {%- if paginate.next -%}
+            <a href="{{ paginate.next.url }}" class="pagination__btn" aria-label="Next page">
+              Next
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+          {%- endif -%}
+        </nav>
+      {%- endif -%}
+
+    {%- else -%}
+      <div class="collection-empty">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <h2>No products found</h2>
+        <p>Try adjusting your filters or browsing a different category.</p>
+        <a href="{{ collection.url }}" class="btn btn--primary">Clear Filters</a>
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collection Page",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_banner",
+      "label": "Show collection banner image",
+      "default": true,
+      "info": "Banner image is taken from the collection image in Shopify admin"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 12,
+      "max": 48,
+      "step": 12,
+      "label": "Products per page",
+      "default": 24
+    }
+  ]
+}
+{% endschema %}

@@ -34,14 +34,47 @@
       {%- endif -%}
     </div>
 
+    {%- liquid
+      assign deals_list = collection.products
+      if deals_list.size == 0 or collection == blank
+        # Filter products with compare_at_price > price
+        assign deals_list = ""
+        for prod in collections.all.products
+          if prod.compare_at_price > prod.price
+            if deals_list != ""
+              assign deals_list = deals_list | append: ","
+            endif
+            assign deals_list = deals_list | append: prod.id
+          endif
+        endfor
+        assign deal_ids = deals_list | split: ","
+      endif
+    -%}
+
     {%- if collection != blank and collection.products.size > 0 -%}
       <div class="flash-deals__scroll">
         {%- for product in collection.products limit: products_to_show -%}
           {%- render 'product-card', product: product -%}
         {%- endfor -%}
       </div>
+    {%- elsif deal_ids.size > 0 -%}
+      <div class="flash-deals__scroll">
+        {%- assign deal_count = 0 -%}
+        {%- for product in collections.all.products -%}
+          {%- assign prod_id_str = product.id | string -%}
+          {%- if deal_ids contains prod_id_str -%}
+            {%- render 'product-card', product: product -%}
+            {%- assign deal_count = deal_count | plus: 1 -%}
+            {%- if deal_count >= products_to_show -%}{%- break -%}{%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
     {%- else -%}
-      <p class="text-muted" style="font-size:14px">Select a "Flash Deals" collection in the Theme Editor to display deals here.</p>
+      <div class="flash-deals__scroll">
+        {%- for product in collections.all.products limit: products_to_show -%}
+          {%- render 'product-card', product: product -%}
+        {%- endfor -%}
+      </div>
     {%- endif -%}
   </div>
 </section>

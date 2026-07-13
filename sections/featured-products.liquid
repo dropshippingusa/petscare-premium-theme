@@ -18,9 +18,14 @@
       {%- endif -%}
     </div>
 
-    {%- if collection != blank and collection.products.size > 0 -%}
+    {%- assign products_list = collection.products -%}
+    {%- if products_list.size == 0 or collection == blank -%}
+      {%- assign products_list = collections.all.products -%}
+    {%- endif -%}
+
+    {%- if products_list.size > 0 -%}
       <div class="product-grid">
-        {%- for product in collection.products limit: products_to_show -%}
+        {%- for product in products_list limit: products_to_show -%}
           {%- render 'product-card', product: product -%}
         {%- endfor -%}
       </div>

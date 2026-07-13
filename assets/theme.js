@@ -1,16 +1,20 @@
-/* Core Theme JavaScript */
+/* ==========================================================================
+   PETSCARE.COM THEME JAVASCRIPT
+   AJAX Cart, Instant Search, Layout Animation Hooks
+   ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Mobile nav toggle
+  // Mobile Hamburger Menu Toggle
   const hamburger = document.getElementById('hamburger');
   const mainNav = document.getElementById('main-nav');
   if (hamburger && mainNav) {
     hamburger.addEventListener('click', () => {
       mainNav.classList.toggle('open');
+      hamburger.classList.toggle('active');
     });
   }
 
-  // Cart Drawer open/close
+  // Cart Drawer open/close hooks
   const cartIcon = document.getElementById('cart-icon-trigger');
   const cartDrawer = document.getElementById('cart-drawer');
   const cartClose = document.getElementById('cart-drawer-close');
@@ -24,6 +28,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     cartClose.addEventListener('click', closeCartDrawer);
     cartOverlay.addEventListener('click', closeCartDrawer);
+  }
+
+  // Instant Search Overlay
+  const searchBtn = document.getElementById('search-btn');
+  const searchOverlay = document.getElementById('search-overlay');
+  const searchClose = document.getElementById('search-close');
+  const searchInput = document.getElementById('search-input');
+
+  if (searchBtn && searchOverlay && searchClose) {
+    searchBtn.addEventListener('click', () => {
+      searchOverlay.classList.add('active');
+      if (searchInput) searchInput.focus();
+    });
+
+    searchClose.addEventListener('click', () => {
+      searchOverlay.classList.remove('active');
+    });
   }
 });
 
@@ -56,7 +77,7 @@ function ajaxAddToCart(variantId, quantity = 1) {
   })
   .then(response => response.json())
   .then(data => {
-    // Show toast
+    // Show premium toast
     const toast = document.getElementById('cart-toast');
     if (toast) {
       toast.classList.add('show');
@@ -110,13 +131,13 @@ function fetchCartData() {
       cart.items.forEach(item => {
         const priceFormatted = Shopify.formatMoney(item.price, "${{amount}}");
         itemsHtml += `
-          <div class="cart-item" style="display:flex; gap:12px; margin-bottom:16px; align-items:center; border-bottom:1px solid #f1f5f9; padding-bottom:12px;">
+          <div class="cart-item" style="display:flex; gap:16px; margin-bottom:16px; align-items:center; border-bottom:1px solid #f1f5f9; padding-bottom:12px;">
             <img src="${item.image}" alt="${item.title}" style="width:70px; height:70px; object-fit:cover; border-radius:12px;">
             <div style="flex:1;">
-              <h4 style="font-size:0.9rem; margin-bottom:4px;">${item.product_title}</h4>
+              <h4 style="font-size:0.9rem; font-weight:600; margin-bottom:4px; color:#0f172a;">${item.product_title}</h4>
               <p style="font-size:0.75rem; color:#64748b; margin-bottom:6px;">${item.variant_title || ''}</p>
               <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:0.85rem; font-weight:700; color:#f97316;">${priceFormatted}</span>
+                <span style="font-size:0.9rem; font-weight:700; color:#f97316;">${priceFormatted}</span>
                 <span style="font-size:0.8rem; color:#64748b;">Qty: ${item.quantity}</span>
               </div>
             </div>

@@ -1,29 +1,83 @@
-<section class="flash-deals section">
+{%- assign collection = section.settings.collection -%}
+{%- assign products_to_show = section.settings.products_to_show | default: 4 -%}
+{%- assign end_time = section.settings.end_time -%}
+
+<section class="section" aria-labelledby="flash-deals-title">
   <div class="container">
-    <div class="flash-header-row">
-      <div class="flash-title-wrap">
-        <span class="flash-badge">Ends Today</span>
-        <h2 class="section-title">Flash Deals</h2>
+    <div class="flash-deals__header">
+      <div>
+        <span class="section-label">Limited Time</span>
+        <h2 class="section-title" id="flash-deals-title">{{ section.settings.title | default: "Today's Best Deals" }}</h2>
       </div>
-      <div class="countdown-timer" id="flash-countdown" data-hours="6">
-        <span>00</span>:<span>00</span>:<span>00</span>
-      </div>
-    </div>
-    <div class="products-grid">
-      {% for product in collections.all.products limit: 4 %}
-        {% render 'product-card', product: product %}
-      {% else %}
-        <div style="grid-column: span 4; text-align: center; padding: 40px 0;">
-          <p>No discount items found. Add products to your Shopify store.</p>
+
+      {%- if end_time != blank -%}
+        {%- assign end_timestamp = end_time | date: '%s' | times: 1000 -%}
+        <div class="flash-deals__countdown">
+          <span class="flash-deals__countdown-label">Ends in</span>
+          <div class="countdown-timer" data-countdown="{{ end_timestamp }}" aria-label="Countdown timer">
+            <div class="countdown-unit">
+              <span class="countdown-unit__value" data-unit="h">--</span>
+              <span class="countdown-unit__label">hrs</span>
+            </div>
+            <span class="countdown-sep" aria-hidden="true">:</span>
+            <div class="countdown-unit">
+              <span class="countdown-unit__value" data-unit="m">--</span>
+              <span class="countdown-unit__label">min</span>
+            </div>
+            <span class="countdown-sep" aria-hidden="true">:</span>
+            <div class="countdown-unit">
+              <span class="countdown-unit__value" data-unit="s">--</span>
+              <span class="countdown-unit__label">sec</span>
+            </div>
+          </div>
         </div>
-      {% endfor %}
+      {%- endif -%}
     </div>
+
+    {%- if collection != blank and collection.products.size > 0 -%}
+      <div class="flash-deals__scroll">
+        {%- for product in collection.products limit: products_to_show -%}
+          {%- render 'product-card', product: product -%}
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <p class="text-muted" style="font-size:14px">Select a "Flash Deals" collection in the Theme Editor to display deals here.</p>
+    {%- endif -%}
   </div>
 </section>
 
 {% schema %}
 {
   "name": "Flash Deals",
-  "settings": []
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Today's Best Deals"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Deals collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 8,
+      "step": 2,
+      "label": "Number of products",
+      "default": 4
+    },
+    {
+      "type": "text",
+      "id": "end_time",
+      "label": "Deal end date/time",
+      "placeholder": "2025-12-31 23:59:59",
+      "info": "Format: YYYY-MM-DD HH:MM:SS. Leave empty to hide countdown."
+    }
+  ],
+  "presets": [{ "name": "Flash Deals" }]
 }
 {% endschema %}

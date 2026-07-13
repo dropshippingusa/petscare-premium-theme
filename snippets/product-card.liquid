@@ -1,69 +1,158 @@
-{% comment %}
-  Flipkart/Chewy-style Product Card Snippet
-{% endcomment %}
+{%- comment -%}
+  Product Card Snippet
+  Usage: {% render 'product-card', product: product %}
+  All data comes from the Shopify product object — nothing is hardcoded.
+{%- endcomment -%}
 
-{%- assign discount_price = 0 -%}
-{%- if product.compare_at_price > product.price -%}
-  {%- assign discount_price = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round -%}
-{%- endif -%}
+{%- liquid
+  assign product_url = product.url
+  assign product_title = product.title
+  assign vendor = product.vendor
+  assign price = product.price
+  assign compare_price = product.compare_at_price
+  assign available = product.available
+  assign featured_media = product.featured_media
+  assign second_image = product.media[1]
+  assign first_variant = product.first_available_variant | default: product.variants.first
 
-<div class="product-card" data-product-id="{{ product.id }}">
-  <div class="product-img-wrap">
-    <!-- Badges -->
-    <div class="product-badges">
-      {% if product.compare_at_price > product.price %}
-        <span class="badge-tag sale-tag">{{ discount_price }}% OFF</span>
-      {% endif %}
-      {% if product.tags contains 'new' %}
-        <span class="badge-tag new-tag">New</span>
-      {% endif %}
-    </div>
+  assign discount_pct = 0
+  if compare_price > price and compare_price > 0
+    assign discount_pct = compare_price | minus: price | times: 100 | divided_by: compare_price | round
+  endif
+-%}
 
-    <!-- Image -->
-    <a href="{{ product.url }}" class="product-img-link">
-      {% if product.featured_image != blank %}
-        <img class="lazyload" src="{{ product.featured_image | img_url: '400x400' }}" alt="{{ product.title | escape }}" loading="lazy">
-      {% else %}
-        <div class="product-img-placeholder">🐾</div>
-      {% endif %}
+<article class="product-card" data-product-id="{{ product.id }}">
+
+  {%- comment -%} Image area {%- endcomment -%}
+  <div class="product-card__media">
+    <a href="{{ product_url }}" tabindex="-1" aria-hidden="true">
+      {%- if featured_media != blank -%}
+        <img
+          src="{{ featured_media | image_url: width: 500 }}"
+          srcset="{{ featured_media | image_url: width: 300 }} 300w, {{ featured_media | image_url: width: 500 }} 500w"
+          sizes="(max-width: 640px) 50vw, 25vw"
+          alt="{{ featured_media.alt | default: product_title | escape }}"
+          class="product-card__img product-card__img--primary"
+          loading="lazy"
+          width="500" height="500"
+        >
+        {%- if second_image != blank -%}
+          <img
+            src="{{ second_image | image_url: width: 500 }}"
+            alt="{{ second_image.alt | default: product_title | escape }}"
+            class="product-card__img product-card__img--secondary"
+            loading="lazy"
+            width="500" height="500"
+          >
+        {%- endif -%}
+      {%- else -%}
+        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg-subtle);">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </div>
+      {%- endif -%}
     </a>
 
-    <!-- Wishlist Button -->
-    <button class="wish-btn" onclick="toggleWishlist('{{ product.id }}')" aria-label="Add to Wishlist">♡</button>
+    {%- comment -%} Floating action buttons {%- endcomment -%}
+    <div class="product-card__actions">
+      <button
+        type="button"
+        class="product-card__action-btn"
+        data-wishlist-toggle="{{ product.id }}"
+        aria-label="Add {{ product_title | escape }} to wishlist"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      </button>
+      <a href="{{ product_url }}" class="product-card__action-btn" aria-label="View {{ product_title | escape }}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </a>
+    </div>
+
+    {%- comment -%} Badges {%- endcomment -%}
+    <div class="product-card__badges">
+      {%- if discount_pct > 0 -%}
+        <span class="product-card__discount-badge">-{{ discount_pct }}%</span>
+      {%- endif -%}
+      {%- if product.tags contains 'new' or product.tags contains 'New' -%}
+        <span class="badge badge--new" style="margin-top:4px">New</span>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Slide-up Add to Cart button {%- endcomment -%}
+    {%- if first_variant != blank -%}
+      <button
+        type="button"
+        class="product-card__add"
+        data-variant-id="{{ first_variant.id }}"
+        onclick="PetsCare.cart.add([{id: {{ first_variant.id }}, quantity: 1}], false)"
+        {% unless available %}disabled aria-disabled="true"{% endunless %}
+        aria-label="Add {{ product_title | escape }} to bag"
+      >
+        {%- if available -%}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          Add to Bag
+        {%- else -%}
+          Sold Out
+        {%- endif -%}
+      </button>
+    {%- endif -%}
   </div>
 
-  <div class="product-info">
-    <p class="product-brand">{{ product.vendor }}</p>
-    <h3 class="product-name"><a href="{{ product.url }}">{{ product.title }}</a></h3>
-    
-    <!-- Rating (Flipkart Style Green Badge) -->
-    <div class="product-rating-row">
-      <span class="rating-badge">4.9 ★</span>
-      <span class="rating-count">(47 reviews)</span>
+  {%- comment -%} Card body — all data from Shopify {%- endcomment -%}
+  <div class="product-card__body">
+    {%- if vendor != blank -%}
+      <p class="product-card__brand">{{ vendor }}</p>
+    {%- endif -%}
+
+    <a href="{{ product_url }}" class="product-card__title">{{ product_title }}</a>
+
+    {%- comment -%} Rating — shows if metafield is populated via reviews app injection {%- endcomment -%}
+    {%- if product.metafields.reviews.rating.value != blank -%}
+      {%- assign rating = product.metafields.reviews.rating.value -%}
+      {%- assign rating_count = product.metafields.reviews.rating_count.value -%}
+      <div class="product-card__rating">
+        <span class="product-card__stars" aria-hidden="true">
+          {%- for i in (1..5) -%}★{%- endfor -%}
+        </span>
+        <span>{{ rating | round: 1 }} ({{ rating_count }})</span>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Pricing {%- endcomment -%}
+    <div class="product-card__price-row">
+      <span class="product-card__price">{{ price | money }}</span>
+      {%- if compare_price > price -%}
+        <span class="product-card__compare">{{ compare_price | money }}</span>
+        {%- if discount_pct > 0 -%}
+          <span class="product-card__discount">Save {{ discount_pct }}%</span>
+        {%- endif -%}
+      {%- endif -%}
     </div>
 
-    <!-- Pricing (Flipkart Style: Price, Strikethrough, Green Discount) -->
-    <div class="price-row">
-      <span class="price">{{ product.price | money }}</span>
-      {% if product.compare_at_price > product.price %}
-        <span class="old-price">{{ product.compare_at_price | money }}</span>
-        <span class="discount-percent">{{ discount_price }}% off</span>
-      {% endif %}
-    </div>
+    {%- comment -%} Availability & shipping {%- endcomment -%}
+    {%- if available -%}
+      <p class="product-card__shipping">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        Free shipping on $49+
+      </p>
+    {%- else -%}
+      <p class="product-card__shipping" style="color:var(--red)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        Currently unavailable
+      </p>
+    {%- endif -%}
 
-    <!-- Stock / Shipping Badge -->
-    <div class="shipping-badge">
-      <span>⚡ Fast Shipping</span>
-      <span class="sep">•</span>
-      <span>🇺🇸 Made in USA</span>
-    </div>
-
-    <!-- Add to Cart (Visible Flipkart Style Button) -->
-    <div class="product-card-action">
-      <form method="post" action="/cart/add" onsubmit="ajaxAddToCartForm(this); return false;">
-        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" />
-        <button type="submit" class="btn-card-add">Add to Cart</button>
-      </form>
+    {%- comment -%} Trust micro-badges from Shopify product tags {%- endcomment -%}
+    <div class="product-card__trust-badges">
+      {%- if product.tags contains 'usa' or product.tags contains 'made-in-usa' or product.tags contains 'Made in USA' -%}
+        <span class="badge badge--green">🇺🇸 USA Made</span>
+      {%- endif -%}
+      {%- if product.tags contains 'vet-approved' or product.tags contains 'vet-recommended' -%}
+        <span class="badge badge--primary">✓ Vet Approved</span>
+      {%- endif -%}
+      {%- if product.tags contains 'subscribe' or product.tags contains 'subscription' -%}
+        <span class="badge badge--amber">↻ Subscribe & Save</span>
+      {%- endif -%}
     </div>
   </div>
-</div>
+
+</article>

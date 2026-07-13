@@ -23,61 +23,119 @@
 
   {% render 'seo-schema' %}
 
-  <!-- Fonts -->
+  <!-- Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- CSS -->
   {{ 'theme.css' | asset_url | stylesheet_tag }}
 
   {{ content_for_header }}
 </head>
 <body class="template-{{ template.name }}">
 
-  {% section 'announcement-bar' %}
   {% section 'header' %}
 
-  <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
+  <main id="MainContent" class="content-for-layout" role="main" tabindex="-1">
     {{ content_for_layout }}
   </main>
 
   {% section 'footer' %}
 
-  <!-- AJAX Slide Cart Drawer -->
-  {% render 'ajax-cart' %}
-
-  <!-- Mobile Bottom Sticky Navigation (App-like UX) -->
-  <div class="mobile-bottom-nav">
-    <a href="/" class="mobile-nav-item {% if template.name == 'index' %}active{% endif %}">
-      <span class="nav-icon">🏠</span>
-      <span>Home</span>
-    </a>
-    <a href="/collections/all" class="mobile-nav-item {% if template.name == 'collection' %}active{% endif %}">
-      <span class="nav-icon">🛍️</span>
-      <span>Shop</span>
-    </a>
-    <a href="/search" class="mobile-nav-item {% if template.name == 'search' %}active{% endif %}">
-      <span class="nav-icon">🔍</span>
-      <span>Search</span>
-    </a>
-    <a href="#" class="mobile-nav-item" id="mobile-cart-trigger">
-      <span class="nav-icon" style="position:relative;">
-        🛒
-        <span class="cart-badge-bottom" id="bottom-cart-count">{{ cart.item_count }}</span>
-      </span>
-      <span>Cart</span>
-    </a>
-    <a href="/account" class="mobile-nav-item {% if template.name == 'account' %}active{% endif %}">
-      <span class="nav-icon">👤</span>
-      <span>Profile</span>
-    </a>
+  {%- comment -%} Cart Drawer — rendered via AJAX, no app needed {%- endcomment -%}
+  <div id="cart-drawer" class="cart-drawer" aria-hidden="true" role="dialog" aria-label="Shopping bag">
+    <div class="cart-drawer__overlay" onclick="PetsCare.cart.close()"></div>
+    <div class="cart-drawer__panel">
+      <div class="cart-drawer__header">
+        <h2 class="cart-drawer__title">My Bag <span id="cart-count-label">({{ cart.item_count }})</span></h2>
+        <button class="icon-btn" onclick="PetsCare.cart.close()" aria-label="Close bag">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      {%- comment -%} Free shipping progress bar {%- endcomment -%}
+      <div class="shipping-bar" id="shipping-bar">
+        {%- assign threshold = 4900 -%}
+        {%- if cart.total_price >= threshold -%}
+          <p class="shipping-bar__text shipping-bar__text--done">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            You've unlocked <strong>FREE shipping!</strong>
+          </p>
+        {%- else -%}
+          {%- assign remaining_cents = threshold | minus: cart.total_price -%}
+          <p class="shipping-bar__text">Add <strong>{{ remaining_cents | money }}</strong> more for FREE shipping</p>
+          <div class="shipping-bar__track">
+            {%- assign pct = cart.total_price | times: 100 | divided_by: threshold -%}
+            <div class="shipping-bar__fill" style="width: {{ pct }}%"></div>
+          </div>
+        {%- endif -%}
+      </div>
+      {%- comment -%} Cart line items — re-rendered via JS after mutations {%- endcomment -%}
+      <div id="cart-drawer-lines" class="cart-drawer__lines">
+        {%- render 'cart-line-items', cart: cart -%}
+      </div>
+      <div class="cart-drawer__footer" id="cart-drawer-footer" {% if cart.item_count == 0 %}hidden{% endif %}>
+        <div class="cart-subtotal">
+          <span class="cart-subtotal__label">Subtotal</span>
+          <span class="cart-subtotal__amount" id="cart-subtotal-amount">{{ cart.total_price | money }}</span>
+        </div>
+        <p class="cart-drawer__tax-note">Taxes and shipping calculated at checkout</p>
+        <a href="/checkout" class="btn btn--primary btn--full btn--lg">Checkout</a>
+        <a href="/cart" class="btn btn--ghost btn--full">View full bag</a>
+      </div>
+    </div>
   </div>
 
-  <!-- Cart Toast Notification -->
-  <div class="cart-toast" id="cart-toast">✓ Item added to your cart!</div>
+  {%- comment -%} Search overlay — uses /search/suggest.json (Shopify native) {%- endcomment -%}
+  <div id="search-overlay" class="search-overlay" aria-hidden="true" role="dialog" aria-label="Search">
+    <div class="search-overlay__backdrop" onclick="PetsCare.search.close()"></div>
+    <div class="search-overlay__box">
+      <form action="/search" method="get" role="search">
+        <input type="hidden" name="type" value="product">
+        <div class="search-overlay__field">
+          <svg class="search-overlay__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" name="q" id="search-input" class="search-overlay__input" placeholder="Search products, brands, ingredients…" autocomplete="off" aria-label="Search products">
+          <button type="button" class="icon-btn" onclick="PetsCare.search.close()" aria-label="Close search">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </form>
+      <div id="search-results" class="search-results" aria-live="polite"></div>
+    </div>
+  </div>
 
-  <!-- JS -->
+  {%- comment -%} Mobile bottom navigation (SVG icons only, no emojis) {%- endcomment -%}
+  <nav class="mobile-bottom-nav" aria-label="Main navigation">
+    <a href="/" class="mobile-nav-item {% if template.name == 'index' %}is-active{% endif %}" aria-label="Home">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Home</span>
+    </a>
+    <a href="/collections/all" class="mobile-nav-item {% if template.name == 'collection' %}is-active{% endif %}" aria-label="Shop all">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <span>Shop</span>
+    </a>
+    <button type="button" class="mobile-nav-item" onclick="PetsCare.search.open()" aria-label="Search">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>Search</span>
+    </button>
+    <button type="button" class="mobile-nav-item mobile-nav-cart" onclick="PetsCare.cart.open()" aria-label="Open bag">
+      <span class="mobile-nav-cart__icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="mobile-cart-badge" id="mobile-cart-badge" {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
+      </span>
+      <span>Bag</span>
+    </button>
+    <a href="/account" class="mobile-nav-item {% if template.name contains 'customers' %}is-active{% endif %}" aria-label="Account">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Account</span>
+    </a>
+  </nav>
+
+  {%- comment -%} Add-to-cart toast notification {%- endcomment -%}
+  <div id="cart-toast" class="cart-toast" role="status" aria-live="polite" aria-atomic="true">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    <span id="cart-toast-msg">Added to bag!</span>
+  </div>
+
   {{ 'theme.js' | asset_url | script_tag }}
 </body>
 </html>

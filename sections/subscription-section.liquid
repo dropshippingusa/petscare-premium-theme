@@ -1,16 +1,37 @@
-<section class="subscription-section section">
-  <div class="container">
-    <div class="sub-card">
-      <div class="sub-info">
-        <span class="sub-badge">🐾 Autoship &amp; Save</span>
-        <h2 class="sub-title">Never Run Out of Their Favorites</h2>
-        <p class="sub-desc">Subscribe to your pet's food and supplements and get <strong>10% off</strong> on every recurring delivery. Choose your custom schedule, skip or cancel anytime with one click.</p>
-        <div class="sub-steps">
-          <div class="sub-step"><strong>1</strong><span>Choose Schedule</span></div>
-          <div class="sub-step"><strong>2</strong><span>Get 10% Discount</span></div>
-          <div class="sub-step"><strong>3</strong><span>Adjust Anytime</span></div>
+{%- comment -%}
+  Autoship & Save — Marketing section only.
+  This is NOT a functional subscription widget.
+  It links to a Recharge/Bold/Loop subscription app page.
+  No app dependency for the section rendering itself.
+{%- endcomment -%}
+
+<section class="section section--warm" aria-labelledby="autoship-title">
+  <div class="autoship-banner">
+    <div class="autoship-banner__inner">
+      <div class="autoship-banner__content">
+        <div>
+          <span class="section-label">{{ section.settings.eyebrow | default: 'Never Run Out' }}</span>
+          <h2 class="section-title" id="autoship-title">{{ section.settings.title | default: 'Autoship & Save Up to 20%' }}</h2>
+          {%- if section.settings.description != blank -%}
+            <p class="section-sub" style="margin-top:12px">{{ section.settings.description }}</p>
+          {%- endif -%}
         </div>
-        <a href="/collections/all" class="btn btn-primary">Start Subscribing</a>
+        {%- if section.settings.cta_text != blank -%}
+          <a href="{{ section.settings.cta_url | default: '/collections/all' }}" class="btn btn--primary">
+            {{ section.settings.cta_text }}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        {%- endif -%}
+      </div>
+
+      <div class="autoship-steps">
+        {%- for block in section.blocks -%}
+          <div class="autoship-step" {{ block.shopify_attributes }}>
+            <div class="autoship-step__num" aria-hidden="true">{{ forloop.index }}</div>
+            <p class="autoship-step__title">{{ block.settings.title }}</p>
+            <p class="autoship-step__text">{{ block.settings.text }}</p>
+          </div>
+        {%- endfor -%}
       </div>
     </div>
   </div>
@@ -18,7 +39,68 @@
 
 {% schema %}
 {
-  "name": "Autoship Subscription",
-  "settings": []
+  "name": "Autoship & Save",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label",
+      "default": "Never Run Out"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Headline",
+      "default": "Autoship & Save Up to 20%"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description (optional)",
+      "default": "Set up automatic deliveries and save on every order. Cancel or pause anytime."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA text",
+      "default": "Start Saving Today"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA link",
+      "info": "Link to your subscription app or subscribe-and-save collection"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Step title",
+          "default": "Choose Products"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Step description",
+          "default": "Select your pet's favorites from our full catalog."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Autoship & Save",
+      "blocks": [
+        { "type": "step", "settings": { "title": "Choose Products", "text": "Select your pet's favorites from our full catalog." } },
+        { "type": "step", "settings": { "title": "Set Frequency", "text": "Pick weekly, bi-weekly, or monthly delivery." } },
+        { "type": "step", "settings": { "title": "Save Every Time", "text": "Get up to 20% off every autoship order." } }
+      ]
+    }
+  ]
 }
 {% endschema %}

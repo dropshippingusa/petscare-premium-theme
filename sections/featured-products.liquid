@@ -1,24 +1,93 @@
-<section class="products section" id="featured">
+{%- assign collection = section.settings.collection -%}
+{%- assign products_to_show = section.settings.products_to_show | default: 8 -%}
+{%- assign title = section.settings.title | default: 'Featured Products' -%}
+{%- assign label = section.settings.label | default: 'Our Selection' -%}
+
+<section class="section" aria-labelledby="featured-products-title">
   <div class="container">
-    <div class="section-header">
-      <p class="section-label">Bestsellers</p>
-      <h2 class="section-title">Trending Products</h2>
+    <div class="section-head">
+      <div>
+        <span class="section-label">{{ label }}</span>
+        <h2 class="section-title" id="featured-products-title">{{ title }}</h2>
+      </div>
+      {%- if collection != blank -%}
+        <a href="{{ collection.url }}" class="view-all-link">
+          View all {{ collection.products_count }} products
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      {%- endif -%}
     </div>
-    <div class="products-grid">
-      {% for product in collections.all.products limit: 6 %}
-        {% render 'product-card', product: product %}
-      {% else %}
-        <div style="grid-column: span 3; text-align: center; padding: 40px 0;">
-          <p>No products found. Please add products in Shopify Admin.</p>
-        </div>
-      {% endfor %}
-    </div>
+
+    {%- if collection != blank and collection.products.size > 0 -%}
+      <div class="product-grid">
+        {%- for product in collection.products limit: products_to_show -%}
+          {%- render 'product-card', product: product -%}
+        {%- endfor -%}
+      </div>
+    {%- elsif section.settings.show_placeholder -%}
+      <div class="product-grid">
+        {%- for i in (1..4) -%}
+          <div class="product-card" aria-hidden="true">
+            <div class="product-card__media skeleton" style="aspect-ratio:1"></div>
+            <div class="product-card__body" style="gap:10px">
+              <div class="skeleton" style="height:12px;width:60%;border-radius:4px"></div>
+              <div class="skeleton" style="height:16px;width:90%;border-radius:4px"></div>
+              <div class="skeleton" style="height:12px;width:40%;border-radius:4px"></div>
+              <div class="skeleton" style="height:20px;width:50%;border-radius:4px"></div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+      <p class="text-center text-muted" style="margin-top:20px;font-size:14px">
+        Select a collection in the Theme Editor to display products here.
+      </p>
+    {%- else -%}
+      <p class="text-center text-muted" style="font-size:14px">No products found in this collection.</p>
+    {%- endif -%}
   </div>
 </section>
 
 {% schema %}
 {
   "name": "Featured Products",
-  "settings": []
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Section label",
+      "default": "Our Selection"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Featured Products"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection to display"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 16,
+      "step": 2,
+      "label": "Number of products",
+      "default": 8
+    },
+    {
+      "type": "checkbox",
+      "id": "show_placeholder",
+      "label": "Show placeholder cards when no collection selected",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Products"
+    }
+  ]
 }
 {% endschema %}

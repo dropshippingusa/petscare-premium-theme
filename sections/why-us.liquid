@@ -1,21 +1,80 @@
-<section class="why-us section">
-  <div class="container">
-    <div class="section-header">
-      <p class="section-label">Our Promise</p>
-      <h2 class="section-title">Why Pet Parents Love Us</h2>
-    </div>
-    <div class="why-grid">
-      <div class="why-card"><span class="why-icon">🔬</span><h3>Lab Tested Safety</h3><p>Rigigorously tested safe materials.</p></div>
-      <div class="why-card"><span class="why-icon">🩺</span><h3>Vet Approved</h3><p>Developed with professional vets.</p></div>
-      <div class="why-card"><span class="why-icon">🌿</span><h3>Natural Materials</h3><p>No harsh chemicals or toxins.</p></div>
-      <div class="why-card"><span class="why-icon">💬</span><h3>7-Day Support</h3><p>Friendly expert support crew.</p></div>
-    </div>
+<section class="trust-bar" aria-label="Trust signals">
+  <div class="trust-bar__inner">
+    {%- for block in section.blocks -%}
+      <div class="trust-item" {{ block.shopify_attributes }}>
+        <div class="trust-item__icon" aria-hidden="true">
+          {%- case block.settings.icon -%}
+            {%- when 'truck' -%}
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            {%- when 'shield' -%}
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+            {%- when 'leaf' -%}
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8C8 10 5.9 16.17 3.82 19.47a1 1 0 001.74 1c.6-1.05 1.33-2.05 2.2-2.92C9 19.5 11 20 13 20c4 0 8-3 9-9-1 1-2 2-5 2s-5-2-5-2c3 0 5-1 5-3z"/></svg>
+            {%- when 'star' -%}
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            {%- when 'heart' -%}
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            {%- else -%}
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          {%- endcase -%}
+        </div>
+        <div class="trust-item__text">
+          <strong>{{ block.settings.title }}</strong>
+          <span>{{ block.settings.subtitle }}</span>
+        </div>
+      </div>
+    {%- endfor -%}
   </div>
 </section>
 
 {% schema %}
 {
-  "name": "Why Us Promise",
-  "settings": []
+  "name": "Trust Bar",
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "trust_item",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "truck", "label": "Truck (shipping)" },
+            { "value": "shield", "label": "Shield (guarantee)" },
+            { "value": "leaf", "label": "Leaf (natural)" },
+            { "value": "star", "label": "Star (quality)" },
+            { "value": "heart", "label": "Heart (care)" },
+            { "value": "check", "label": "Checkmark" }
+          ],
+          "default": "truck"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Free Shipping"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "On all orders over $49"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust Bar",
+      "blocks": [
+        { "type": "trust_item", "settings": { "icon": "truck", "title": "Free Shipping $49+", "subtitle": "Fast US delivery" } },
+        { "type": "trust_item", "settings": { "icon": "shield", "title": "30-Day Guarantee", "subtitle": "No questions asked" } },
+        { "type": "trust_item", "settings": { "icon": "leaf", "title": "Vet-Approved", "subtitle": "Science-backed formulas" } },
+        { "type": "trust_item", "settings": { "icon": "star", "title": "50K+ Happy Pets", "subtitle": "Rated 4.9/5 stars" } }
+      ]
+    }
+  ]
 }
 {% endschema %}

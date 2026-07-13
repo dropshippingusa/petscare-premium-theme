@@ -1,105 +1,120 @@
-{% comment %}
-  Enterprise-Grade Header with Mega Menu and Predictive Search
-{% endcomment %}
+{%- assign announcement_text = section.settings.announcement_text | default: 'Free shipping on orders $49+ · Made in the USA · Vet-Approved formulas' -%}
+{%- assign announcement_link = section.settings.announcement_link -%}
 
-<header class="header" id="header">
-  <div class="header-top-banner">
-    <div class="container header-top-inner">
-      <span>🐾 100% Safe &amp; Natural Pet Products</span>
-      <span>🇺🇸 Made in USA · Vet Approved</span>
-      <span>✨ Free Shipping on Orders Over $60</span>
-    </div>
-  </div>
-  
-  <div class="header-main container">
-    <!-- Logo -->
-    <a href="/" class="logo">
-      <span class="logo-paw">🐾</span>
-      <span class="logo-text">PetsCare<span class="logo-dot">.com</span></span>
+<div class="announcement-bar">
+  {%- if announcement_link != blank -%}
+    <a href="{{ announcement_link }}">{{ announcement_text }}</a>
+  {%- else -%}
+    {{ announcement_text }}
+  {%- endif -%}
+</div>
+
+<header class="site-header" role="banner">
+  <div class="header-inner">
+
+    {%- comment -%} Logo {%- endcomment -%}
+    <a href="/" class="header-logo" aria-label="{{ shop.name }} — Home">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <circle cx="16" cy="16" r="15" fill="currentColor"/>
+        <path d="M10 13a2 2 0 100-4 2 2 0 000 4zM22 13a2 2 0 100-4 2 2 0 000 4zM8 18a2 2 0 100-4 2 2 0 000 4zM24 18a2 2 0 100-4 2 2 0 000 4zM16 24a4 4 0 100-8 4 4 0 000 8z" fill="white"/>
+      </svg>
+      {{ shop.name }}
     </a>
 
-    <!-- Prominent Search Bar (Flipkart/Amazon style) with Predictive Search Results Dropdown -->
-    <div class="header-search-wrap">
-      <form action="/search" method="get" class="search-form" id="predictive-search-form">
-        <input type="text" name="q" id="search-input" placeholder="Search for products, brands, pet issues, ingredients..." value="{{ search.terms | escape }}" class="search-input-field" autocomplete="off" required />
-        <button type="submit" class="search-submit-btn" aria-label="Search">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        </button>
-      </form>
-      <!-- Predictive Search Box Panel -->
-      <div class="predictive-search-results" id="predictive-search-box">
-        <div class="predictive-search-loading">Searching...</div>
-      </div>
-    </div>
-
-    <!-- Right Actions -->
-    <div class="header-actions">
-      <a href="/account" class="header-account-link">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <span>Account</span>
-      </a>
-      <button class="icon-btn cart-icon-btn" id="cart-icon-trigger" aria-label="Cart">
-        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-        <span class="cart-count" id="header-cart-count">{{ cart.item_count }}</span>
-      </button>
-      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
-    </div>
-  </div>
-
-  <!-- Navigation Menu Bar with Custom Mega Menus -->
-  <div class="header-nav-bar">
-    <div class="container">
-      <nav class="nav" id="main-nav">
-        <ul class="nav-list">
-          <li class="nav-item-dropdown">
-            <a href="/collections/all" class="nav-link">Shop Products ▾</a>
-            
-            <!-- Mega Menu Container -->
-            <div class="mega-menu">
-              <div class="mega-menu-grid">
-                <!-- Col 1: Shop By Pet -->
-                <div class="mega-menu-col">
-                  <h5>Shop By Pet</h5>
-                  <ul>
-                    <li><a href="/collections/dogs">🐕 Dogs Collection</a></li>
-                    <li><a href="/collections/cats">🐈 Cats Collection</a></li>
-                    <li><a href="/collections/all">🐾 All Pets</a></li>
-                  </ul>
-                </div>
-                <!-- Col 2: Shop By Category -->
-                <div class="mega-menu-col">
-                  <h5>Shop By Category</h5>
-                  <ul>
-                    <li><a href="/collections/supplements">💊 Supplements</a></li>
-                    <li><a href="/collections/health">🩺 Health &amp; Dental</a></li>
-                    <li><a href="/collections/treats">🥩 Treats &amp; Food</a></li>
-                    <li><a href="/collections/accessories">🎒 Travel &amp; Accessories</a></li>
-                  </ul>
-                </div>
-                <!-- Col 3: Special Programs -->
-                <div class="mega-menu-col">
-                  <h5>Programs &amp; Deals</h5>
-                  <ul>
-                    <li><a href="/collections/all">⭐ Subscription Plans</a></li>
-                    <li><a href="/collections/all">🔥 Today's Flash Deals</a></li>
-                    <li><a href="/collections/all">🧑‍⚕️ Vet Recommended</a></li>
-                  </ul>
-                </div>
+    {%- comment -%} Primary navigation using Shopify linklists {%- endcomment -%}
+    <nav class="header-nav" aria-label="Main navigation">
+      {%- for link in linklists[section.settings.menu].links -%}
+        {%- if link.links.size > 0 -%}
+          <div style="position:relative;">
+            <button
+              class="header-nav__link"
+              data-mega-trigger="{{ link.handle }}"
+              aria-expanded="false"
+              aria-haspopup="true"
+            >
+              {{ link.title }}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="mega-menu" data-mega-menu="{{ link.handle }}" role="region" aria-label="{{ link.title }} menu">
+              <div class="mega-menu__inner">
+                {%- comment -%} Group sub-links into columns of 4 {%- endcomment -%}
+                {%- assign cols = link.links | split: ',' -%}
+                {%- assign col_size = 4 -%}
+                {%- assign col_count = link.links.size | divided_by: col_size | ceil -%}
+                {%- for col_idx in (0..3) -%}
+                  <div>
+                    <p class="mega-menu__col-title" aria-hidden="true">
+                      {%- if col_idx == 0 -%}Shop by Pet{%- endif -%}
+                      {%- if col_idx == 1 -%}Categories{%- endif -%}
+                      {%- if col_idx == 2 -%}Health Concerns{%- endif -%}
+                      {%- if col_idx == 3 -%}Quick Links{%- endif -%}
+                    </p>
+                    {%- for sub_link in link.links -%}
+                      {%- assign sub_idx = forloop.index0 -%}
+                      {%- if sub_idx >= col_idx | times: col_size and sub_idx < col_idx | plus: 1 | times: col_size -%}
+                        <a href="{{ sub_link.url }}" class="mega-menu__link">
+                          <span class="mega-menu__link-icon" aria-hidden="true">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                          </span>
+                          {{ sub_link.title }}
+                        </a>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </div>
+                {%- endfor -%}
               </div>
             </div>
-          </li>
-          <li><a href="/collections/all" class="nav-link">Best Sellers</a></li>
-          <li><a href="/pages/about" class="nav-link">Our Story</a></li>
-          <li><a href="/pages/contact" class="nav-link">Contact</a></li>
-        </ul>
-      </nav>
+          </div>
+        {%- else -%}
+          <a href="{{ link.url }}" class="header-nav__link" {% if link.active %}aria-current="page"{% endif %}>
+            {{ link.title }}
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </nav>
+
+    {%- comment -%} Header action icons {%- endcomment -%}
+    <div class="header-actions">
+      <button type="button" class="icon-btn" data-open-search aria-label="Search products">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+
+      {%- if shop.customer_accounts_enabled -%}
+        <a href="{%- if customer -%}/account{%- else -%}/account/login{%- endif -%}" class="icon-btn" aria-label="{%- if customer -%}My account{%- else -%}Sign in{%- endif -%}">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </a>
+      {%- endif -%}
+
+      <button type="button" class="header-cart-btn" data-open-cart aria-label="Open shopping bag ({{ cart.item_count }} items)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="cart-count" id="header-cart-count" {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
+      </button>
     </div>
+
   </div>
 </header>
 
 {% schema %}
 {
   "name": "Header",
-  "settings": []
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "text",
+      "id": "announcement_text",
+      "label": "Announcement bar text",
+      "default": "Free shipping on orders $49+ · Made in the USA · Vet-Approved formulas"
+    },
+    {
+      "type": "url",
+      "id": "announcement_link",
+      "label": "Announcement bar link (optional)"
+    }
+  ]
 }
 {% endschema %}

@@ -374,6 +374,65 @@
   </div>
 </div>
 
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  function applyPetFilter() {
+    const urlParams = new URLSearchParams(window.location.search);
+    let pet = urlParams.get('pet');
+    if (!pet && window.location.pathname.includes('dogs')) {
+      pet = 'dogs';
+    } else if (!pet && window.location.pathname.includes('cats')) {
+      pet = 'cats';
+    }
+    
+    if (pet === 'dogs' || pet === 'cats') {
+      const displayTitle = pet === 'dogs' ? 'Dogs' : 'Cats';
+      
+      // Update Banner Title
+      document.querySelectorAll('.collection-banner__title, .collection-title-plain').forEach(function(el) {
+        el.textContent = displayTitle;
+      });
+      
+      // Update Breadcrumb Current Item
+      document.querySelectorAll('.breadcrumb__item--current').forEach(function(el) {
+        el.textContent = displayTitle;
+      });
+      
+      // Filter Grid Items
+      const cards = document.querySelectorAll('#collection-grid .product-card');
+      let visibleCount = 0;
+      const query = pet === 'dogs' ? 'dog' : 'cat';
+      
+      cards.forEach(function(card) {
+        const title = (card.querySelector('.product-card__title')?.textContent || '').toLowerCase();
+        const tags = (card.getAttribute('data-tags') || '').toLowerCase();
+        const handle = (card.getAttribute('data-handle') || '').toLowerCase();
+        
+        if (title.includes(query) || tags.includes(query) || handle.includes(query)) {
+          card.style.display = 'block';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      
+      // Update Count Labels
+      document.querySelectorAll('.collection-banner__count, .collection-count').forEach(function(el) {
+        el.textContent = visibleCount + ' products';
+      });
+      
+      // Hide pagination if filters are applied client-side
+      document.querySelectorAll('.pagination').forEach(function(el) {
+        el.style.display = 'none';
+      });
+    }
+  }
+  
+  applyPetFilter();
+  window.addEventListener('popstate', applyPetFilter);
+});
+</script>
+
 {% schema %}
 {
   "name": "Collection Page",

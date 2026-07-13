@@ -407,3 +407,66 @@ function buyFbtBundle() {
     console.error("FBT Bundle add failed", err);
   });
 }
+
+/* Phase 5 V3 PDP JS Interactions */
+function switchPdpImage(src, btn) {
+  const featured = document.getElementById("pdp-featured-image");
+  if (featured) {
+    featured.src = src;
+  }
+  const btns = document.querySelectorAll(".pdp-thumb-btn");
+  btns.forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+}
+
+function adjustQty(amount) {
+  const input = document.getElementById("pdp-quantity");
+  if (input) {
+    let val = parseInt(input.value || "1");
+    val += amount;
+    if (val < 1) val = 1;
+    input.value = val;
+  }
+}
+
+function switchTab(evt, tabId) {
+  const contents = document.querySelectorAll(".tab-content");
+  contents.forEach(c => c.classList.remove("active"));
+  
+  const links = document.querySelectorAll(".tab-link");
+  links.forEach(l => l.classList.remove("active"));
+  
+  const tab = document.getElementById(tabId);
+  if (tab) {
+    tab.classList.add("active");
+  }
+  evt.currentTarget.classList.add("active");
+}
+
+function togglePurchaseType(type) {
+  const cards = document.querySelectorAll(".pdp-option-card");
+  cards.forEach(card => {
+    const radio = card.querySelector("input[type='radio']");
+    if (radio && radio.value === type) {
+      card.classList.add("active");
+      radio.checked = true;
+    } else {
+      card.classList.remove("active");
+    }
+  });
+}
+
+// Sticky Add-To-Cart Bar Scroll listener
+window.addEventListener("scroll", function() {
+  const stickyBar = document.getElementById("sticky-cart-bar");
+  const mainAddBtn = document.querySelector(".btn-pdp-add");
+  
+  if (stickyBar && mainAddBtn) {
+    const triggerPos = mainAddBtn.getBoundingClientRect().bottom + window.scrollY;
+    if (window.scrollY > triggerPos) {
+      stickyBar.classList.add("visible");
+    } else {
+      stickyBar.classList.remove("visible");
+    }
+  }
+});

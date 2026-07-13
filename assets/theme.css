@@ -367,3 +367,229 @@ a { text-decoration: none; color: inherit; }
   50% { transform: scale(1.05); }
   100% { transform: scale(1); }
 }
+
+/* Phase 5 V3 PDP Styling */
+.variant-option-group {
+  margin-bottom: 20px;
+}
+.variant-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #212121;
+  display: block;
+  margin-bottom: 8px;
+}
+.variant-pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.variant-pill-label {
+  position: relative;
+  cursor: pointer;
+}
+.variant-hidden-radio {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.variant-pill-box {
+  display: inline-block;
+  padding: 8px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4b5563;
+  background: #ffffff;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+.variant-hidden-radio:checked + .variant-pill-box {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: #fff7ed;
+  box-shadow: 0 0 0 1px var(--color-primary);
+}
+.variant-pill-box:hover {
+  border-color: #94a3b8;
+}
+
+.pdp-purchase-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 24px 0;
+}
+.pdp-option-card {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+.pdp-option-card input[type="radio"] {
+  margin-right: 14px;
+  accent-color: var(--color-primary);
+  width: 18px;
+  height: 18px;
+}
+.pdp-option-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.option-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #212121;
+}
+.option-desc {
+  font-size: 12px;
+  color: #64748b;
+}
+.option-price {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+.pdp-option-card:hover {
+  border-color: #cbd5e1;
+}
+.pdp-option-card.active {
+  border-color: var(--color-primary);
+  background: #fff7ed;
+  box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+.qty-selector {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #ffffff;
+}
+.qty-selector button {
+  background: #f8fafc;
+  border: none;
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.qty-selector button:hover {
+  background: #f1f5f9;
+}
+.qty-selector input {
+  width: 50px;
+  height: 36px;
+  border: none;
+  border-left: 1px solid #cbd5e1;
+  border-right: 1px solid #cbd5e1;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #212121;
+  background: #ffffff;
+}
+
+.pdp-details-tabs {
+  margin-top: 50px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+  overflow: hidden;
+}
+.tabs-header {
+  display: flex;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+.tab-link {
+  padding: 16px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #64748b;
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+.tab-link:hover {
+  color: #212121;
+}
+.tab-link.active {
+  color: var(--color-primary);
+  background: #ffffff;
+}
+.tab-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--color-primary);
+}
+.tab-content {
+  display: none;
+  padding: 30px;
+}
+.tab-content.active {
+  display: block;
+}
+.specs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 15px;
+  margin-bottom: 24px;
+}
+.spec-row {
+  display: flex;
+  padding: 8px 0;
+  border-bottom: 1px dashed #e2e8f0;
+}
+.spec-label {
+  width: 120px;
+  font-weight: 600;
+  color: #64748b;
+  font-size: 14px;
+}
+.spec-val {
+  flex: 1;
+  color: #212121;
+  font-size: 14px;
+}
+.faq-item {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 15px;
+}
+.faq-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.faq-item strong {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #212121;
+}
+.faq-item p {
+  color: #4b5563;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+}

@@ -15,7 +15,7 @@
     <div class="shop-by-pet__grid">
 
       {%- comment -%} Dogs Card {%- endcomment -%}
-      {%- assign dogs_url = dogs_collection.url | default: '/collections/dogs' -%}
+      {%- assign dogs_url = dogs_collection.url | default: '/collections/all?pet=dogs' -%}
       <a href="{{ dogs_url }}" class="pet-card" aria-label="Shop dog products">
         {%- if dogs_image != blank -%}
           <img
@@ -50,7 +50,7 @@
       </a>
 
       {%- comment -%} Cats Card {%- endcomment -%}
-      {%- assign cats_url = cats_collection.url | default: '/collections/cats' -%}
+      {%- assign cats_url = cats_collection.url | default: '/collections/all?pet=cats' -%}
       <a href="{{ cats_url }}" class="pet-card" aria-label="Shop cat products">
         {%- if cats_image != blank -%}
           <img

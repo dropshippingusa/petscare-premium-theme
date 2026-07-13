@@ -1,6 +1,22 @@
 {%- liquid
+  # Detect pet parameter in query string or URL path
+  assign filter_pet = ''
+  if request.path contains 'dogs'
+    assign filter_pet = 'dogs'
+  elsif request.path contains 'cats'
+    assign filter_pet = 'cats'
+  else
+    # Parse query string from content_for_header
+    assign page_url = content_for_header | split: '"pageurl":"' | last | split: '"' | first | downcase | replace: '%2f', '/' | replace: '%3f', '?' | replace: '%3d', '='
+    if page_url contains 'pet=dogs'
+      assign filter_pet = 'dogs'
+    elsif page_url contains 'pet=cats'
+      assign filter_pet = 'cats'
+    endif
+  endif
+
   assign is_fallback = false
-  if collection.handle == 'dogs' or collection.handle == 'cats' or collection.products.size == 0
+  if collection.handle == 'dogs' or collection.handle == 'cats' or collection.products.size == 0 or filter_pet != blank
     assign is_fallback = true
   endif
 
@@ -11,11 +27,11 @@
       assign type_downcase = product.type | downcase
       assign tags_string = product.tags | join: ',' | downcase
       
-      if collection.handle == 'dogs'
+      if collection.handle == 'dogs' or filter_pet == 'dogs'
         if title_downcase contains 'dog' or type_downcase contains 'dog' or tags_string contains 'dog' or product.handle contains 'dog'
           assign fallback_count = fallback_count | plus: 1
         endif
-      elsif collection.handle == 'cats'
+      elsif collection.handle == 'cats' or filter_pet == 'cats'
         if title_downcase contains 'cat' or type_downcase contains 'cat' or tags_string contains 'cat' or product.handle contains 'cat'
           assign fallback_count = fallback_count | plus: 1
         endif
@@ -42,7 +58,13 @@
       <li class="breadcrumb__item"><a href="/">Home</a></li>
       <li class="breadcrumb__item breadcrumb__sep" aria-hidden="true">/</li>
       {%- if collection.handle == 'all' -%}
-        <li class="breadcrumb__item breadcrumb__item--current" aria-current="page">All Products</li>
+        {%- if filter_pet == 'dogs' -%}
+          <li class="breadcrumb__item breadcrumb__item--current" aria-current="page">Dogs</li>
+        {%- elsif filter_pet == 'cats' -%}
+          <li class="breadcrumb__item breadcrumb__item--current" aria-current="page">Cats</li>
+        {%- else -%}
+          <li class="breadcrumb__item breadcrumb__item--current" aria-current="page">All Products</li>
+        {%- endif -%}
       {%- else -%}
         <li class="breadcrumb__item"><a href="/collections">Collections</a></li>
         <li class="breadcrumb__item breadcrumb__sep" aria-hidden="true">/</li>
@@ -68,8 +90,13 @@
     <div class="collection-banner__overlay"></div>
   {%- endif -%}
   <div class="collection-banner__content container">
-    <h1 class="collection-banner__title">{{ collection.title }}</h1>
-    {%- if collection.description != blank -%}
+    <h1 class="collection-banner__title">
+      {%- if filter_pet == 'dogs' -%}Dogs
+      {%- elsif filter_pet == 'cats' -%}Cats
+      {%- else -%}{{ collection.title }}
+      {%- endif -%}
+    </h1>
+    {%- if collection.description != blank and filter_pet == blank -%}
       <p class="collection-banner__desc">{{ collection.description | strip_html | truncate: 150 }}</p>
     {%- endif -%}
     <p class="collection-banner__count">{{ current_products }} products</p>
@@ -78,8 +105,13 @@
 {%- else -%}
 <div class="collection-hero-text">
   <div class="container">
-    <h1 class="collection-title-plain">{{ collection.title }}</h1>
-    {%- if collection.description != blank -%}
+    <h1 class="collection-title-plain">
+      {%- if filter_pet == 'dogs' -%}Dogs
+      {%- elsif filter_pet == 'cats' -%}Cats
+      {%- else -%}{{ collection.title }}
+      {%- endif -%}
+    </h1>
+    {%- if collection.description != blank and filter_pet == blank -%}
       <p class="collection-desc-plain">{{ collection.description | strip_html | truncate: 180 }}</p>
     {%- endif -%}
   </div>
@@ -265,11 +297,11 @@
             {%- assign type_downcase = product.type | downcase -%}
             {%- assign tags_string = product.tags | join: ',' | downcase -%}
             
-            {%- if collection.handle == 'dogs' -%}
+            {%- if collection.handle == 'dogs' or filter_pet == 'dogs' -%}
               {%- if title_downcase contains 'dog' or type_downcase contains 'dog' or tags_string contains 'dog' or product.handle contains 'dog' -%}
                 {%- assign should_render = true -%}
               {%- endif -%}
-            {%- elsif collection.handle == 'cats' -%}
+            {%- elsif collection.handle == 'cats' or filter_pet == 'cats' -%}
               {%- if title_downcase contains 'cat' or type_downcase contains 'cat' or tags_string contains 'cat' or product.handle contains 'cat' -%}
                 {%- assign should_render = true -%}
               {%- endif -%}

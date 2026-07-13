@@ -2213,7 +2213,6 @@ a:focus-visible, button:focus-visible {
 .collection-banner__img {
   width: 100%; height: 100%;
   object-fit: cover;
-  object-position: center bottom;
   transition: transform 8s ease;
 }
 .collection-banner:hover .collection-banner__img { transform: scale(1.04); }

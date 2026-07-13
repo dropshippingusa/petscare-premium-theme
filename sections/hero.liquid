@@ -1,0 +1,47 @@
+<section class="hero">
+  <div class="hero-gradient"></div>
+  <div class="hero-content container">
+    <div class="hero-text">
+      <div class="hero-badge">
+        <span class="badge-pulse"></span> {{ section.settings.badge_text }}
+      </div>
+      <h1 class="hero-title">{{ section.settings.headline }}</h1>
+      <p class="hero-sub">{{ section.settings.subheadline }}</p>
+      <div class="hero-actions">
+        <a href="/collections/all" class="btn btn-primary">Shop Now</a>
+        <a href="#featured" class="btn btn-ghost">Best Sellers</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-pet-card">
+        <div class="pet-emoji-big">🐾</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero Banner",
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": "Trusted by 10,000+ Pet Parents"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline",
+      "default": "Happy Pets, Happy Life."
+    },
+    {
+      "type": "textarea",
+      "id": "subheadline",
+      "label": "Subheadline",
+      "default": "Premium, vet-approved pet products crafted with love. Because your furry friends deserve the best."
+    }
+  ]
+}
+{% endschema %}

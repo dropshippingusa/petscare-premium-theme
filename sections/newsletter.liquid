@@ -1,0 +1,18 @@
+<section class="newsletter">
+  <div class="container">
+    <h2>Stay Ahead of the Pack</h2>
+    <p>Subscribe to save 10% on your next purchase.</p>
+    {% form 'customer', class: 'nl-form' %}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <input type="email" name="contact[email]" placeholder="Your email address..." required />
+      <button type="submit">Subscribe</button>
+    {% endform %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter Signup",
+  "settings": []
+}
+{% endschema %}

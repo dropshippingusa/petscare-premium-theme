@@ -1,0 +1,33 @@
+<div class="cart-page section container">
+  <div class="section-header">
+    <h1 class="section-title">Your Cart</h1>
+  </div>
+
+  {% if cart.item_count > 0 %}
+    <form action="/cart" method="post" novalidate>
+      <div style="margin-bottom:40px;">
+        {% for item in cart.items %}
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:16px 0; border-bottom:1px solid var(--border-light);">
+            <div style="display:flex; align-items:center; gap:20px;">
+              <img src="{{ item.image | img_url: '100x100' }}" alt="{{ item.title }}" style="border-radius:12px;">
+              <div>
+                <h3 style="font-size:1.1rem; margin-bottom:4px;">{{ item.product.title }}</h3>
+                <p style="color:var(--text-muted);">{{ item.variant.title }}</p>
+              </div>
+            </div>
+            <div>
+              <span>{{ item.quantity }} x {{ item.price | money }}</span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      
+      <div style="text-align:right;">
+        <div style="font-size:1.4rem; font-weight:800; margin-bottom:16px;">Subtotal: {{ cart.total_price | money }}</div>
+        <button type="submit" name="checkout" class="btn btn-primary btn-large">Check Out</button>
+      </div>
+    </form>
+  {% else %}
+    <p style="text-align:center; padding:40px 0;">Your cart is empty.</p>
+  {% endif %}
+</div>

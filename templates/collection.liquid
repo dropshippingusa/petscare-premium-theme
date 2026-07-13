@@ -1,0 +1,16 @@
+<div class="collection-page section container">
+  <div class="section-header">
+    <h1 class="section-title">{{ collection.title }}</h1>
+    {% if collection.description != blank %}
+      <p class="section-desc">{{ collection.description }}</p>
+    {% endif %}
+  </div>
+
+  <div class="products-grid">
+    {% for product in collection.products %}
+      {% render 'product-card', product: product %}
+    {% else %}
+      <p style="text-align:center; grid-column:span 3;">No products in this collection.</p>
+    {% endfor %}
+  </div>
+</div>

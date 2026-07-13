@@ -1,0 +1,64 @@
+{%- comment -%}
+  SEO JSON-LD Schemas for PetsCare.com
+{%- endcomment -%}
+
+<!-- OpenGraph Metadata -->
+<meta property="og:site_name" content="{{ shop.name }}">
+<meta property="og:url" content="{{ canonical_url }}">
+<meta property="og:title" content="{{ page_title | escape }}">
+<meta property="og:type" content="{{ template.name | default: 'website' }}">
+{%- if page_description -%}
+  <meta property="og:description" content="{{ page_description | escape }}">
+{%- endif -%}
+
+{%- if template.name == 'product' -%}
+  <meta property="og:price:amount" content="{{ product.price | money_without_currency | strip_html }}">
+  <meta property="og:price:currency" content="{{ cart.currency.iso_code }}">
+  {%- if product.featured_image -%}
+    <meta property="og:image" content="http:{{ product.featured_image.src | img_url: 'master' }}">
+    <meta property="og:image:secure_url" content="https:{{ product.featured_image.src | img_url: 'master' }}">
+  {%- endif -%}
+{%- endif -%}
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "{{ shop.name }}",
+  "url": "{{ shop.url }}",
+  "logo": "https:{{ 'logo.png' | asset_url }}",
+  "sameAs": [
+    "{{ settings.social_instagram_link }}",
+    "{{ settings.social_facebook_link }}",
+    "{{ settings.social_pinterest_link }}"
+  ]
+}
+</script>
+
+{%- if template.name == 'product' -%}
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org/",
+  "@type": "Product",
+  "name": "{{ product.title | escape }}",
+  "image": [
+    "https:{{ product.featured_image.src | img_url: 'master' }}"
+  ],
+  "description": "{{ product.description | strip_html | escape }}",
+  "sku": "{{ product.selected_or_first_available_variant.sku }}",
+  "brand": {
+    "@type": "Brand",
+    "name": "{{ product.vendor | escape }}"
+  },
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ shop.url }}{{ product.url }}",
+    "priceCurrency": "{{ cart.currency.iso_code }}",
+    "price": "{{ product.price | money_without_currency }}",
+    "itemCondition": "http://schema.org/NewCondition",
+    "availability": "http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}"
+  }
+}
+</script>
+{%- endif -%}

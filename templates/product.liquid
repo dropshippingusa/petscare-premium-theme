@@ -1,0 +1,35 @@
+<div class="product-page-detail section container">
+  <div class="product-detail-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:40px;">
+    <!-- Gallery -->
+    <div class="product-detail-gallery">
+      {% if product.featured_image != blank %}
+        <img src="{{ product.featured_image | img_url: '600x600' }}" alt="{{ product.title }}" style="width:100%; border-radius:24px; border:1px solid var(--border-light);">
+      {% else %}
+        <div style="background:var(--bg-soft); height:400px; display:flex; align-items:center; justify-content:center; border-radius:24px; font-size:4rem;">🐾</div>
+      {% endif %}
+    </div>
+
+    <!-- Info -->
+    <div class="product-detail-info">
+      <p style="color:var(--primary); font-weight:700; text-transform:uppercase; font-size:0.8rem;">{{ product.vendor }}</p>
+      <h1 style="font-size:2.4rem; font-weight:800; margin-bottom:12px;">{{ product.title }}</h1>
+      <div style="font-size:1.6rem; font-weight:800; color:var(--primary); margin-bottom:24px;">{{ product.price | money }}</div>
+      
+      <div style="margin-bottom:24px; color:var(--text-muted);">
+        {{ product.description }}
+      </div>
+
+      <!-- Add to Cart -->
+      <form method="post" action="/cart/add" style="margin-bottom:32px;">
+        <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
+        <button type="submit" class="btn btn-primary btn-large" style="width:100%; justify-content:center;">Add to Cart</button>
+      </form>
+
+      <!-- Meta specs -->
+      <ul style="list-style:none; padding:0; border-top:1px solid var(--border-light); padding-top:20px; font-size:0.9rem;">
+        <li style="margin-bottom:8px;"><strong>SKU:</strong> {{ product.variants.first.sku | default: 'N/A' }}</li>
+        <li style="margin-bottom:8px;"><strong>Availability:</strong> {% if product.available %}In Stock{% else %}Out of Stock{% endif %}</li>
+      </ul>
+    </div>
+  </div>
+</div>

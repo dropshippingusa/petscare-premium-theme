@@ -1,0 +1,37 @@
+{% comment %}
+  AJAX Side Cart Drawer
+{% endcomment %}
+<div class="cart-drawer-overlay" id="cart-drawer-overlay"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-drawer-header">
+    <h3>Shopping Cart (<span id="drawer-cart-count">0</span>)</h3>
+    <button class="cart-drawer-close" id="cart-drawer-close">✕</button>
+  </div>
+  
+  <!-- Free shipping progress bar -->
+  <div class="shipping-progress-wrap">
+    <p id="shipping-progress-text">Spend $60.00 more for FREE shipping!</p>
+    <div class="shipping-progress-bg">
+      <div class="shipping-progress-bar" id="shipping-progress-bar" style="width: 0%;"></div>
+    </div>
+  </div>
+
+  <div class="cart-drawer-items" id="cart-drawer-items">
+    <!-- Dynamic Cart Items load here -->
+    <div class="cart-empty-msg">Your cart is currently empty.</div>
+  </div>
+
+  <div class="cart-drawer-footer">
+    <div class="cart-subtotal">
+      <span>Subtotal:</span>
+      <strong id="drawer-cart-subtotal">$0.00</strong>
+    </div>
+    <p class="cart-tax-note">Shipping &amp; taxes calculated at checkout.</p>
+    
+    <a href="/checkout" class="btn btn-primary btn-checkout">Proceed to Checkout</a>
+    <a href="/cart" class="view-cart-link">View Full Cart</a>
+  </div>
+</div>
+
+<!-- Add notification Toast -->
+<div class="cart-toast" id="cart-toast">✓ Item added to cart!</div>

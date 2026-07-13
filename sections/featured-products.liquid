@@ -1,0 +1,24 @@
+<section class="products section" id="featured">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">Bestsellers</p>
+      <h2 class="section-title">Trending Products</h2>
+    </div>
+    <div class="products-grid">
+      {% for product in collections.all.products limit: 6 %}
+        {% render 'product-card', product: product %}
+      {% else %}
+        <div style="grid-column: span 3; text-align: center; padding: 40px 0;">
+          <p>No products found. Please add products in Shopify Admin.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured Products",
+  "settings": []
+}
+{% endschema %}

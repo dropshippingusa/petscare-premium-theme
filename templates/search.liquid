@@ -1,0 +1,18 @@
+<div class="search-page section container">
+  <div class="section-header">
+    <h1 class="section-title">Search Results</h1>
+    <p>Found {{ search.results_count }} results for "{{ search.terms }}"</p>
+  </div>
+
+  <div class="products-grid">
+    {% if search.performed %}
+      {% for item in search.results %}
+        {% if item.object_type == 'product' %}
+          {% render 'product-card', product: item %}
+        {% endif %}
+      {% else %}
+        <p style="text-align:center; grid-column:span 3;">No matching products found.</p>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>

@@ -21,7 +21,12 @@
   endif
 -%}
 
-<article class="product-card" data-product-id="{{ product.id }}">
+<article 
+  class="product-card" 
+  data-product-id="{{ product.id }}"
+  data-handle="{{ product.handle | escape }}"
+  data-tags="{{ product.tags | join: ',' | escape }}"
+>
 
   {%- comment -%} Image area {%- endcomment -%}
   <div class="product-card__media">

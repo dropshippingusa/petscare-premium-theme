@@ -8,47 +8,79 @@
     </div>
 
     <div class="category-grid" role="list">
-      {%- for block in section.blocks -%}
-        {%- assign cat_url = block.settings.collection.url | default: block.settings.fallback_url | default: '/collections/all' -%}
-        {%- assign cat_image = block.settings.image -%}
-        <a href="{{ cat_url }}" class="category-card" role="listitem" {{ block.shopify_attributes }} aria-label="{{ block.settings.name }}">
-          <div class="category-card__image-wrapper" aria-hidden="true">
-            {%- if cat_image != blank -%}
-              <img
-                src="{{ cat_image | image_url: width: 240 }}"
-                alt="{{ block.settings.name | escape }}"
-                class="category-card__img"
-                loading="lazy"
-                width="120"
-                height="120"
-              >
-            {%- else -%}
-              {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/dog_bowls.webp?v=1742375228' -%}
-              {%- assign name_downcase = block.settings.name | downcase -%}
-              {%- if name_downcase contains 'toy' -%}
-                {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/cat_toys_79bf694c-2c5c-4f18-8cac-626ccf76c503.webp?v=1742375228' -%}
-              {%- elsif name_downcase contains 'walk' or name_downcase contains 'collar' or name_downcase contains 'leash' or name_downcase contains 'accessories' -%}
-                {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/walkwear_5c6c2121-cb23-455b-80df-db4be934f0e9.webp?v=1742375228' -%}
-              {%- elsif name_downcase contains 'chew' or name_downcase contains 'treat' or name_downcase contains 'yakies' -%}
-                {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/yakies.webp?v=1742375228' -%}
-              {%- elsif name_downcase contains 'litter' or name_downcase contains 'cleaning' or name_downcase contains 'grooming' -%}
-                {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/cat_litter_a3ab9c21-1f9d-4762-b91c-297bc099fa71.webp?v=1742375228' -%}
-              {%- elsif name_downcase contains 'food' or name_downcase contains 'broth' or name_downcase contains 'health' or name_downcase contains 'supplement' -%}
-                {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/bone_broth_bbdfcfbf-78b1-4f9e-bd9d-09559c5d0124.webp?v=1742375228' -%}
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          {%- assign cat_url = block.settings.collection.url | default: block.settings.fallback_url | default: '/collections/all' -%}
+          {%- assign cat_image = block.settings.image -%}
+          <a href="{{ cat_url }}" class="category-card" role="listitem" {{ block.shopify_attributes }} aria-label="{{ block.settings.name }}">
+            <div class="category-card__image-wrapper" aria-hidden="true">
+              {%- if cat_image != blank -%}
+                <img
+                  src="{{ cat_image | image_url: width: 240 }}"
+                  alt="{{ block.settings.name | escape }}"
+                  class="category-card__img"
+                  loading="lazy"
+                  width="120"
+                  height="120"
+                >
+              {%- else -%}
+                {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/dog_bowls.webp?v=1742375228' -%}
+                {%- assign name_downcase = block.settings.name | downcase -%}
+                {%- if name_downcase contains 'toy' -%}
+                  {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/cat_toys_79bf694c-2c5c-4f18-8cac-626ccf76c503.webp?v=1742375228' -%}
+                {%- elsif name_downcase contains 'walk' or name_downcase contains 'collar' or name_downcase contains 'leash' or name_downcase contains 'accessories' -%}
+                  {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/walkwear_5c6c2121-cb23-455b-80df-db4be934f0e9.webp?v=1742375228' -%}
+                {%- elsif name_downcase contains 'chew' or name_downcase contains 'treat' or name_downcase contains 'yakies' -%}
+                  {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/yakies.webp?v=1742375228' -%}
+                {%- elsif name_downcase contains 'litter' or name_downcase contains 'cleaning' or name_downcase contains 'grooming' -%}
+                  {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/cat_litter_a3ab9c21-1f9d-4762-b91c-297bc099fa71.webp?v=1742375228' -%}
+                {%- elsif name_downcase contains 'food' or name_downcase contains 'broth' or name_downcase contains 'health' or name_downcase contains 'supplement' -%}
+                  {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/bone_broth_bbdfcfbf-78b1-4f9e-bd9d-09559c5d0124.webp?v=1742375228' -%}
+                {%- endif -%}
+                <img
+                  src="{{ fallback_img }}"
+                  alt="{{ block.settings.name | escape }}"
+                  class="category-card__img"
+                  loading="lazy"
+                  width="120"
+                  height="120"
+                >
               {%- endif -%}
+            </div>
+            <span class="category-card__name">{{ block.settings.name }}</span>
+          </a>
+        {%- endfor -%}
+      {%- else -%}
+        {%- assign fallback_categories = "Health,Food,Treats,Dental,Travel,Beds,Cleaning,Accessories,Training,Toys" | split: "," -%}
+        {%- for cat_name in fallback_categories -%}
+          {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/dog_bowls.webp?v=1742375228' -%}
+          {%- assign name_downcase = cat_name | downcase -%}
+          {%- if name_downcase contains 'toy' -%}
+            {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/cat_toys_79bf694c-2c5c-4f18-8cac-626ccf76c503.webp?v=1742375228' -%}
+          {%- elsif name_downcase contains 'walk' or name_downcase contains 'collar' or name_downcase contains 'leash' or name_downcase contains 'accessories' -%}
+            {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/walkwear_5c6c2121-cb23-455b-80df-db4be934f0e9.webp?v=1742375228' -%}
+          {%- elsif name_downcase contains 'chew' or name_downcase contains 'treat' or name_downcase contains 'yakies' -%}
+            {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/yakies.webp?v=1742375228' -%}
+          {%- elsif name_downcase contains 'litter' or name_downcase contains 'cleaning' or name_downcase contains 'grooming' -%}
+            {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/cat_litter_a3ab9c21-1f9d-4762-b91c-297bc099fa71.webp?v=1742375228' -%}
+          {%- elsif name_downcase contains 'food' or name_downcase contains 'broth' or name_downcase contains 'health' or name_downcase contains 'supplement' -%}
+            {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/bone_broth_bbdfcfbf-78b1-4f9e-bd9d-09559c5d0124.webp?v=1742375228' -%}
+          {%- endif -%}
+          <a href="/collections/all" class="category-card" role="listitem" aria-label="{{ cat_name }}">
+            <div class="category-card__image-wrapper" aria-hidden="true">
               <img
                 src="{{ fallback_img }}"
-                alt="{{ block.settings.name | escape }}"
+                alt="{{ cat_name }}"
                 class="category-card__img"
                 loading="lazy"
                 width="120"
                 height="120"
               >
-            {%- endif -%}
-          </div>
-          <span class="category-card__name">{{ block.settings.name }}</span>
-        </a>
-      {%- endfor -%}
+            </div>
+            <span class="category-card__name">{{ cat_name }}</span>
+          </a>
+        {%- endfor -%}
+      {%- endif -%}
     </div>
   </div>
 </section>

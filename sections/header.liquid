@@ -19,11 +19,7 @@
 
     {%- comment -%} Logo {%- endcomment -%}
     <a href="/" class="header-logo" aria-label="{{ shop.name }} — Home">
-      <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-        <circle cx="16" cy="16" r="15" fill="currentColor"/>
-        <path d="M10 13a2 2 0 100-4 2 2 0 000 4zM22 13a2 2 0 100-4 2 2 0 000 4zM8 18a2 2 0 100-4 2 2 0 000 4zM24 18a2 2 0 100-4 2 2 0 000 4zM16 24a4 4 0 100-8 4 4 0 000 8z" fill="white"/>
-      </svg>
-      {{ shop.name }}
+      <img src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name | escape }}" class="header-logo__img" width="160" height="40">
     </a>
 
     {%- comment -%} Primary navigation using Shopify linklists {%- endcomment -%}

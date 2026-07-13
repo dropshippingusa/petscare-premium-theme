@@ -3,6 +3,7 @@
     <div class="footer-brand">
       <a href="/" class="footer-logo" aria-label="{{ shop.name }} Home">{{ shop.name }}</a>
       <p class="footer-tagline">{{ section.settings.tagline | default: 'Premium pet care products crafted with love and science. Made for the US pet parents who want only the best for their furry family.' }}</p>
+      
       {%- if section.settings.show_newsletter -%}
         <form action="/contact#contact_form" method="post" class="footer-newsletter" accept-charset="UTF-8">
           <input type="hidden" name="form_type" value="customer">
@@ -20,6 +21,31 @@
             {{ section.settings.newsletter_button | default: 'Subscribe' }}
           </button>
         </form>
+      {%- endif -%}
+
+      {%- if section.settings.social_instagram != blank or section.settings.social_facebook != blank or section.settings.social_pinterest != blank or section.settings.social_tiktok != blank -%}
+        <div class="footer-social">
+          {%- if section.settings.social_instagram != blank -%}
+            <a href="{{ section.settings.social_instagram }}" class="footer-social__link" aria-label="Instagram" target="_blank" rel="noopener">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+          {%- endif -%}
+          {%- if section.settings.social_facebook != blank -%}
+            <a href="{{ section.settings.social_facebook }}" class="footer-social__link" aria-label="Facebook" target="_blank" rel="noopener">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+          {%- endif -%}
+          {%- if section.settings.social_pinterest != blank -%}
+            <a href="{{ section.settings.social_pinterest }}" class="footer-social__link" aria-label="Pinterest" target="_blank" rel="noopener">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22s1.5-5.3 1.8-7c-1.3-2-1-5.3 1.2-5.3 1.9 0 2.8 1.4 2.8 3 0 1.9-1.2 4.7-1.8 7.3-.5 2.2 1.1 4 3.3 4 3.9 0 6.6-4.9 6.6-10.7 0-4.4-3.1-7.8-8.5-7.8-6.1 0-10 4.5-10 9.8 0 1.7.5 3 1.2 3.8.3.4.4.6.3 1.1l-.5 2.1c-.1.5-.4.7-.9.5C2.6 19.3 1 15 1 11.2 1 5.3 5.7 1 12.3 1 18 1 22 5 22 10.8c0 6-3.4 10.2-8.3 10.2-1.6 0-3.1-.9-3.6-1.9z"/></svg>
+            </a>
+          {%- endif -%}
+          {%- if section.settings.social_tiktok != blank -%}
+            <a href="{{ section.settings.social_tiktok }}" class="footer-social__link" aria-label="TikTok" target="_blank" rel="noopener">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+            </a>
+          {%- endif -%}
+        </div>
       {%- endif -%}
     </div>
 
@@ -39,7 +65,16 @@
   </div>
 
   <div class="footer-bottom">
-    <p>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.</p>
+    <div class="footer-bottom__left">
+      <p>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.</p>
+      <div class="footer-policies" aria-label="Store policies">
+        {%- for policy in shop.policies -%}
+          {%- if policy != blank -%}
+            <a href="{{ policy.url }}" class="footer-policy-link">{{ policy.title }}</a>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
     <div class="footer-payment-icons" aria-label="Accepted payment methods">
       {%- for type in shop.enabled_payment_types -%}
         <img
@@ -81,6 +116,30 @@
       "id": "newsletter_button",
       "label": "Newsletter button text",
       "default": "Subscribe"
+    },
+    {
+      "type": "header",
+      "content": "Social Media Links"
+    },
+    {
+      "type": "text",
+      "id": "social_instagram",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "text",
+      "id": "social_facebook",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "text",
+      "id": "social_pinterest",
+      "label": "Pinterest URL"
+    },
+    {
+      "type": "text",
+      "id": "social_tiktok",
+      "label": "TikTok URL"
     }
   ],
   "blocks": [

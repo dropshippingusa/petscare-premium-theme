@@ -70,10 +70,32 @@
     {%- comment -%} Badges {%- endcomment -%}
     <div class="product-card__badges">
       {%- if discount_pct > 0 -%}
-        <span class="product-card__discount-badge">-{{ discount_pct }}%</span>
+        <span class="product-card__badge product-card__badge--sale">Sale</span>
       {%- endif -%}
-      {%- if product.tags contains 'new' or product.tags contains 'New' -%}
-        <span class="badge badge--new" style="margin-top:4px">New</span>
+      {%- if product.tags contains 'bestseller' or product.tags contains 'best-seller' or product.tags contains 'Best Seller' -%}
+        <span class="product-card__badge product-card__badge--bestseller">Best Seller</span>
+      {%- endif -%}
+      {%- if product.tags contains 'new' or product.tags contains 'new-arrival' or product.tags contains 'New' -%}
+        <span class="product-card__badge product-card__badge--new">New</span>
+      {%- endif -%}
+      {%- assign is_limited = false -%}
+      {%- if first_variant.inventory_management == 'shopify' and first_variant.inventory_quantity > 0 and first_variant.inventory_quantity <= 5 -%}
+        {%- assign is_limited = true -%}
+      {%- endif -%}
+      {%- if product.tags contains 'limited' or product.tags contains 'limited-stock' or is_limited -%}
+        <span class="product-card__badge product-card__badge--limited">Limited</span>
+      {%- endif -%}
+      {%- if product.tags contains 'usa' or product.tags contains 'made-in-usa' or product.tags contains 'Made in USA' -%}
+        <span class="product-card__badge product-card__badge--usa">USA Made</span>
+      {%- endif -%}
+      {%- if product.tags contains 'vet-approved' or product.tags contains 'vet-recommended' or product.tags contains 'Vet Recommended' -%}
+        <span class="product-card__badge product-card__badge--vet">Vet Approved</span>
+      {%- endif -%}
+      {%- if product.tags contains 'bundle' or product.tags contains 'Bundle' -%}
+        <span class="product-card__badge product-card__badge--bundle">Bundle</span>
+      {%- endif -%}
+      {%- if product.selling_plan_groups.size > 0 -%}
+        <span class="product-card__badge product-card__badge--subscribe">Subscribe</span>
       {%- endif -%}
     </div>
 
@@ -144,13 +166,22 @@
     {%- comment -%} Trust micro-badges from Shopify product tags {%- endcomment -%}
     <div class="product-card__trust-badges">
       {%- if product.tags contains 'usa' or product.tags contains 'made-in-usa' or product.tags contains 'Made in USA' -%}
-        <span class="badge badge--green">🇺🇸 USA Made</span>
+        <span class="badge badge--green">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="margin-right:2px"><polygon points="12 2 15 9 22 9 17 14 19 21 12 17 5 21 7 14 2 9 9 9 12 2"/></svg>
+          USA Made
+        </span>
       {%- endif -%}
-      {%- if product.tags contains 'vet-approved' or product.tags contains 'vet-recommended' -%}
-        <span class="badge badge--primary">✓ Vet Approved</span>
+      {%- if product.tags contains 'vet-approved' or product.tags contains 'vet-recommended' or product.tags contains 'Vet Recommended' -%}
+        <span class="badge badge--primary">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="margin-right:2px"><polyline points="20 6 9 17 4 12"/></svg>
+          Vet Approved
+        </span>
       {%- endif -%}
-      {%- if product.tags contains 'subscribe' or product.tags contains 'subscription' -%}
-        <span class="badge badge--amber">↻ Subscribe & Save</span>
+      {%- if product.selling_plan_groups.size > 0 or product.tags contains 'subscribe' or product.tags contains 'subscription' -%}
+        <span class="badge badge--amber">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="margin-right:2px"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          Subscribe & Save
+        </span>
       {%- endif -%}
     </div>
   </div>

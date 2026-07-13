@@ -1,0 +1,14 @@
+{%- comment -%}
+  Recently Viewed AJAX Search Template
+  Renders product cards directly to be fetched via AJAX by theme.js.
+  No layout is used to prevent header/footer rendering.
+{%- endcomment -%}
+{%- layout none -%}
+
+{%- if search.results_count > 0 -%}
+  {%- for item in search.results -%}
+    {%- if item.object_type == 'product' -%}
+      {%- render 'product-card', product: item -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}

@@ -1,18 +1,90 @@
-<section class="newsletter">
-  <div class="container">
-    <h2>Stay Ahead of the Pack</h2>
-    <p>Subscribe to save 10% on your next purchase.</p>
-    {% form 'customer', class: 'nl-form' %}
-      <input type="hidden" name="contact[tags]" value="newsletter">
-      <input type="email" name="contact[email]" placeholder="Your email address..." required />
-      <button type="submit">Subscribe</button>
-    {% endform %}
+{%- comment -%}
+  DTC Premium Newsletter Signup Section
+  Clean, warm background, typography-centric layout with robust privacy assurances.
+{%- endcomment -%}
+
+<section class="newsletter-section section section--warm">
+  <div class="container container--narrow">
+    <div class="newsletter-box">
+      <span class="section-label">{{ section.settings.eyebrow | default: 'Newsletter' }}</span>
+      <h2 class="section-title newsletter-title">{{ section.settings.title | default: 'Stay Ahead of the Pack' }}</h2>
+      <p class="newsletter-subtitle">{{ section.settings.subtitle | default: 'Join our family of pet parents. Subscribe to get exclusive wellness guides, product updates, and 10% off your first order.' }}</p>
+
+      {%- form 'customer', class: 'newsletter-form' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        
+        {%- if form.posted_successfully? -%}
+          <div class="newsletter-success" role="alert">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Thanks for subscribing! Check your inbox for your 10% code.</span>
+          </div>
+        {%- else -%}
+          {%- if form.errors -%}
+            <div class="newsletter-error" role="alert">
+              {{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}
+            </div>
+          {%- endif -%}
+
+          <div class="newsletter-field-group">
+            <div class="newsletter-input-wrapper">
+              <input
+                type="email"
+                name="contact[email]"
+                class="newsletter-input"
+                value="{{ form.email }}"
+                placeholder="{{ section.settings.placeholder | default: 'Enter your email address' }}"
+                aria-label="Email address"
+                required
+                autocomplete="email"
+              >
+            </div>
+            <button type="submit" class="btn btn--dark newsletter-btn" aria-label="Subscribe to newsletter">
+              Subscribe
+            </button>
+          </div>
+          
+          <p class="newsletter-privacy-note">
+            We respect your privacy. Unsubscribe at any time. View our <a href="/policies/privacy-policy">Privacy Policy</a>.
+          </p>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
   </div>
 </section>
 
 {% schema %}
 {
-  "name": "Newsletter Signup",
-  "settings": []
+  "name": "Newsletter",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Newsletter"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Stay Ahead of the Pack"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Description",
+      "default": "Join our family of pet parents. Subscribe to get exclusive wellness guides, product updates, and 10% off your first order."
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Input placeholder",
+      "default": "Enter your email address"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter Signup"
+    }
+  ]
 }
 {% endschema %}

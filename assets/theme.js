@@ -151,18 +151,21 @@ const PetsCare = {
       if (!bar) return;
       const threshold = 4900; // $49.00 in cents
       const remaining = threshold - totalPrice;
+      const deliveryEst = PetsCare.utils.getDeliveryEstimateString();
       if (remaining <= 0) {
         bar.innerHTML = `<p class="shipping-bar__text shipping-bar__text--done">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           You've unlocked <strong>FREE shipping!</strong>
-        </p>`;
+        </p>
+        <p class="shipping-bar__text" style="color:var(--green);font-weight:700;margin-top:6px;margin-bottom:0">${deliveryEst}</p>`;
       } else {
         const pct = Math.min((totalPrice / threshold) * 100, 100);
         bar.innerHTML = `
           <p class="shipping-bar__text">Add <strong>${PetsCare.utils.formatMoney(remaining)}</strong> more for FREE shipping</p>
           <div class="shipping-bar__track">
             <div class="shipping-bar__fill" style="width:${pct}%"></div>
-          </div>`;
+          </div>
+          <p class="shipping-bar__text" style="color:var(--green);font-weight:700;margin-top:8px;margin-bottom:0">${deliveryEst}</p>`;
       }
     },
 
@@ -360,16 +363,42 @@ const PetsCare = {
     }
   },
 
-  /* ─── HEADER SCROLL ─────────────────────────────────────────────────────── */
+  /* ─── HEADER SCROLL & ANNOUNCEMENT BAR ──────────────────────────────────── */
   header: {
     init() {
       const header = document.querySelector('.site-header');
-      if (!header) return;
-      const onScroll = () => {
-        header.classList.toggle('is-scrolled', window.scrollY > 10);
-      };
-      window.addEventListener('scroll', onScroll, { passive: true });
-      onScroll();
+      if (header) {
+        const onScroll = () => {
+          header.classList.toggle('is-scrolled', window.scrollY > 10);
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+      }
+      this._initAnnouncementTicker();
+    },
+    _initAnnouncementTicker() {
+      const ticker = document.getElementById('announcement-bar-ticker');
+      if (!ticker) return;
+      const slides = ticker.querySelectorAll('.announcement-slide');
+      if (slides.length <= 1) return;
+      let activeIdx = 0;
+      setInterval(() => {
+        const activeSlide = slides[activeIdx];
+        activeSlide.style.opacity = '0';
+        activeSlide.style.transition = 'opacity 300ms ease';
+        setTimeout(() => {
+          activeSlide.style.display = 'none';
+          activeSlide.classList.remove('is-active');
+          activeIdx = (activeIdx + 1) % slides.length;
+          
+          const nextSlide = slides[activeIdx];
+          nextSlide.style.display = 'block';
+          nextSlide.classList.add('is-active');
+          nextSlide.offsetHeight; // trigger reflow
+          nextSlide.style.opacity = '1';
+          nextSlide.style.transition = 'opacity 300ms ease';
+        }, 300);
+      }, 4000);
     }
   },
 
@@ -614,6 +643,8 @@ const PetsCare = {
       this._initTabs();
       this._initStickyAtc();
       this._initFbt();
+      this._initDeliveryEstimator();
+      this._trackRecentlyViewed();
     },
 
     /* Gallery: thumbnail → main image swap */
@@ -638,6 +669,58 @@ const PetsCare = {
           }
         });
       });
+    },
+
+    _initDeliveryEstimator() {
+      const el = document.getElementById('pdp-delivery-estimator');
+      if (el) el.textContent = PetsCare.utils.getDeliveryEstimateString();
+    },
+
+    _trackRecentlyViewed() {
+      const data = window.PetsCareProductData;
+      if (!data || !data.id) return;
+      let list = [];
+      try {
+        list = JSON.parse(localStorage.getItem('pc_recently_viewed') || '[]');
+      } catch(e) {}
+      list = list.filter(id => id !== data.id);
+      list.unshift(data.id);
+      list = list.slice(0, 6);
+      localStorage.setItem('pc_recently_viewed', JSON.stringify(list));
+    },
+
+    async _renderRecentlyViewed() {
+      const grid = document.getElementById('recently-viewed-grid');
+      const section = document.getElementById('recently-viewed-section');
+      if (!grid || !section) return;
+
+      let list = [];
+      try {
+        list = JSON.parse(localStorage.getItem('pc_recently_viewed') || '[]');
+      } catch(e) {}
+
+      // Exclude current product if on a PDP
+      const currentData = window.PetsCareProductData;
+      if (currentData && currentData.id) {
+        list = list.filter(id => id !== currentData.id);
+      }
+
+      if (list.length === 0) return;
+
+      const q = list.map(id => `id:${id}`).join(' OR ');
+      try {
+        const url = `/search?view=recently-viewed&type=product&q=${encodeURIComponent(q)}`;
+        const r = await fetch(url);
+        const html = await r.text();
+        if (html && html.trim().length > 10) {
+          grid.innerHTML = html;
+          section.classList.remove('hidden');
+          // Re-trigger wishlist bindings
+          if (PetsCare.wishlist && typeof PetsCare.wishlist.init === 'function') {
+            PetsCare.wishlist.init();
+          }
+        }
+      } catch(e) { console.error('[PetsCare] renderRecentlyViewed failed', e); }
     },
 
     /* Variant selection — pill click → find matching variant → update price, ATC */
@@ -698,6 +781,24 @@ const PetsCare = {
               } else {
                 if (compareEl) compareEl.style.display = 'none';
                 if (discountEl) discountEl.style.display = 'none';
+              }
+
+              // Update shipping progress bar dynamically
+              const shippingBar = document.getElementById('pdp-shipping-bar');
+              if (shippingBar) {
+                const threshold = 4900;
+                const price = matchedVariant.price;
+                const barFill = document.getElementById('pdp-shipping-bar-fill');
+                const barText = shippingBar.querySelector('.pdp-shipping-bar__text');
+                if (price >= threshold) {
+                  if (barText) barText.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;color:var(--green)"><polyline points="20 6 9 17 4 12"/></svg>This item qualifies for <strong>FREE shipping!</strong>`;
+                  if (barFill) barFill.style.width = '100%';
+                } else {
+                  const remaining = threshold - price;
+                  if (barText) barText.innerHTML = `Add <strong>${PetsCare.utils.formatMoney(remaining)}</strong> more to unlock FREE shipping`;
+                  const pct = Math.min((price / threshold) * 100, 100);
+                  if (barFill) barFill.style.width = pct + '%';
+                }
               }
 
               // Update ATC state
@@ -802,6 +903,23 @@ const PetsCare = {
       return '$' + (cents / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
 
+    getDeliveryEstimateString() {
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const addBusinessDays = (date, daysToAdd) => {
+        let cnt = 0;
+        let tmpDate = new Date(date.getTime());
+        while (cnt < daysToAdd) {
+          tmpDate.setDate(tmpDate.getDate() + 1);
+          if (tmpDate.getDay() !== 0) cnt++;
+        }
+        return tmpDate;
+      };
+      const start = addBusinessDays(new Date(), 3);
+      const end = addBusinessDays(new Date(), 5);
+      return `Arrives: ${days[start.getDay()]}, ${months[start.getMonth()]} ${start.getDate()} – ${days[end.getDay()]}, ${months[end.getMonth()]} ${end.getDate()} (Fast US Shipping)`;
+    },
+
     showToast(msg, isError = false) {
       const toast = document.getElementById('cart-toast');
       const msgEl = document.getElementById('cart-toast-msg');
@@ -822,6 +940,12 @@ const PetsCare = {
     this.countdown.init();
     this.wishlist.init();
     this.filters.init();
+
+    // Render recently viewed grid on any page if container is active
+    if (document.getElementById('recently-viewed-section')) {
+      this.pdp._renderRecentlyViewed();
+    }
+
     // PDP only
     if (document.querySelector('.pdp-layout')) this.pdp.init();
   }

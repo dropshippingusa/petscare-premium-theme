@@ -1,0 +1,53 @@
+{%- comment -%}
+  Recently Viewed Section
+  Placeholder grid populated dynamically by theme.js using search.recently-viewed template.
+{%- endcomment -%}
+
+<section class="section section--alt recently-viewed-section hidden" id="recently-viewed-section" aria-labelledby="rv-title">
+  <div class="container">
+    <div class="section-head" style="margin-bottom: var(--sp-3);">
+      <div>
+        <span class="section-label">{{ section.settings.eyebrow | default: 'Your History' }}</span>
+        <h2 class="section-title" id="rv-title">{{ section.settings.title | default: 'Recently Viewed' }}</h2>
+      </div>
+    </div>
+    
+    <div class="product-grid" id="recently-viewed-grid">
+      {%- comment -%} Dynamically filled by theme.js {%- endcomment -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Recently Viewed",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Section eyebrow",
+      "default": "Your History"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Recently Viewed"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "min": 3,
+      "max": 6,
+      "step": 1,
+      "label": "Max products to show",
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Recently Viewed"
+    }
+  ]
+}
+{% endschema %}

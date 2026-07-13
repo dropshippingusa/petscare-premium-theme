@@ -136,6 +136,22 @@
     <span id="cart-toast-msg">Added to bag!</span>
   </div>
 
+  {%- if customer and customer.orders.size > 0 -%}
+    {%- assign last_order = customer.orders.first -%}
+    {%- assign last_item = last_order.line_items.first -%}
+    <div id="recent-purchase-toast" class="recent-purchase-toast" aria-live="polite">
+      {%- if last_item.image -%}
+        <img src="{{ last_item.image | image_url: width: 120 }}" alt="{{ last_item.title }}" class="recent-purchase-toast__img" loading="lazy">
+      {%- endif -%}
+      <div>
+        <p class="recent-purchase-toast__title">You recently purchased</p>
+        <a href="{{ last_item.url }}" class="recent-purchase-toast__link">{{ last_item.title | truncate: 36 }}</a>
+        <p class="recent-purchase-toast__date">Ordered {{ last_order.created_at | date: "%b %d, %Y" }}</p>
+      </div>
+    </div>
+  {%- endif -%}
+
   {{ 'theme.js' | asset_url | script_tag }}
 </body>
 </html>
+

@@ -125,18 +125,39 @@
       {%- endif -%}
     </div>
 
-    {%- comment -%} Delivery estimate {%- endcomment -%}
-    <div class="pdp-delivery">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-      <div>
-        {%- if current_variant.available -%}
-          <strong style="color:var(--green)">In Stock</strong> ·
-          Ships free on orders $49+ ·
-          <span style="color:var(--green)">Fast US delivery</span>
-        {%- else -%}
-          <strong style="color:var(--red)">Currently unavailable</strong>
-        {%- endif -%}
+    {%- comment -%} Delivery estimate & Free Shipping Progress Bar {%- endcomment -%}
+    <div class="pdp-delivery-box">
+      <div class="pdp-delivery">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        <div>
+          {%- if current_variant.available -%}
+            <p class="pdp-delivery__status"><strong style="color:var(--green)">In Stock</strong> · Vet Approved · Fast US Delivery</p>
+            <p class="pdp-delivery__estimator" id="pdp-delivery-estimator" data-price="{{ current_variant.price }}">Estimating delivery date...</p>
+          {%- else -%}
+            <strong style="color:var(--red)">Currently unavailable</strong>
+          {%- endif -%}
+        </div>
       </div>
+      
+      {%- if current_variant.available -%}
+        <div class="pdp-shipping-bar" id="pdp-shipping-bar">
+          {%- assign threshold = 4900 -%}
+          {%- assign price = current_variant.price -%}
+          {%- if price >= threshold -%}
+            <p class="pdp-shipping-bar__text">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;color:var(--green)"><polyline points="20 6 9 17 4 12"/></svg>
+              This item qualifies for <strong>FREE shipping!</strong>
+            </p>
+          {%- else -%}
+            {%- assign remaining = threshold | minus: price -%}
+            <p class="pdp-shipping-bar__text">Add <strong>{{ remaining | money }}</strong> more to unlock FREE shipping</p>
+            <div class="pdp-shipping-bar__track">
+              {%- assign pct = price | times: 100 | divided_by: threshold -%}
+              <div class="pdp-shipping-bar__fill" id="pdp-shipping-bar-fill" style="width: {{ pct }}%"></div>
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
     </div>
 
     {%- comment -%} Product Form {%- endcomment -%}

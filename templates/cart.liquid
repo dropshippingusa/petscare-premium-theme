@@ -1,33 +1,194 @@
-<div class="cart-page section container">
-  <div class="section-header">
-    <h1 class="section-title">Your Cart</h1>
+{%- comment -%}
+  DTC-Style Cart Page
+  Clean dual-column layout. Fully responsive.
+  Uses approved design system spacing, typography, and color tokens.
+{%- endcomment -%}
+
+<div class="cart-page-container container" id="cart-page-container">
+  <div class="breadcrumb-nav" style="border-bottom: none; padding-left: 0; padding-right: 0;">
+    <ol class="breadcrumb" role="list">
+      <li class="breadcrumb__item"><a href="/">Home</a></li>
+      <li class="breadcrumb__item breadcrumb__sep" aria-hidden="true">/</li>
+      <li class="breadcrumb__item breadcrumb__item--current" aria-current="page">Your Bag</li>
+    </ol>
   </div>
 
-  {% if cart.item_count > 0 %}
-    <form action="/cart" method="post" novalidate>
-      <div style="margin-bottom:40px;">
-        {% for item in cart.items %}
-          <div style="display:flex; justify-content:space-between; align-items:center; padding:16px 0; border-bottom:1px solid var(--border-light);">
-            <div style="display:flex; align-items:center; gap:20px;">
-              <img src="{{ item.image | img_url: '100x100' }}" alt="{{ item.title }}" style="border-radius:12px;">
-              <div>
-                <h3 style="font-size:1.1rem; margin-bottom:4px;">{{ item.product.title }}</h3>
-                <p style="color:var(--text-muted);">{{ item.variant.title }}</p>
+  <div class="cart-page-inner">
+    {%- if cart.item_count > 0 -%}
+      <div class="cart-page-layout">
+        
+        {%- comment -%} Left Column: Cart Items List {%- endcomment -%}
+        <div class="cart-page-main">
+          <h1 class="cart-page-title">Your Bag <span class="cart-page-title__count">({{ cart.item_count }} items)</span></h1>
+          
+          <form action="/cart" method="post" novalidate id="cart-form">
+            <div class="cart-items-list">
+              {%- for item in cart.items -%}
+                <div class="cart-page-item" data-key="{{ item.key }}">
+                  <div class="cart-page-item__image">
+                    <a href="{{ item.url }}">
+                      <img
+                        src="{{ item.image | image_url: width: 240 }}"
+                        alt="{{ item.title | escape }}"
+                        class="cart-page-item__img"
+                        loading="lazy"
+                        width="120" height="120"
+                      >
+                    </a>
+                  </div>
+
+                  <div class="cart-page-item__details">
+                    <div class="cart-page-item__header">
+                      <div>
+                        <a href="{{ item.url }}" class="cart-page-item__title">{{ item.product.title }}</a>
+                        {%- unless item.product.has_only_default_variant -%}
+                          <p class="cart-page-item__meta">{{ item.variant.title }}</p>
+                        {%- endunless -%}
+                        {%- if item.selling_plan_allocation -%}
+                          <p class="cart-page-item__meta cart-page-item__subscription-tag">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            {{ item.selling_plan_allocation.selling_plan.name }}
+                          </p>
+                        {%- endif -%}
+                      </div>
+                      
+                      <button
+                        type="button"
+                        class="cart-page-item__remove icon-btn"
+                        onclick="PetsCare.cart.change('{{ item.key }}', 0)"
+                        aria-label="Remove {{ item.product.title | escape }} from bag"
+                      >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      </button>
+                    </div>
+
+                    <div class="cart-page-item__footer">
+                      <div class="qty-control qty-control--sm">
+                        <button
+                          type="button"
+                          class="qty-btn"
+                          onclick="PetsCare.cart.change('{{ item.key }}', {{ item.quantity | minus: 1 }})"
+                          aria-label="Decrease quantity"
+                        >−</button>
+                        <input
+                          type="number"
+                          name="updates[]"
+                          value="{{ item.quantity }}"
+                          min="1"
+                          class="qty-input"
+                          aria-label="Quantity"
+                          onchange="PetsCare.cart.change('{{ item.key }}', this.value)"
+                        >
+                        <button
+                          type="button"
+                          class="qty-btn"
+                          onclick="PetsCare.cart.change('{{ item.key }}', {{ item.quantity | plus: 1 }})"
+                          aria-label="Increase quantity"
+                        >+</button>
+                      </div>
+
+                      <div class="cart-page-item__price-info">
+                        <span class="cart-page-item__price">{{ item.final_line_price | money }}</span>
+                        {%- if item.original_line_price > item.final_line_price -%}
+                          <span class="cart-page-item__compare">{{ item.original_line_price | money }}</span>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {%- endfor -%}
+            </div>
+          </form>
+        </div>
+
+        {%- comment -%} Right Column: Summary Card & Checkout {%- endcomment -%}
+        <div class="cart-page-sidebar">
+          <div class="cart-summary-card">
+            <h2 class="cart-summary-title">Order Summary</h2>
+
+            {%- comment -%} Free shipping calculator {%- endcomment -%}
+            <div class="shipping-bar" id="cart-page-shipping-bar" style="margin-bottom: var(--sp-3);">
+              {%- assign threshold = 4900 -%}
+              {%- if cart.total_price >= threshold -%}
+                <p class="shipping-bar__text shipping-bar__text--done">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                  You've unlocked <strong>FREE shipping!</strong>
+                </p>
+              {%- else -%}
+                {%- assign remaining_cents = threshold | minus: cart.total_price -%}
+                <p class="shipping-bar__text">Add <strong>{{ remaining_cents | money }}</strong> more for FREE shipping</p>
+                <div class="shipping-bar__track">
+                  {%- assign pct = cart.total_price | times: 100 | divided_by: threshold -%}
+                  <div class="shipping-bar__fill" style="width: {{ pct }}%"></div>
+                </div>
+              {%- endif -%}
+            </div>
+
+            <div class="cart-summary-row">
+              <span>Subtotal</span>
+              <span class="cart-summary-val">{{ cart.total_price | money }}</span>
+            </div>
+            
+            <div class="cart-summary-row">
+              <span>Shipping</span>
+              <span class="cart-summary-val">
+                {%- if cart.total_price >= threshold -%}
+                  FREE
+                {%- else -%}
+                  Calculated next
+                {%- endif -%}
+              </span>
+            </div>
+
+            {%- if settings.cart_show_notes != false -%}
+              <div class="cart-summary-notes">
+                <label for="cart-notes" class="cart-summary-notes__label">Add Order Notes (Optional)</label>
+                <textarea
+                  name="note"
+                  id="cart-notes"
+                  class="cart-summary-notes__input"
+                  placeholder="Special instructions, gate codes, or delivery notes..."
+                  rows="3"
+                  onchange="PetsCare.cart.updateNote(this.value)"
+                >{{ cart.note }}</textarea>
+              </div>
+            {%- endif -%}
+
+            <div class="cart-summary-total">
+              <span>Estimated Total</span>
+              <span class="cart-summary-total-val">{{ cart.total_price | money }}</span>
+            </div>
+
+            <p class="cart-summary-tax-note">Local taxes and duties calculated during secure checkout.</p>
+
+            <a href="/checkout" class="btn btn--primary btn--lg btn--full" style="height: 52px; font-size: 16px; gap: 8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Secure Checkout
+            </a>
+
+            <div class="cart-summary-trust">
+              <p class="cart-summary-trust__title">Guaranteed Safe Checkout</p>
+              <div class="cart-summary-trust__badges" aria-label="Accepted payment methods">
+                {%- for type in shop.enabled_payment_types -%}
+                  <img src="{{ type | payment_type_img_url }}" alt="{{ type }}" class="payment-icon" loading="lazy" height="20">
+                {%- endfor -%}
               </div>
             </div>
-            <div>
-              <span>{{ item.quantity }} x {{ item.price | money }}</span>
-            </div>
           </div>
-        {% endfor %}
+        </div>
+
       </div>
-      
-      <div style="text-align:right;">
-        <div style="font-size:1.4rem; font-weight:800; margin-bottom:16px;">Subtotal: {{ cart.total_price | money }}</div>
-        <button type="submit" name="checkout" class="btn btn-primary btn-large">Check Out</button>
+    {%- else -%}
+      <div class="cart-page-empty">
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
+        <h1 class="cart-page-empty__title">Your Bag is Empty</h1>
+        <p class="cart-page-empty__text">Looks like you haven't added any products to your bag yet. Let's find some favorites!</p>
+        <a href="/collections/all" class="btn btn--primary">Browse Our Catalog</a>
       </div>
-    </form>
-  {% else %}
-    <p style="text-align:center; padding:40px 0;">Your cart is empty.</p>
-  {% endif %}
+    {%- endif -%}
+  </div>
 </div>

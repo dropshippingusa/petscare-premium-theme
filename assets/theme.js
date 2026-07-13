@@ -34,7 +34,7 @@ const PetsCare = {
       document.body.style.overflow = '';
     },
 
-    /** Re-fetch cart state and re-render the drawer */
+    /** Re-fetch cart state and re-render the drawer & full page */
     async refresh() {
       try {
         const r = await fetch('/cart.js');
@@ -42,7 +42,37 @@ const PetsCare = {
         this._renderLines(cart);
         this._updateCount(cart.item_count);
         this._updateShippingBar(cart.total_price);
+        
+        // Dynamic full cart page update if active
+        if (document.getElementById('cart-page-container')) {
+          await this._refreshCartPage();
+        }
       } catch(e) { console.error('[PetsCare] cart.refresh failed', e); }
+    },
+
+    async _refreshCartPage() {
+      try {
+        const r = await fetch(window.location.pathname + window.location.search);
+        const htmlText = await r.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlText, 'text/html');
+        const newContainer = doc.getElementById('cart-page-container');
+        const oldContainer = document.getElementById('cart-page-container');
+        if (newContainer && oldContainer) {
+          oldContainer.innerHTML = newContainer.innerHTML;
+        }
+      } catch(e) { console.error('[PetsCare] _refreshCartPage failed', e); }
+    },
+
+    async updateNote(note) {
+      try {
+        await fetch('/cart/update.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ note })
+        });
+        PetsCare.utils.showToast('Note updated!');
+      } catch(e) { console.error('[PetsCare] updateNote failed', e); }
     },
 
     _renderLines(cart) {

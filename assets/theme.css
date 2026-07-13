@@ -8,23 +8,23 @@
 :root {
   /* Backgrounds */
   --bg:           #FFFFFF;
-  --bg-alt:       #FAFAFA;
-  --bg-subtle:    #F5F5F7;
-  --bg-warm:      #FFF8F5;
+  --bg-alt:       #F9F9F9;
+  --bg-subtle:    #F3F3F3;
+  --bg-warm:      #FEF8F0;
 
   /* Borders */
   --border:       #ECECEC;
   --border-strong:#D1D5DB;
 
   /* Brand */
-  --primary:      #FF5C38;
-  --primary-dark: #E04A28;
-  --primary-light:#FFF3F0;
+  --primary:      #FD8542;
+  --primary-dark: #E36C29;
+  --primary-light:#FEF8F0;
 
   /* Typography */
-  --ink:          #111827;
-  --ink-2:        #374151;
-  --ink-3:        #6B7280;
+  --ink:          #151515;
+  --ink-2:        #333333;
+  --ink-3:        #666666;
   --ink-4:        #9CA3AF;
   --ink-inv:      #FFFFFF;
 
@@ -42,11 +42,11 @@
   --shadow-lg:    0 8px 32px rgba(0,0,0,0.10);
   --shadow-xl:    0 20px 60px rgba(0,0,0,0.12);
 
-  /* Radius */
-  --r-sm:  6px;
-  --r-md:  12px;
-  --r-lg:  16px;
-  --r-xl:  24px;
+  /* Radius (HUFT uses clean slightly rounded styles) */
+  --r-sm:  4px;
+  --r-md:  8px;
+  --r-lg:  12px;
+  --r-xl:  16px;
   --r-full:9999px;
 
   /* Spacing (8px grid) */
@@ -59,7 +59,7 @@
   --sp-7: 96px;
 
   /* Typography */
-  --font: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  --font: 'Rubik', 'Inter', system-ui, sans-serif;
 
   /* Transitions */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
@@ -177,7 +177,7 @@ a:focus-visible, button:focus-visible {
 .btn--primary:hover {
   background: var(--primary-dark);
   transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(255,92,56,0.35);
+  box-shadow: 0 4px 16px rgba(253,133,66,0.35);
 }
 .btn--dark {
   background: var(--ink);

@@ -1,7 +1,38 @@
 {%- liquid
+  assign is_fallback = false
+  if collection.handle == 'dogs' or collection.handle == 'cats' or collection.products.size == 0
+    assign is_fallback = true
+  endif
+
+  assign fallback_count = 0
+  if is_fallback
+    for product in collections.all.products
+      assign title_downcase = product.title | downcase
+      assign type_downcase = product.type | downcase
+      assign tags_string = product.tags | join: ',' | downcase
+      
+      if collection.handle == 'dogs'
+        if title_downcase contains 'dog' or type_downcase contains 'dog' or tags_string contains 'dog' or product.handle contains 'dog'
+          assign fallback_count = fallback_count | plus: 1
+        endif
+      elsif collection.handle == 'cats'
+        if title_downcase contains 'cat' or type_downcase contains 'cat' or tags_string contains 'cat' or product.handle contains 'cat'
+          assign fallback_count = fallback_count | plus: 1
+        endif
+      else
+        assign fallback_count = fallback_count | plus: 1
+      endif
+    endfor
+  endif
+
   assign sort_by = collection.sort_by | default: collection.default_sort_by
-  assign total_products = collection.all_products_count
-  assign current_products = collection.products_count
+  if is_fallback
+    assign total_products = fallback_count
+    assign current_products = fallback_count
+  else
+    assign total_products = collection.all_products_count
+    assign current_products = collection.products_count
+  endif
 -%}
 
 {%- comment -%} Breadcrumb {%- endcomment -%}
@@ -225,51 +256,87 @@
     </div>
 
     {%- comment -%} Product Grid {%- endcomment -%}
-    {%- if collection.products.size > 0 -%}
-      <div class="product-grid" id="collection-grid">
-        {%- for product in collection.products -%}
-          {%- render 'product-card', product: product -%}
-        {%- endfor -%}
-      </div>
-
-      {%- comment -%} Pagination — Shopify native {%- endcomment -%}
-      {%- if paginate.pages > 1 -%}
-        <nav class="pagination" aria-label="Pagination">
-          {%- if paginate.previous -%}
-            <a href="{{ paginate.previous.url }}" class="pagination__btn" aria-label="Previous page">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-              Prev
-            </a>
-          {%- endif -%}
-          <div class="pagination__pages">
-            {%- for part in paginate.parts -%}
-              {%- if part.is_link -%}
-                <a href="{{ part.url }}" class="pagination__page">{{ part.title }}</a>
-              {%- elsif part.title == paginate.current_page -%}
-                <span class="pagination__page pagination__page--current" aria-current="page">{{ part.title }}</span>
-              {%- else -%}
-                <span class="pagination__ellipsis">{{ part.title }}</span>
+    {%- if is_fallback -%}
+      {%- if fallback_count > 0 -%}
+        <div class="product-grid" id="collection-grid">
+          {%- for product in collections.all.products -%}
+            {%- assign should_render = false -%}
+            {%- assign title_downcase = product.title | downcase -%}
+            {%- assign type_downcase = product.type | downcase -%}
+            {%- assign tags_string = product.tags | join: ',' | downcase -%}
+            
+            {%- if collection.handle == 'dogs' -%}
+              {%- if title_downcase contains 'dog' or type_downcase contains 'dog' or tags_string contains 'dog' or product.handle contains 'dog' -%}
+                {%- assign should_render = true -%}
               {%- endif -%}
-            {%- endfor -%}
-          </div>
-          {%- if paginate.next -%}
-            <a href="{{ paginate.next.url }}" class="pagination__btn" aria-label="Next page">
-              Next
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-            </a>
-          {%- endif -%}
-        </nav>
+            {%- elsif collection.handle == 'cats' -%}
+              {%- if title_downcase contains 'cat' or type_downcase contains 'cat' or tags_string contains 'cat' or product.handle contains 'cat' -%}
+                {%- assign should_render = true -%}
+              {%- endif -%}
+            {%- else -%}
+              {%- assign should_render = true -%}
+            {%- endif -%}
+            
+            {%- if should_render -%}
+              {%- render 'product-card', product: product -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- else -%}
+        <div class="collection-empty">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <h2>No products found</h2>
+          <p>We are adding products daily. Check back soon!</p>
+        </div>
       {%- endif -%}
-
     {%- else -%}
-      <div class="collection-empty">
-        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-        <h2>No products found</h2>
-        <p>Try adjusting your filters or browsing a different category.</p>
-        <a href="{{ collection.url }}" class="btn btn--primary">Clear Filters</a>
-      </div>
+      {%- if collection.products.size > 0 -%}
+        <div class="product-grid" id="collection-grid">
+          {%- for product in collection.products -%}
+            {%- render 'product-card', product: product -%}
+          {%- endfor -%}
+        </div>
+
+        {%- comment -%} Pagination — Shopify native {%- endcomment -%}
+        {%- if paginate.pages > 1 -%}
+          <nav class="pagination" aria-label="Pagination">
+            {%- if paginate.previous -%}
+              <a href="{{ paginate.previous.url }}" class="pagination__btn" aria-label="Previous page">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+                Prev
+              </a>
+            {%- endif -%}
+            <div class="pagination__pages">
+              {%- for part in paginate.parts -%}
+                {%- if part.is_link -%}
+                  <a href="{{ part.url }}" class="pagination__page">{{ part.title }}</a>
+                {%- elsif part.title == paginate.current_page -%}
+                  <span class="pagination__page pagination__page--current" aria-current="page">{{ part.title }}</span>
+                {%- else -%}
+                  <span class="pagination__ellipsis">{{ part.title }}</span>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+            {%- if paginate.next -%}
+              <a href="{{ paginate.next.url }}" class="pagination__btn" aria-label="Next page">
+                Next
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+              </a>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+      {%- else -%}
+        <div class="collection-empty">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <h2>No products found</h2>
+          <p>Try adjusting your filters or browsing a different category.</p>
+          <a href="{{ collection.url }}" class="btn btn--primary">Clear Filters</a>
+        </div>
+      {%- endif -%}
     {%- endif -%}
 
   </div>

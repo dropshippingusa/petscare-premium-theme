@@ -1,7 +1,7 @@
-/* Core Theme JavaScript */
+/* E-commerce Interactive Features */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Mobile Hamburger Menu Toggle
+  // Mobile Hamburger Menu
   const hamburger = document.getElementById('hamburger');
   const mainNav = document.getElementById('main-nav');
   if (hamburger && mainNav) {
@@ -10,35 +10,67 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Cart Drawer open/close
-  const cartIcon = document.getElementById('cart-icon-trigger');
+  // Cart Drawer triggers
+  const cartTriggers = [
+    document.getElementById('cart-icon-trigger'),
+    document.getElementById('mobile-cart-trigger')
+  ];
   const cartDrawer = document.getElementById('cart-drawer');
   const cartClose = document.getElementById('cart-drawer-close');
   const cartOverlay = document.getElementById('cart-drawer-overlay');
+  const continueShopping = document.getElementById('continue-shopping');
 
-  if (cartIcon && cartDrawer && cartClose && cartOverlay) {
-    cartIcon.addEventListener('click', (e) => {
+  cartTriggers.forEach(btn => {
+    if (btn) {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openCartDrawer();
+      });
+    }
+  });
+
+  if (cartClose) cartClose.addEventListener('click', closeCartDrawer);
+  if (cartOverlay) cartOverlay.addEventListener('click', closeCartDrawer);
+  if (continueShopping) {
+    continueShopping.addEventListener('click', (e) => {
       e.preventDefault();
-      openCartDrawer();
+      closeCartDrawer();
     });
+  }
 
-    cartClose.addEventListener('click', closeCartDrawer);
-    cartOverlay.addEventListener('click', closeCartDrawer);
+  // Sticky Cart Bar triggers
+  const stickyCart = document.getElementById('sticky-cart-bar');
+  if (stickyCart) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 500) {
+        stickyCart.classList.add('active');
+      } else {
+        stickyCart.classList.remove('active');
+      }
+    });
   }
 });
 
 function openCartDrawer() {
-  document.getElementById('cart-drawer').classList.add('open');
-  document.getElementById('cart-drawer-overlay').classList.add('open');
-  fetchCartData();
+  const drawer = document.getElementById('cart-drawer');
+  const overlay = document.getElementById('cart-drawer-overlay');
+  if (drawer && overlay) {
+    drawer.classList.add('open');
+    overlay.classList.add('open');
+    fetchCartData();
+  }
 }
 
 function closeCartDrawer() {
-  document.getElementById('cart-drawer').classList.remove('open');
-  document.getElementById('cart-drawer-overlay').classList.remove('open');
+  const drawer = document.getElementById('cart-drawer');
+  const overlay = document.getElementById('cart-drawer-overlay');
+  if (drawer && overlay) {
+    drawer.classList.remove('open');
+    overlay.classList.remove('open');
+  }
 }
 
-// AJAX Add to Cart for Flipkart-style forms
+// AJAX Add to Cart
 function ajaxAddToCartForm(form) {
   const formData = new FormData(form);
   
@@ -48,13 +80,13 @@ function ajaxAddToCartForm(form) {
   })
   .then(response => response.json())
   .then(data => {
-    // Show toast
+    // Show cart success toast
     const toast = document.getElementById('cart-toast');
     if (toast) {
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 3000);
     }
-    // Refresh cart drawer
+    // Refresh and open cart drawer
     openCartDrawer();
   })
   .catch((error) => {
@@ -91,18 +123,24 @@ function ajaxAddToCart(variantId, quantity = 1) {
   });
 }
 
-// Fetch Cart Data and update Drawer
+// Fetch Cart Data and update Drawer Elements
 function fetchCartData() {
   fetch('/cart.js')
   .then(response => response.json())
   .then(cart => {
-    // Update count in header and drawer
-    document.getElementById('header-cart-count').textContent = cart.item_count;
-    document.getElementById('drawer-cart-count').textContent = cart.item_count;
+    // Update count labels
+    const cartCountEl = document.getElementById('header-cart-count');
+    const bottomCartCountEl = document.getElementById('bottom-cart-count');
+    const drawerCartCountEl = document.getElementById('drawer-cart-count');
+
+    if (cartCountEl) cartCountEl.textContent = cart.item_count;
+    if (bottomCartCountEl) bottomCartCountEl.textContent = cart.item_count;
+    if (drawerCartCountEl) drawerCartCountEl.textContent = cart.item_count;
     
     // Update subtotal
     const subtotalFormatted = Shopify.formatMoney(cart.total_price, "${{amount}}");
-    document.getElementById('drawer-cart-subtotal').textContent = subtotalFormatted;
+    const subtotalEl = document.getElementById('drawer-cart-subtotal');
+    if (subtotalEl) subtotalEl.textContent = subtotalFormatted;
 
     // Free shipping threshold ($60.00 = 6000 cents)
     const threshold = 6000;
@@ -124,6 +162,8 @@ function fetchCartData() {
 
     // Load Cart Items
     const itemsContainer = document.getElementById('cart-drawer-items');
+    if (!itemsContainer) return;
+
     if (cart.item_count === 0) {
       itemsContainer.innerHTML = '<div class="cart-empty-msg">Your cart is currently empty.</div>';
     } else {
@@ -132,13 +172,13 @@ function fetchCartData() {
         const priceFormatted = Shopify.formatMoney(item.price, "${{amount}}");
         itemsHtml += `
           <div class="cart-item" style="display:flex; gap:12px; margin-bottom:16px; align-items:center; border-bottom:1px solid #f1f5f9; padding-bottom:12px;">
-            <img src="${item.image}" alt="${item.title}" style="width:70px; height:70px; object-fit:cover; border-radius:4px;">
+            <img src="${item.image}" alt="${item.title}" style="width:65px; height:65px; object-fit:cover; border-radius:4px; border:1px solid #e0e0e0;">
             <div style="flex:1;">
-              <h4 style="font-size:0.9rem; font-weight:600; margin-bottom:4px; color:#212121;">${item.product_title}</h4>
-              <p style="font-size:0.75rem; color:#878787; margin-bottom:6px;">${item.variant_title || ''}</p>
+              <h4 style="font-size:0.85rem; font-weight:600; margin-bottom:2px; color:#212121;">${item.product_title}</h4>
+              <p style="font-size:0.72rem; color:#878787; margin-bottom:4px;">${item.variant_title || ''}</p>
               <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:0.9rem; font-weight:700; color:#f97316;">${priceFormatted}</span>
-                <span style="font-size:0.8rem; color:#878787;">Qty: ${item.quantity}</span>
+                <span style="font-size:0.85rem; font-weight:700; color:#f97316;">${priceFormatted}</span>
+                <span style="font-size:0.75rem; color:#878787;">Qty: ${item.quantity}</span>
               </div>
             </div>
           </div>
@@ -149,7 +189,54 @@ function fetchCartData() {
   });
 }
 
-// Simple Currency formatter helper
+// PDP Image switcher helper
+window.switchPdpImage = function(imageUrl, btnElement) {
+  const featured = document.getElementById('pdp-featured-image');
+  if (featured) {
+    featured.src = imageUrl;
+  }
+  // Toggle active class on thumbnails
+  const buttons = document.querySelectorAll('.pdp-thumb-btn');
+  buttons.forEach(btn => btn.classList.remove('active'));
+  btnElement.classList.add('active');
+};
+
+// PDP Quantity Adjuster
+window.adjustQty = function(value) {
+  const qtyInput = document.getElementById('pdp-quantity');
+  if (qtyInput) {
+    let current = parseInt(qtyInput.value) || 1;
+    current += value;
+    if (current < 1) current = 1;
+    qtyInput.value = current;
+  }
+};
+
+// PDP Tab switcher
+window.switchTab = function(event, tabId) {
+  const tabs = document.querySelectorAll('.tab-content');
+  const links = document.querySelectorAll('.tab-link');
+  
+  tabs.forEach(tab => tab.classList.remove('active'));
+  links.forEach(link => link.classList.remove('active'));
+  
+  document.getElementById(tabId).classList.add('active');
+  event.currentTarget.classList.add('active');
+};
+
+// Toggle Purchase Type (Subscription Autoship vs One-time)
+window.togglePurchaseType = function(type) {
+  const cards = document.querySelectorAll('.pdp-option-card');
+  cards.forEach(card => card.classList.remove('active'));
+  
+  // Find selected radio parent and highlight it
+  const selectedRadio = document.querySelector(`input[value="${type}"]`);
+  if (selectedRadio) {
+    selectedRadio.closest('.pdp-option-card').classList.add('active');
+  }
+};
+
+// Shopify formatMoney fallback
 if (typeof Shopify === 'undefined') {
   var Shopify = {};
 }

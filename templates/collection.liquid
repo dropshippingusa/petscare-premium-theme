@@ -1,16 +1,79 @@
-<div class="collection-page section container">
-  <div class="section-header">
-    <h1 class="section-title">{{ collection.title }}</h1>
-    {% if collection.description != blank %}
-      <p class="section-desc">{{ collection.description }}</p>
-    {% endif %}
-  </div>
+<div class="container section">
+  <div class="collection-page-layout">
+    <!-- 1. Left Sidebar Filters (Amazon/Flipkart Style) -->
+    <aside class="collection-sidebar" id="collection-sidebar">
+      <div class="sidebar-header">
+        <h3>Filters</h3>
+        <button class="sidebar-close-btn" id="filter-close-btn">&times;</button>
+      </div>
+      
+      <div class="filter-group">
+        <h4>Pet Category</h4>
+        <ul>
+          <li><label><input type="checkbox" name="pet" value="dog"> Dogs</label></li>
+          <li><label><input type="checkbox" name="pet" value="cat"> Cats</label></li>
+        </ul>
+      </div>
 
-  <div class="products-grid">
-    {% for product in collection.products %}
-      {% render 'product-card', product: product %}
-    {% else %}
-      <p style="text-align:center; grid-column:span 3;">No products in this collection.</p>
-    {% endfor %}
+      <div class="filter-group">
+        <h4>Product Type</h4>
+        <ul>
+          <li><label><input type="checkbox" name="type" value="supplement"> Supplements</label></li>
+          <li><label><input type="checkbox" name="type" value="treat"> Treats</label></li>
+          <li><label><input type="checkbox" name="type" value="health"> Health &amp; Dental</label></li>
+          <li><label><input type="checkbox" name="type" value="apparel"> Apparel</label></li>
+          <li><label><input type="checkbox" name="type" value="travel"> Travel</label></li>
+        </ul>
+      </div>
+
+      <div class="filter-group">
+        <h4>Price Range</h4>
+        <ul>
+          <li><label><input type="radio" name="price" value="under-25"> Under $25</label></li>
+          <li><label><input type="radio" name="price" value="25-50"> $25 to $50</label></li>
+          <li><label><input type="radio" name="price" value="over-50"> Over $50</label></li>
+        </ul>
+      </div>
+
+      <div class="filter-group">
+        <h4>Origin / Badges</h4>
+        <ul>
+          <li><label><input type="checkbox" name="origin" value="usa"> Made in USA</label></li>
+          <li><label><input type="checkbox" name="origin" value="organic"> Organic / Natural</label></li>
+          <li><label><input type="checkbox" name="origin" value="subscription"> Subscription Plans</label></li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- 2. Right Side Products Grid -->
+    <div class="collection-main">
+      <div class="collection-toolbar">
+        <div class="collection-product-count">
+          <h2>{{ collection.title }}</h2>
+          <p>{{ collection.products_count }} Products</p>
+        </div>
+        
+        <div class="collection-sorting">
+          <label for="sort-by">Sort By:</label>
+          <select id="sort-by">
+            <option value="manual">Featured</option>
+            <option value="best-selling">Best Selling</option>
+            <option value="title-ascending">Alphabetically, A-Z</option>
+            <option value="price-ascending">Price, low to high</option>
+            <option value="price-descending">Price, high to low</option>
+            <option value="created-ascending">Date, old to new</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="products-grid">
+        {% for product in collection.products %}
+          {% render 'product-card', product: product %}
+        {% else %}
+          <p class="no-products-msg">No products found in this collection.</p>
+        {% endfor %}
+      </div>
+    </div>
   </div>
 </div>

@@ -2,30 +2,35 @@
 <html lang="{{ request.locale.iso_code }}">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="canonical" href="{{ canonical_url }}">
-  
-  {%- if page_description -%}
-    <meta name="description" content="{{ page_description | escape }}">
-  {%- endif -%}
 
-  {% render 'seo-schema' %}
+  {%- if settings.favicon != blank -%}
+    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+  {%- endif -%}
 
   <title>
     {{ page_title }}
     {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
-    {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif - -%}
+    {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
     {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
   </title>
 
-  <!-- Typography -->
+  {% if page_description %}
+    <meta name="description" content="{{ page_description | escape }}">
+  {% endif %}
+
+  {% render 'seo-schema' %}
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
 
-  <!-- Core Assets -->
+  <!-- CSS -->
   {{ 'theme.css' | asset_url | stylesheet_tag }}
-  
+
   {{ content_for_header }}
 </head>
 <body class="template-{{ template.name }}">
@@ -39,9 +44,40 @@
 
   {% section 'footer' %}
 
+  <!-- AJAX Slide Cart Drawer -->
   {% render 'ajax-cart' %}
 
-  <!-- Scripts -->
-  <script src="{{ 'theme.js' | asset_url }}" defer></script>
+  <!-- Mobile Bottom Sticky Navigation (App-like UX) -->
+  <div class="mobile-bottom-nav">
+    <a href="/" class="mobile-nav-item {% if template.name == 'index' %}active{% endif %}">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="/collections/all" class="mobile-nav-item {% if template.name == 'collection' %}active{% endif %}">
+      <span class="nav-icon">🛍️</span>
+      <span>Shop</span>
+    </a>
+    <a href="/search" class="mobile-nav-item {% if template.name == 'search' %}active{% endif %}">
+      <span class="nav-icon">🔍</span>
+      <span>Search</span>
+    </a>
+    <a href="#" class="mobile-nav-item" id="mobile-cart-trigger">
+      <span class="nav-icon" style="position:relative;">
+        🛒
+        <span class="cart-badge-bottom" id="bottom-cart-count">{{ cart.item_count }}</span>
+      </span>
+      <span>Cart</span>
+    </a>
+    <a href="/account" class="mobile-nav-item {% if template.name == 'account' %}active{% endif %}">
+      <span class="nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </div>
+
+  <!-- Cart Toast Notification -->
+  <div class="cart-toast" id="cart-toast">✓ Item added to your cart!</div>
+
+  <!-- JS -->
+  {{ 'theme.js' | asset_url | script_tag }}
 </body>
 </html>

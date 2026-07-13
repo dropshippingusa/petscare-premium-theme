@@ -307,7 +307,7 @@ a:focus-visible, button:focus-visible {
   padding: 4px 0;
 }
 .header-logo__img {
-  max-height: 90px;
+  max-height: 110px;
   width: auto;
   object-fit: contain;
   display: block;
@@ -332,6 +332,7 @@ a:focus-visible, button:focus-visible {
   max-width: 580px;
   display: flex;
   align-items: center;
+  margin-top: 6px;
 }
 .header-search-icon {
   position: absolute;
@@ -362,6 +363,7 @@ a:focus-visible, button:focus-visible {
   align-items: center;
   gap: 12px;
   flex-shrink: 0;
+  margin-top: 6px;
 }
 .header-action-item {
   display: inline-flex;
@@ -383,14 +385,35 @@ a:focus-visible, button:focus-visible {
 }
 .header-cart-btn {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  padding: 0;
+  color: #374151;
+}
+.header-cart-btn:hover {
+  color: #FF7E20;
+  background: #F9FAFB;
 }
 .cart-count {
+  position: absolute;
+  top: 2px;
+  right: 2px;
   background: #FF7E20;
   color: #ffffff;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
-  padding: 2px 6px;
+  height: 18px;
+  min-width: 18px;
+  padding: 0 4px;
   border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 .header-login-btn {
   display: inline-flex;

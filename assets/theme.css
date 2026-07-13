@@ -316,6 +316,9 @@ a:focus-visible, button:focus-visible {
   align-items: center;
   gap: 4px;
 }
+@media (max-width: 1023px) {
+  .header-nav { display: none; }
+}
 .header-nav__link {
   display: inline-flex;
   align-items: center;
@@ -2148,7 +2151,7 @@ a:focus-visible, button:focus-visible {
 }
 .collection-toolbar__left { display: flex; align-items: center; gap: 14px; }
 .collection-toolbar__right { display: flex; align-items: center; gap: 12px; }
-.filter-toggle-btn { position: relative; gap: 8px; }
+.filter-toggle-btn { display: none; position: relative; gap: 8px; }
 .filter-count-badge {
   display: inline-flex; align-items: center; justify-content: center;
   width: 18px; height: 18px; border-radius: 50%;

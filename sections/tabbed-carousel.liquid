@@ -1,0 +1,208 @@
+{%- assign blocks = section.blocks -%}
+{%- assign title = section.settings.title | default: "Wondering What Your Pet Wants?" -%}
+{%- assign label = section.settings.label | default: "Curated Selections" -%}
+
+<section class="section tabbed-carousel" aria-labelledby="tabbed-carousel-title" id="section-{{ section.id }}">
+  <div class="container">
+    <div class="section-head text-center" style="display:flex; flex-direction:column; align-items:center; margin-bottom:var(--sp-5)">
+      <span class="section-label">{{ label }}</span>
+      <h2 class="section-title" id="tabbed-carousel-title">{{ title }}</h2>
+    </div>
+
+    {%- if blocks.size > 0 -%}
+      {%- comment -%} Tabs List {%- endcomment -%}
+      <div class="tab-buttons-container">
+        <div class="tab-buttons" role="tablist">
+          {%- for block in blocks -%}
+            {%- assign col = block.settings.collection -%}
+            {%- assign tab_title = block.settings.title | default: col.title | default: "Collection Tab" -%}
+            <button
+              type="button"
+              class="tab-btn{% if forloop.first %} active{% endif %}"
+              role="tab"
+              aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+              aria-controls="panel-{{ block.id }}"
+              id="tab-{{ block.id }}"
+              data-tab-index="{{ forloop.index0 }}"
+              {{ block.shopify_attributes }}
+            >
+              {{ tab_title }}
+            </button>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      {%- comment -%} Tabs Panels {%- endcomment -%}
+      <div class="tab-panels">
+        {%- for block in blocks -%}
+          {%- assign col = block.settings.collection -%}
+          <div
+            class="tab-panel{% if forloop.first %} active{% endif %}"
+            id="panel-{{ block.id }}"
+            role="tabpanel"
+            aria-labelledby="tab-{{ block.id }}"
+            {% unless forloop.first %}hidden{% endunless %}
+          >
+            <div class="tab-carousel-wrapper">
+              <button class="carousel-nav-btn prev" aria-label="Previous products" type="button">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              
+              <div class="product-carousel-track">
+                {%- if col != blank and col.products.size > 0 -%}
+                  {%- for product in col.products limit: section.settings.limit -%}
+                    <div class="carousel-item">
+                      {%- render 'product-card', product: product -%}
+                    </div>
+                  {%- endfor -%}
+                {%- else -%}
+                  {%- comment -%} Render fallbacks if no products / empty collection {%- endcomment -%}
+                  {%- for i in (1..6) -%}
+                    <div class="carousel-item">
+                      <div class="product-card" aria-hidden="true">
+                        <div class="product-card__media skeleton" style="aspect-ratio:1; background:var(--bg-subtle); border-radius:var(--r-md);"></div>
+                        <div class="product-card__body" style="gap:10px; padding: 15px 0;">
+                          <div class="skeleton" style="height:12px;width:60%;border-radius:4px;background:var(--bg-subtle)"></div>
+                          <div class="skeleton" style="height:16px;width:90%;border-radius:4px;background:var(--bg-subtle)"></div>
+                          <div class="skeleton" style="height:12px;width:40%;border-radius:4px;background:var(--bg-subtle)"></div>
+                          <div class="skeleton" style="height:20px;width:50%;border-radius:4px;background:var(--bg-subtle)"></div>
+                        </div>
+                      </div>
+                    </div>
+                  {%- endfor -%}
+                {%- endif -%}
+              </div>
+
+              <button class="carousel-nav-btn next" aria-label="Next products" type="button">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <p class="text-center text-muted" style="font-size: 14px; margin: 30px 0;">Add collection blocks in the Theme Editor to populate tabs.</p>
+    {%- endif -%}
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const section = document.getElementById('section-{{ section.id }}');
+  if (!section) return;
+
+  const tabButtons = section.querySelectorAll('.tab-btn');
+  const tabPanels = section.querySelectorAll('.tab-panel');
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', function() {
+      // Deactivate all
+      tabButtons.forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      tabPanels.forEach(p => {
+        p.classList.remove('active');
+        p.setAttribute('hidden', 'true');
+      });
+
+      // Activate clicked
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+      const targetPanel = section.querySelector(`#${btn.getAttribute('aria-controls')}`);
+      if (targetPanel) {
+        targetPanel.classList.add('active');
+        targetPanel.removeAttribute('hidden');
+      }
+    });
+  });
+
+  // Carousel scrolling navigation
+  const navBtns = section.querySelectorAll('.carousel-nav-btn');
+  navBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const panel = btn.closest('.tab-panel');
+      const track = panel.querySelector('.product-carousel-track');
+      const scrollAmount = track.offsetWidth * 0.75;
+      if (btn.classList.contains('prev')) {
+        track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      } else {
+        track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+    });
+  });
+});
+</script>
+
+{% schema %}
+{
+  "name": "Tabbed Product Carousel",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Section label",
+      "default": "Curated Selections"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Wondering What Your Pet Wants?"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "min": 4,
+      "max": 16,
+      "step": 1,
+      "label": "Product limit per tab",
+      "default": 8
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Tab Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Custom Tab Name",
+          "info": "Leave blank to use collection title"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tabbed Product Carousel",
+      "blocks": [
+        {
+          "type": "collection",
+          "settings": {
+            "title": "Bestsellers"
+          }
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "title": "New Arrivals"
+          }
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "title": "Special Offers"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

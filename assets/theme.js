@@ -1,4 +1,4 @@
-/* E-commerce Interactive Features */
+/* Enterprise Shopify Theme Operations */
 
 document.addEventListener('DOMContentLoaded', () => {
   // Mobile Hamburger Menu
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Cart Drawer triggers
+  // Cart Drawer open/close triggers
   const cartTriggers = [
     document.getElementById('cart-icon-trigger'),
     document.getElementById('mobile-cart-trigger')
@@ -18,8 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const cartDrawer = document.getElementById('cart-drawer');
   const cartClose = document.getElementById('cart-drawer-close');
   const cartOverlay = document.getElementById('cart-drawer-overlay');
-  const continueShopping = document.getElementById('continue-shopping');
-
+  
   cartTriggers.forEach(btn => {
     if (btn) {
       btn.addEventListener('click', (e) => {
@@ -31,21 +30,75 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (cartClose) cartClose.addEventListener('click', closeCartDrawer);
   if (cartOverlay) cartOverlay.addEventListener('click', closeCartDrawer);
-  if (continueShopping) {
-    continueShopping.addEventListener('click', (e) => {
-      e.preventDefault();
-      closeCartDrawer();
-    });
-  }
 
-  // Sticky Cart Bar triggers
-  const stickyCart = document.getElementById('sticky-cart-bar');
-  if (stickyCart) {
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 500) {
-        stickyCart.classList.add('active');
-      } else {
-        stickyCart.classList.remove('active');
+  // Predictive Autocomplete Search Input Handler
+  const searchInput = document.getElementById('search-input');
+  const searchResultsBox = document.getElementById('predictive-search-box');
+
+  if (searchInput && searchResultsBox) {
+    searchInput.addEventListener('input', debounce((e) => {
+      const query = e.target.value.trim();
+      if (query.length < 2) {
+        searchResultsBox.classList.remove('active');
+        return;
+      }
+      
+      searchResultsBox.innerHTML = '<div class="predictive-search-loading">Searching suggestions...</div>';
+      searchResultsBox.classList.add('active');
+
+      fetch(`/search/suggest.json?q=${encodeURIComponent(query)}&resources[type]=product,collection&resources[limit]=5`)
+      .then(response => response.json())
+      .then(suggestions => {
+        const products = suggestions.resources.results.products || [];
+        const collections = suggestions.resources.results.collections || [];
+
+        if (products.length === 0 && collections.length === 0) {
+          searchResultsBox.innerHTML = '<div class="predictive-search-loading">No results found</div>';
+          return;
+        }
+
+        let html = '';
+        
+        // Show matching collections/categories
+        if (collections.length > 0) {
+          html += '<div style="padding:8px 16px; font-size:0.75rem; font-weight:700; text-transform:uppercase; color:#878787; border-bottom:1px solid #f1f5f9;">Collections</div>';
+          collections.forEach(col => {
+            html += `
+              <a href="${col.url}" class="predictive-search-item">
+                <span style="font-size:1.1rem; margin-right:8px;">📁</span>
+                <div><h4>${col.title}</h4></div>
+              </a>
+            `;
+          });
+        }
+
+        // Show matching products
+        if (products.length > 0) {
+          html += '<div style="padding:8px 16px; font-size:0.75rem; font-weight:700; text-transform:uppercase; color:#878787; border-bottom:1px solid #f1f5f9;">Products</div>';
+          products.forEach(prod => {
+            html += `
+              <a href="${prod.url}" class="predictive-search-item">
+                <img src="${prod.image}" alt="${prod.title}">
+                <div style="flex:1;">
+                  <h4>${prod.title}</h4>
+                  <p>$${(prod.price / 100.0).toFixed(2)}</p>
+                </div>
+              </a>
+            `;
+          });
+        }
+
+        searchResultsBox.innerHTML = html;
+      })
+      .catch(err => {
+        console.error('Predictive Search error:', err);
+      });
+    }, 300));
+
+    // Hide search panel when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!searchInput.contains(e.target) && !searchResultsBox.contains(e.target)) {
+        searchResultsBox.classList.remove('active');
       }
     });
   }
@@ -70,7 +123,16 @@ function closeCartDrawer() {
   }
 }
 
-// AJAX Add to Cart
+// Debounce helper
+function debounce(func, wait) {
+  let timeout;
+  return function(...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
+}
+
+// AJAX Add to Cart Form
 function ajaxAddToCartForm(form) {
   const formData = new FormData(form);
   
@@ -80,37 +142,6 @@ function ajaxAddToCartForm(form) {
   })
   .then(response => response.json())
   .then(data => {
-    // Show cart success toast
-    const toast = document.getElementById('cart-toast');
-    if (toast) {
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 3000);
-    }
-    // Refresh and open cart drawer
-    openCartDrawer();
-  })
-  .catch((error) => {
-    console.error('Error adding to cart:', error);
-  });
-}
-
-function ajaxAddToCart(variantId, quantity = 1) {
-  const formData = {
-    'items': [{
-      'id': variantId,
-      'quantity': quantity
-    }]
-  };
-
-  fetch('/cart/add.js', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(formData)
-  })
-  .then(response => response.json())
-  .then(data => {
     const toast = document.getElementById('cart-toast');
     if (toast) {
       toast.classList.add('show');
@@ -118,31 +149,24 @@ function ajaxAddToCart(variantId, quantity = 1) {
     }
     openCartDrawer();
   })
-  .catch((error) => {
-    console.error('Error adding to cart:', error);
+  .catch(error => {
+    console.error('Error adding item to cart:', error);
   });
 }
 
-// Fetch Cart Data and update Drawer Elements
+// Fetch Cart Calculations
 function fetchCartData() {
   fetch('/cart.js')
   .then(response => response.json())
   .then(cart => {
-    // Update count labels
-    const cartCountEl = document.getElementById('header-cart-count');
-    const bottomCartCountEl = document.getElementById('bottom-cart-count');
-    const drawerCartCountEl = document.getElementById('drawer-cart-count');
-
-    if (cartCountEl) cartCountEl.textContent = cart.item_count;
-    if (bottomCartCountEl) bottomCartCountEl.textContent = cart.item_count;
-    if (drawerCartCountEl) drawerCartCountEl.textContent = cart.item_count;
+    document.getElementById('header-cart-count').textContent = cart.item_count;
+    const bottomCount = document.getElementById('bottom-cart-count');
+    if (bottomCount) bottomCount.textContent = cart.item_count;
+    document.getElementById('drawer-cart-count').textContent = cart.item_count;
     
-    // Update subtotal
     const subtotalFormatted = Shopify.formatMoney(cart.total_price, "${{amount}}");
-    const subtotalEl = document.getElementById('drawer-cart-subtotal');
-    if (subtotalEl) subtotalEl.textContent = subtotalFormatted;
+    document.getElementById('drawer-cart-subtotal').textContent = subtotalFormatted;
 
-    // Free shipping threshold ($60.00 = 6000 cents)
     const threshold = 6000;
     const progressText = document.getElementById('shipping-progress-text');
     const progressBar = document.getElementById('shipping-progress-bar');
@@ -160,7 +184,6 @@ function fetchCartData() {
       }
     }
 
-    // Load Cart Items
     const itemsContainer = document.getElementById('cart-drawer-items');
     if (!itemsContainer) return;
 
@@ -189,54 +212,64 @@ function fetchCartData() {
   });
 }
 
-// PDP Image switcher helper
-window.switchPdpImage = function(imageUrl, btnElement) {
-  const featured = document.getElementById('pdp-featured-image');
-  if (featured) {
-    featured.src = imageUrl;
-  }
-  // Toggle active class on thumbnails
-  const buttons = document.querySelectorAll('.pdp-thumb-btn');
-  buttons.forEach(btn => btn.classList.remove('active'));
-  btnElement.classList.add('active');
+// Mobile sidebar filters trigger
+window.toggleSidebarFilter = function() {
+  const sidebar = document.getElementById('collection-sidebar');
+  if (sidebar) sidebar.classList.toggle('open');
 };
 
-// PDP Quantity Adjuster
-window.adjustQty = function(value) {
-  const qtyInput = document.getElementById('pdp-quantity');
-  if (qtyInput) {
-    let current = parseInt(qtyInput.value) || 1;
-    current += value;
-    if (current < 1) current = 1;
-    qtyInput.value = current;
-  }
-};
-
-// PDP Tab switcher
-window.switchTab = function(event, tabId) {
-  const tabs = document.querySelectorAll('.tab-content');
-  const links = document.querySelectorAll('.tab-link');
+// AJAX Collection Filtering (No page reload grid update)
+window.ajaxFilterCollection = function() {
+  const form = document.getElementById('collection-filter-form');
+  const sortBy = document.getElementById('sort-by').value;
   
-  tabs.forEach(tab => tab.classList.remove('active'));
-  links.forEach(link => link.classList.remove('active'));
-  
-  document.getElementById(tabId).classList.add('active');
-  event.currentTarget.classList.add('active');
-};
+  if (!form) return;
 
-// Toggle Purchase Type (Subscription Autoship vs One-time)
-window.togglePurchaseType = function(type) {
-  const cards = document.querySelectorAll('.pdp-option-card');
-  cards.forEach(card => card.classList.remove('active'));
+  const formData = new FormData(form);
+  const params = new URLSearchParams(formData);
   
-  // Find selected radio parent and highlight it
-  const selectedRadio = document.querySelector(`input[value="${type}"]`);
-  if (selectedRadio) {
-    selectedRadio.closest('.pdp-option-card').classList.add('active');
+  // Append sort parameter
+  if (sortBy) {
+    params.set('sort_by', sortBy);
   }
+
+  const queryUrl = `${window.location.pathname}?${params.toString()}`;
+  
+  // Update browser URL
+  window.history.pushState({ path: queryUrl }, '', queryUrl);
+
+  const gridContainer = document.getElementById('collection-product-grid');
+  if (gridContainer) {
+    gridContainer.style.opacity = '0.5'; // loading opacity indicator
+  }
+
+  fetch(queryUrl)
+  .then(response => response.text())
+  .then(htmlString => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlString, 'text/html');
+    
+    // Swap products grid content
+    const newGrid = doc.getElementById('collection-product-grid');
+    if (gridContainer && newGrid) {
+      gridContainer.innerHTML = newGrid.innerHTML;
+      gridContainer.style.opacity = '1';
+    }
+
+    // Update count labels
+    const newCount = doc.getElementById('ajax-product-count');
+    const currentCount = document.getElementById('ajax-product-count');
+    if (currentCount && newCount) {
+      currentCount.textContent = newCount.textContent;
+    }
+  })
+  .catch(err => {
+    console.error('AJAX Filter error:', err);
+    if (gridContainer) gridContainer.style.opacity = '1';
+  });
 };
 
-// Shopify formatMoney fallback
+// Shopify formatMoney Helper
 if (typeof Shopify === 'undefined') {
   var Shopify = {};
 }

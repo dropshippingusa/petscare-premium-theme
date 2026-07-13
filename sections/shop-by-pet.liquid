@@ -1,34 +1,46 @@
-<section class="categories-bar section">
-  <div class="container categories-bar-inner">
-    <!-- Horizontal List of Categories -->
-    <div class="category-icon-row">
-      <a href="/collections/all" class="category-icon-item">
-        <div class="category-icon-bg" style="background:#eff6ff;"><span class="cat-icon-emoji">🐕</span></div>
-        <span>Dogs</span>
+<section class="shop-by-pet section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Shop by Pet</span>
+      <h2 class="section-title">Happy Pets. Happy Life.</h2>
+      <p class="section-desc">Select your pet type to explore tailored premium nutrition, accessories, and wellness products.</p>
+    </div>
+
+    <div class="pet-cards-grid">
+      <!-- Dog Card -->
+      {% assign dog_collection = collections['dogs'] %}
+      <a href="{% if dog_collection != blank %}{{ dog_collection.url }}{% else %}/collections/all{% endif %}" class="pet-card card-dog">
+        <div class="pet-card-bg"></div>
+        <div class="pet-card-content">
+          <span class="pet-card-emoji">🐕</span>
+          <h3>Dogs</h3>
+          <p class="pet-count">
+            {% if dog_collection != blank %}
+              {{ dog_collection.all_products_count }} Products
+            {% else %}
+              Premium Dog Supplies
+            {% endif %}
+          </p>
+          <span class="pet-card-btn">Shop Dogs →</span>
+        </div>
       </a>
-      <a href="/collections/all" class="category-icon-item">
-        <div class="category-icon-bg" style="background:#fdf2f8;"><span class="cat-icon-emoji">🐈</span></div>
-        <span>Cats</span>
-      </a>
-      <a href="/collections/all" class="category-icon-item">
-        <div class="category-icon-bg" style="background:#fef2f2;"><span class="cat-icon-emoji">🥩</span></div>
-        <span>Treats</span>
-      </a>
-      <a href="/collections/all" class="category-icon-item">
-        <div class="category-icon-bg" style="background:#ecfdf5;"><span class="cat-icon-emoji">🩺</span></div>
-        <span>Health</span>
-      </a>
-      <a href="/collections/all" class="category-icon-item">
-        <div class="category-icon-bg" style="background:#fff7ed;"><span class="cat-icon-emoji">🎒</span></div>
-        <span>Travel</span>
-      </a>
-      <a href="/collections/all" class="category-icon-item">
-        <div class="category-icon-bg" style="background:#faf5ff;"><span class="cat-icon-emoji">👗</span></div>
-        <span>Apparel</span>
-      </a>
-      <a href="/collections/all" class="category-icon-item">
-        <div class="category-icon-bg" style="background:#f0fdfa;"><span class="cat-icon-emoji">🧼</span></div>
-        <span>Grooming</span>
+
+      <!-- Cat Card -->
+      {% assign cat_collection = collections['cats'] %}
+      <a href="{% if cat_collection != blank %}{{ cat_collection.url }}{% else %}/collections/all{% endif %}" class="pet-card card-cat">
+        <div class="pet-card-bg"></div>
+        <div class="pet-card-content">
+          <span class="pet-card-emoji">🐈</span>
+          <h3>Cats</h3>
+          <p class="pet-count">
+            {% if cat_collection != blank %}
+              {{ cat_collection.all_products_count }} Products
+            {% else %}
+              Premium Cat Supplies
+            {% endif %}
+          </p>
+          <span class="pet-card-btn">Shop Cats →</span>
+        </div>
       </a>
     </div>
   </div>
@@ -36,7 +48,7 @@
 
 {% schema %}
 {
-  "name": "Shop by Category Row",
+  "name": "Shop by Pet Cards",
   "settings": []
 }
 {% endschema %}

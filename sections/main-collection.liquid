@@ -49,6 +49,18 @@
     assign total_products = collection.all_products_count
     assign current_products = collection.products_count
   endif
+
+  # Define dynamic collection banner using downloaded local assets
+  assign banner_img_url = ''
+  if filter_pet == 'dogs' or collection.handle == 'dogs'
+    assign banner_img_url = 'banner-dogs.webp' | asset_url
+  elsif filter_pet == 'cats' or collection.handle == 'cats'
+    assign banner_img_url = 'banner-cats.webp' | asset_url
+  elsif collection.image != blank
+    assign banner_img_url = collection.image | image_url: width: 1400
+  else
+    assign banner_img_url = 'banner-general.webp' | asset_url
+  endif
 -%}
 
 {%- comment -%} Breadcrumb {%- endcomment -%}
@@ -75,14 +87,12 @@
 </nav>
 
 {%- comment -%} Collection Hero Banner {%- endcomment -%}
-{%- if collection.image or section.settings.show_banner -%}
+{%- if banner_img_url != blank or section.settings.show_banner -%}
 <div class="collection-banner">
-  {%- if collection.image -%}
+  {%- if banner_img_url != blank -%}
     <img
-      src="{{ collection.image | image_url: width: 1400 }}"
-      srcset="{{ collection.image | image_url: width: 800 }} 800w, {{ collection.image | image_url: width: 1400 }} 1400w"
-      sizes="100vw"
-      alt="{{ collection.image.alt | default: collection.title | escape }}"
+      src="{{ banner_img_url }}"
+      alt="{{ collection.title | escape }}"
       class="collection-banner__img"
       loading="eager"
       fetchpriority="high"
@@ -397,6 +407,14 @@ document.addEventListener("DOMContentLoaded", function() {
       document.querySelectorAll('.breadcrumb__item--current').forEach(function(el) {
         el.textContent = displayTitle;
       });
+
+      // Update Banner Background Image dynamically
+      const bannerImg = document.querySelector('.collection-banner__img');
+      if (bannerImg) {
+        const newSrc = pet === 'dogs' ? "{{ 'banner-dogs.webp' | asset_url }}" : "{{ 'banner-cats.webp' | asset_url }}";
+        bannerImg.src = newSrc;
+        bannerImg.removeAttribute('srcset');
+      }
       
       // Filter Grid Items
       const cards = document.querySelectorAll('#collection-grid .product-card');

@@ -336,6 +336,14 @@
       {%- endif -%}
     </div>
 
+    {%- comment -%} Universal Product Review App Embed Hooks (Judge.me, Loox, Stamped, Yotpo, SPR) {%- endcomment -%}
+    <div class="pdp-universal-reviews container" style="margin-top:var(--sp-4);">
+      <div id="judgeme_product_reviews" class="jdgm-widget jdgm-review-widget" data-id="{{ product.id }}"></div>
+      <div id="shopify-product-reviews" data-id="{{ product.id }}">{{ product.metafields.spr.reviews }}</div>
+      <div class="stamped-main-widget" id="stamped-main-widget" data-product-id="{{ product.id }}" data-name="{{ product.title | escape }}" data-url="{{ shop.url }}{{ product.url }}" data-image-url="{{ product.featured_image | image_url: width: 120 }}" data-description="{{ product.description | escape }}"></div>
+      <div class="yotpo yotpo-main-widget" data-product-id="{{ product.id }}" data-name="{{ product.title | escape }}" data-url="{{ shop.url }}{{ product.url }}" data-image-url="{{ product.featured_image | image_url: width: 120 }}" data-description="{{ product.description | escape }}"></div>
+    </div>
+
   </div>
 </div>
 

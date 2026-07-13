@@ -19,6 +19,14 @@ const PetsCare = {
       document.querySelectorAll('[data-open-cart]').forEach(el =>
         el.addEventListener('click', e => { e.preventDefault(); this.open(); })
       );
+      // InitiateCheckout Event Binding
+      document.addEventListener('click', e => {
+        if (e.target.closest('[href="/checkout"]') || e.target.closest('.cart-checkout-btn')) {
+          document.dispatchEvent(new CustomEvent('petsCare:initiateCheckout', {
+            detail: { currency: 'USD' }
+          }));
+        }
+      });
     },
 
     open() {
@@ -178,6 +186,12 @@ const PetsCare = {
           body: JSON.stringify({ items })
         });
         if (!r.ok) throw new Error(await r.text());
+        
+        // Dispatch AddToCart Event
+        document.dispatchEvent(new CustomEvent('petsCare:addToCart', {
+          detail: { items, currency: 'USD' }
+        }));
+
         PetsCare.utils.showToast('Added to bag!');
         if (openDrawer) this.open();
         else this.refresh();
@@ -251,6 +265,11 @@ const PetsCare = {
         this.resultsEl.innerHTML = '';
         return;
       }
+
+      // Dispatch Search Event
+      document.dispatchEvent(new CustomEvent('petsCare:search', {
+        detail: { query: q }
+      }));
 
       // Abort previous in-flight request
       if (this._abortCtrl) this._abortCtrl.abort();
@@ -645,6 +664,19 @@ const PetsCare = {
       this._initFbt();
       this._initDeliveryEstimator();
       this._trackRecentlyViewed();
+
+      // Dispatch ViewContent Event on initial load
+      const data = window.PetsCareProductData;
+      if (data) {
+        document.dispatchEvent(new CustomEvent('petsCare:viewContent', {
+          detail: {
+            id: data.id,
+            title: data.title,
+            price: data.price / 100,
+            currency: 'USD'
+          }
+        }));
+      }
     },
 
     /* Gallery: thumbnail → main image swap */
@@ -813,6 +845,18 @@ const PetsCare = {
               const url = new URL(window.location.href);
               url.searchParams.set('variant', matchedVariant.id);
               history.replaceState({}, '', url.toString());
+
+              // Dispatch ViewContent Event on variant switch
+              document.dispatchEvent(new CustomEvent('petsCare:viewContent', {
+                detail: {
+                  id: matchedVariant.id,
+                  title: data.title,
+                  price: matchedVariant.price / 100,
+                  compare_price: matchedVariant.compare_at_price ? matchedVariant.compare_at_price / 100 : null,
+                  variant_title: matchedVariant.title,
+                  currency: 'USD'
+                }
+              }));
             }
           });
         });

@@ -1,7 +1,4 @@
-/* ==========================================================================
-   PETSCARE.COM THEME JAVASCRIPT
-   AJAX Cart, Instant Search, Layout Animation Hooks
-   ========================================================================== */
+/* Core Theme JavaScript */
 
 document.addEventListener('DOMContentLoaded', () => {
   // Mobile Hamburger Menu Toggle
@@ -10,11 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (hamburger && mainNav) {
     hamburger.addEventListener('click', () => {
       mainNav.classList.toggle('open');
-      hamburger.classList.toggle('active');
     });
   }
 
-  // Cart Drawer open/close hooks
+  // Cart Drawer open/close
   const cartIcon = document.getElementById('cart-icon-trigger');
   const cartDrawer = document.getElementById('cart-drawer');
   const cartClose = document.getElementById('cart-drawer-close');
@@ -29,23 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     cartClose.addEventListener('click', closeCartDrawer);
     cartOverlay.addEventListener('click', closeCartDrawer);
   }
-
-  // Instant Search Overlay
-  const searchBtn = document.getElementById('search-btn');
-  const searchOverlay = document.getElementById('search-overlay');
-  const searchClose = document.getElementById('search-close');
-  const searchInput = document.getElementById('search-input');
-
-  if (searchBtn && searchOverlay && searchClose) {
-    searchBtn.addEventListener('click', () => {
-      searchOverlay.classList.add('active');
-      if (searchInput) searchInput.focus();
-    });
-
-    searchClose.addEventListener('click', () => {
-      searchOverlay.classList.remove('active');
-    });
-  }
 });
 
 function openCartDrawer() {
@@ -59,7 +38,30 @@ function closeCartDrawer() {
   document.getElementById('cart-drawer-overlay').classList.remove('open');
 }
 
-// AJAX Add to Cart
+// AJAX Add to Cart for Flipkart-style forms
+function ajaxAddToCartForm(form) {
+  const formData = new FormData(form);
+  
+  fetch('/cart/add.js', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Show toast
+    const toast = document.getElementById('cart-toast');
+    if (toast) {
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+    // Refresh cart drawer
+    openCartDrawer();
+  })
+  .catch((error) => {
+    console.error('Error adding to cart:', error);
+  });
+}
+
 function ajaxAddToCart(variantId, quantity = 1) {
   const formData = {
     'items': [{
@@ -77,13 +79,11 @@ function ajaxAddToCart(variantId, quantity = 1) {
   })
   .then(response => response.json())
   .then(data => {
-    // Show premium toast
     const toast = document.getElementById('cart-toast');
     if (toast) {
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 3000);
     }
-    // Refresh cart drawer
     openCartDrawer();
   })
   .catch((error) => {
@@ -131,14 +131,14 @@ function fetchCartData() {
       cart.items.forEach(item => {
         const priceFormatted = Shopify.formatMoney(item.price, "${{amount}}");
         itemsHtml += `
-          <div class="cart-item" style="display:flex; gap:16px; margin-bottom:16px; align-items:center; border-bottom:1px solid #f1f5f9; padding-bottom:12px;">
-            <img src="${item.image}" alt="${item.title}" style="width:70px; height:70px; object-fit:cover; border-radius:12px;">
+          <div class="cart-item" style="display:flex; gap:12px; margin-bottom:16px; align-items:center; border-bottom:1px solid #f1f5f9; padding-bottom:12px;">
+            <img src="${item.image}" alt="${item.title}" style="width:70px; height:70px; object-fit:cover; border-radius:4px;">
             <div style="flex:1;">
-              <h4 style="font-size:0.9rem; font-weight:600; margin-bottom:4px; color:#0f172a;">${item.product_title}</h4>
-              <p style="font-size:0.75rem; color:#64748b; margin-bottom:6px;">${item.variant_title || ''}</p>
+              <h4 style="font-size:0.9rem; font-weight:600; margin-bottom:4px; color:#212121;">${item.product_title}</h4>
+              <p style="font-size:0.75rem; color:#878787; margin-bottom:6px;">${item.variant_title || ''}</p>
               <div style="display:flex; justify-content:space-between; align-items:center;">
                 <span style="font-size:0.9rem; font-weight:700; color:#f97316;">${priceFormatted}</span>
-                <span style="font-size:0.8rem; color:#64748b;">Qty: ${item.quantity}</span>
+                <span style="font-size:0.8rem; color:#878787;">Qty: ${item.quantity}</span>
               </div>
             </div>
           </div>

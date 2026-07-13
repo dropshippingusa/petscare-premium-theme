@@ -96,7 +96,7 @@
       class="collection-banner__img"
       loading="eager"
       fetchpriority="high"
-      style="{% if filter_pet == 'cats' or collection.handle == 'cats' %}object-position: center 20%;{% else %}object-position: center;{% endif %}"
+      style="{% if filter_pet == 'cats' or collection.handle == 'cats' %}object-position: center 65%;{% else %}object-position: center;{% endif %}"
     >
     <div class="collection-banner__overlay"></div>
   {%- endif -%}
@@ -418,7 +418,7 @@ document.addEventListener("DOMContentLoaded", function() {
         
         // Dynamically adjust object-position to prevent cropping
         if (pet === 'cats') {
-          bannerImg.style.objectPosition = 'center 20%';
+          bannerImg.style.objectPosition = 'center 65%';
         } else {
           bannerImg.style.objectPosition = 'center';
         }

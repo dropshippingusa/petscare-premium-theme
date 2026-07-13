@@ -24,18 +24,26 @@
                   height="120"
                 >
               {%- else -%}
-                {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/dog_bowls.webp?v=1742375228' -%}
+                {%- assign fallback_img = 'https://headsupfortails.com/cdn/shop/files/05_Dog_Bowls_web_800x.png?v=1781287504' -%}
                 {%- assign name_downcase = block.settings.name | downcase -%}
                 {%- if name_downcase contains 'toy' -%}
                   {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/cat_toys_79bf694c-2c5c-4f18-8cac-626ccf76c503.webp?v=1742375228' -%}
                 {%- elsif name_downcase contains 'walk' or name_downcase contains 'collar' or name_downcase contains 'leash' or name_downcase contains 'accessories' -%}
-                  {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/walkwear_5c6c2121-cb23-455b-80df-db4be934f0e9.webp?v=1742375228' -%}
+                  {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/CLH_for_dogs.webp?v=1742375228' -%}
                 {%- elsif name_downcase contains 'chew' or name_downcase contains 'treat' or name_downcase contains 'yakies' -%}
-                  {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/yakies.webp?v=1742375228' -%}
+                  {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/Yakies_for_dogs.webp?v=1742375228' -%}
                 {%- elsif name_downcase contains 'litter' or name_downcase contains 'cleaning' or name_downcase contains 'grooming' -%}
-                  {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/cat_litter_a3ab9c21-1f9d-4762-b91c-297bc099fa71.webp?v=1742375228' -%}
-                {%- elsif name_downcase contains 'food' or name_downcase contains 'broth' or name_downcase contains 'health' or name_downcase contains 'supplement' -%}
-                  {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/bone_broth_bbdfcfbf-78b1-4f9e-bd9d-09559c5d0124.webp?v=1742375228' -%}
+                  {%- assign fallback_img = 'https://headsupfortails.com/cdn/shop/files/09_Cat_Litter_web_800x.png?v=1781287577' -%}
+                {%- elsif name_downcase contains 'broth' or name_downcase contains 'health' or name_downcase contains 'supplement' -%}
+                  {%- assign fallback_img = 'https://headsupfortails.com/cdn/shop/files/04_Bone_broth_web_800x.png?v=1781287425' -%}
+                {%- elsif name_downcase contains 'food' -%}
+                  {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/Saras_Wholesome_Food_e98d8515-7c28-4865-9da1-46527afa9353.webp?v=1742375228' -%}
+                {%- elsif name_downcase contains 'dental' -%}
+                  {%- assign fallback_img = 'https://headsupfortails.com/cdn/shop/files/03_Ice_Cream_web_800x.png?v=1781287452' -%}
+                {%- elsif name_downcase contains 'beds' or name_downcase contains 'sleep' -%}
+                  {%- assign fallback_img = 'https://headsupfortails.com/cdn/shop/files/Beds_web_981aac84-1a00-43ea-a49b-c0c913a7a066_800x.webp?v=1783494102' -%}
+                {%- elsif name_downcase contains 'travel' -%}
+                  {%- assign fallback_img = 'https://headsupfortails.com/cdn/shop/files/02_Grooming_web_800x.png?v=1781287479' -%}
                 {%- endif -%}
                 <img
                   src="{{ fallback_img }}"
@@ -53,18 +61,26 @@
       {%- else -%}
         {%- assign fallback_categories = "Health,Food,Treats,Dental,Travel,Beds,Cleaning,Accessories,Training,Toys" | split: "," -%}
         {%- for cat_name in fallback_categories -%}
-          {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/dog_bowls.webp?v=1742375228' -%}
+          {%- assign fallback_img = 'https://headsupfortails.com/cdn/shop/files/05_Dog_Bowls_web_800x.png?v=1781287504' -%}
           {%- assign name_downcase = cat_name | downcase -%}
           {%- if name_downcase contains 'toy' -%}
             {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/cat_toys_79bf694c-2c5c-4f18-8cac-626ccf76c503.webp?v=1742375228' -%}
           {%- elsif name_downcase contains 'walk' or name_downcase contains 'collar' or name_downcase contains 'leash' or name_downcase contains 'accessories' -%}
-            {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/walkwear_5c6c2121-cb23-455b-80df-db4be934f0e9.webp?v=1742375228' -%}
+            {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/CLH_for_dogs.webp?v=1742375228' -%}
           {%- elsif name_downcase contains 'chew' or name_downcase contains 'treat' or name_downcase contains 'yakies' -%}
-            {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/yakies.webp?v=1742375228' -%}
+            {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/Yakies_for_dogs.webp?v=1742375228' -%}
           {%- elsif name_downcase contains 'litter' or name_downcase contains 'cleaning' or name_downcase contains 'grooming' -%}
-            {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/cat_litter_a3ab9c21-1f9d-4762-b91c-297bc099fa71.webp?v=1742375228' -%}
-          {%- elsif name_downcase contains 'food' or name_downcase contains 'broth' or name_downcase contains 'health' or name_downcase contains 'supplement' -%}
-            {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/bone_broth_bbdfcfbf-78b1-4f9e-bd9d-09559c5d0124.webp?v=1742375228' -%}
+            {%- assign fallback_img = 'https://headsupfortails.com/cdn/shop/files/09_Cat_Litter_web_800x.png?v=1781287577' -%}
+          {%- elsif name_downcase contains 'broth' or name_downcase contains 'health' or name_downcase contains 'supplement' -%}
+            {%- assign fallback_img = 'https://headsupfortails.com/cdn/shop/files/04_Bone_broth_web_800x.png?v=1781287425' -%}
+          {%- elsif name_downcase contains 'food' -%}
+            {%- assign fallback_img = 'https://cdn.shopify.com/s/files/1/0086/0795/7054/files/Saras_Wholesome_Food_e98d8515-7c28-4865-9da1-46527afa9353.webp?v=1742375228' -%}
+          {%- elsif name_downcase contains 'dental' -%}
+            {%- assign fallback_img = 'https://headsupfortails.com/cdn/shop/files/03_Ice_Cream_web_800x.png?v=1781287452' -%}
+          {%- elsif name_downcase contains 'beds' or name_downcase contains 'sleep' -%}
+            {%- assign fallback_img = 'https://headsupfortails.com/cdn/shop/files/Beds_web_981aac84-1a00-43ea-a49b-c0c913a7a066_800x.webp?v=1783494102' -%}
+          {%- elsif name_downcase contains 'travel' -%}
+            {%- assign fallback_img = 'https://headsupfortails.com/cdn/shop/files/02_Grooming_web_800x.png?v=1781287479' -%}
           {%- endif -%}
           <a href="/collections/all" class="category-card" role="listitem" aria-label="{{ cat_name }}">
             <div class="category-card__image-wrapper" aria-hidden="true">

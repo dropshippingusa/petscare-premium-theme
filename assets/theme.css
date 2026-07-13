@@ -93,6 +93,15 @@ input, select, textarea { font-family: var(--font); }
 ul, ol { list-style: none; }
 svg { flex-shrink: 0; }
 
+/* Keyboard Accessibility Focus Outlines */
+:focus-visible {
+  outline: 2px solid var(--primary) !important;
+  outline-offset: 2px !important;
+}
+a:focus-visible, button:focus-visible {
+  border-radius: 4px;
+}
+
 /* === LAYOUT UTILITIES === */
 .container {
   max-width: var(--max-w);

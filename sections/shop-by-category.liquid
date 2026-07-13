@@ -1,0 +1,41 @@
+<section class="shop-by-category section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Tailored Essentials</span>
+      <h2 class="section-title">Shop by Category</h2>
+    </div>
+    <div class="category-grid">
+      {% assign categories = "Health|Dental|Treats|Food|Beds|Travel|Cleaning|Training|Accessories|Toys" | split: "|" %}
+      {% for cat in categories %}
+        {% assign cat_handle = cat | handleize %}
+        <a href="/collections/{{ cat_handle }}" class="category-card">
+          <div class="category-image-wrap">
+            <span class="category-icon">
+              {% case cat %}
+                {% when 'Health' %}🩺
+                {% when 'Dental' %}🦷
+                {% when 'Treats' %}🍖
+                {% when 'Food' %}🥣
+                {% when 'Beds' %}🛏️
+                {% when 'Travel' %}🎒
+                {% when 'Cleaning' %}🧼
+                {% when 'Training' %}🔔
+                {% when 'Accessories' %}🎀
+                {% when 'Toys' %}🧸
+              {% endcase %}
+            </span>
+          </div>
+          <h3>{{ cat }}</h3>
+          <span class="category-link">Shop Now &rarr;</span>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Shop by Category",
+  "settings": []
+}
+{% endschema %}

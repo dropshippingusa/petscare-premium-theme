@@ -316,3 +316,94 @@ Shopify.formatMoney = function(cents, format) {
 
   return formatString.replace(placeholderRegex, value);
 };
+
+/* Phase 4 V3 JS countdown timer & FBT handler */
+document.addEventListener("DOMContentLoaded", function() {
+  // Flash Deals Countdown Timer
+  const timerEl = document.getElementById("flash-countdown");
+  if (timerEl) {
+    let hours = parseInt(timerEl.getAttribute("data-hours") || "6");
+    let targetTime = new Date().getTime() + hours * 60 * 60 * 1000;
+    
+    const interval = setInterval(function() {
+      let now = new Date().getTime();
+      let diff = targetTime - now;
+      
+      if (diff <= 0) {
+        clearInterval(interval);
+        timerEl.innerHTML = "EXPIRED";
+        return;
+      }
+      
+      let h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      let m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      let s = Math.floor((diff % (1000 * 60)) / 1000);
+      
+      h = h < 10 ? "0" + h : h;
+      m = m < 10 ? "0" + m : m;
+      s = s < 10 ? "0" + s : s;
+      
+      timerEl.innerHTML = `<span>${h}</span>:<span>${m}</span>:<span>${s}</span>`;
+    }, 1000);
+  }
+
+  // FBT checkbox listener
+  const sChk = document.querySelectorAll(".fbt-sibling-chk");
+  sChk.forEach(chk => {
+    chk.addEventListener("change", recalculateFbtTotal);
+  });
+  
+  recalculateFbtTotal();
+});
+
+function recalculateFbtTotal() {
+  const items = document.querySelectorAll(".fbt-item");
+  let total = 0;
+  items.forEach(item => {
+    const chk = item.querySelector("input[type='checkbox']");
+    if (chk && chk.checked) {
+      total += parseFloat(item.getAttribute("data-price") || "0") / 100.0;
+    }
+  });
+  const valEl = document.getElementById("fbt-total-val");
+  if (valEl) {
+    valEl.textContent = "$" + total.toFixed(2);
+  }
+}
+
+function buyFbtBundle() {
+  const chks = document.querySelectorAll(".fbt-sibling-chk:checked");
+  let items = [];
+  
+  // Add main variant
+  const mainVariantId = document.getElementById("pdp-selected-variant-id");
+  if (mainVariantId) {
+    items.push({ id: mainVariantId.value, quantity: 1 });
+  }
+  
+  // Add sibling items
+  chks.forEach(chk => {
+    const vId = chk.getAttribute("data-variant-id");
+    if (vId) {
+      items.push({ id: vId, quantity: 1 });
+    }
+  });
+  
+  fetch('/cart/add.js', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ items: items })
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Refresh cart drawer
+    if (typeof updateCartDrawer === "function") {
+      updateCartDrawer();
+    } else {
+      window.location.href = '/cart';
+    }
+  })
+  .catch(err => {
+    console.error("FBT Bundle add failed", err);
+  });
+}

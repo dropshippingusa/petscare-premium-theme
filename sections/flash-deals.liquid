@@ -1,0 +1,29 @@
+<section class="flash-deals section">
+  <div class="container">
+    <div class="flash-header-row">
+      <div class="flash-title-wrap">
+        <span class="flash-badge">Ends Today</span>
+        <h2 class="section-title">Flash Deals</h2>
+      </div>
+      <div class="countdown-timer" id="flash-countdown" data-hours="6">
+        <span>00</span>:<span>00</span>:<span>00</span>
+      </div>
+    </div>
+    <div class="products-grid">
+      {% for product in collections.all.products limit: 4 %}
+        {% render 'product-card', product: product %}
+      {% else %}
+        <div style="grid-column: span 4; text-align: center; padding: 40px 0;">
+          <p>No discount items found. Add products to your Shopify store.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Flash Deals",
+  "settings": []
+}
+{% endschema %}

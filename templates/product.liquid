@@ -114,7 +114,34 @@
 
         <button type="submit" class="btn btn-primary btn-pdp-add">Add to Cart</button>
       </form>
-    </div>
+
+      <!-- Frequently Bought Together Bundle -->
+      <div class="fbt-bundle-box">
+        <h3>Frequently Bought Together</h3>
+        <div class="fbt-flex">
+          <div class="fbt-items">
+            <div class="fbt-item active" data-price="{{ product.price }}">
+              <input type="checkbox" checked disabled id="fbt-curr-chk" />
+              <label for="fbt-curr-chk"><strong>This item:</strong> {{ product.title }} - <span class="fbt-price">{{ product.price | money }}</span></label>
+            </div>
+            {% assign count = 0 %}
+            {% for prod in collections.all.products %}
+              {% if prod.id != product.id and count < 2 %}
+                <div class="fbt-item" data-price="{{ prod.price }}">
+                  <input type="checkbox" checked class="fbt-sibling-chk" data-variant-id="{{ prod.selected_or_first_available_variant.id }}" id="fbt-item-{{ prod.id }}" />
+                  <label for="fbt-item-{{ prod.id }}">{{ prod.title }} - <span class="fbt-price">{{ prod.price | money }}</span></label>
+                </div>
+                {% assign count = count | plus: 1 %}
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="fbt-summary">
+            <div class="fbt-total-price">Total Price: <span id="fbt-total-val">{{ product.price | money }}</span></div>
+            <button type="button" class="btn btn-secondary btn-fbt-buy" onclick="buyFbtBundle()">Add Bundle to Cart</button>
+          </div>
+        </div>
+      </div>
+        </div>
   </div>
 
   <!-- Bottom Details Tabs (Flipkart Specification grid format) -->

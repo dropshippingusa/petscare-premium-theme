@@ -5,7 +5,7 @@
 {%- assign cta_primary_text = section.settings.cta_primary_text | default: 'Shop All Products' -%}
 {%- assign cta_primary_url = section.settings.cta_primary_url | default: '/collections/all' -%}
 {%- assign cta_secondary_text = section.settings.cta_secondary_text | default: 'Shop for Dogs' -%}
-{%- assign cta_secondary_url = section.settings.cta_secondary_url | default: '/collections/dogs' -%}
+{%- assign cta_secondary_url = section.settings.cta_secondary_url | default: '/collections/all?pet=dogs' -%}
 {%- assign badge_title = section.settings.badge_title | default: '50,000+ Happy Pets' -%}
 {%- assign badge_sub = section.settings.badge_sub | default: 'Trusted by US families nationwide' -%}
 {%- assign eyebrow = section.settings.eyebrow | default: 'Trusted by 50,000+ Pet Parents' -%}
@@ -13,7 +13,7 @@
 <section class="hero-section" aria-label="Hero banner">
   <div class="hero hero--three-col">
     <!-- Left column: Dog Image Link -->
-    <a href="{{ cta_secondary_url | default: '/collections/dogs' }}" class="hero__visual hero__visual--left" aria-label="Shop Dogs">
+    <a href="{{ cta_secondary_url | default: '/collections/all?pet=dogs' }}" class="hero__visual hero__visual--left" aria-label="Shop Dogs">
       <img
         src="https://cdn.shopify.com/s/files/1/0086/0795/7054/files/banner_for_dogs.jpg?v=1742363190"
         alt="Shop Dogs"
@@ -62,7 +62,7 @@
     </div>
 
     <!-- Right column: Cat Image Link -->
-    <a href="/collections/cats" class="hero__visual hero__visual--right" aria-label="Shop Cats">
+    <a href="/collections/all?pet=cats" class="hero__visual hero__visual--right" aria-label="Shop Cats">
       {%- if hero_image != blank -%}
         <img
           src="{{ hero_image | image_url: width: 600 }}"

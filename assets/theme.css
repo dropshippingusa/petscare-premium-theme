@@ -292,14 +292,19 @@ a:focus-visible, button:focus-visible {
 }
 
 .header-inner {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   height: 68px;
-  gap: var(--sp-3);
+  gap: var(--sp-4);
   max-width: var(--max-w);
   margin: 0 auto;
   padding: 0 var(--gutter);
+}
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-6);
 }
 .header-logo {
   font-size: 22px;
@@ -333,12 +338,15 @@ a:focus-visible, button:focus-visible {
   padding: 0 14px;
   font-size: 14px;
   font-weight: 600;
-  color: var(--ink-2);
+  color: var(--ink);
   border-radius: var(--r-sm);
   transition: all var(--t-fast) var(--ease);
   position: relative;
 }
-.header-nav__link:hover { color: var(--ink); background: var(--bg-subtle); }
+.header-nav__link:hover {
+  color: var(--primary);
+  background: var(--bg-subtle);
+}
 .header-actions {
   display: flex;
   align-items: center;

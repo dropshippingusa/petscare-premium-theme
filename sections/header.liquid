@@ -17,62 +17,19 @@
 <header class="site-header" role="banner">
   <div class="header-inner">
 
-    {%- comment -%} Logo {%- endcomment -%}
-    <a href="/" class="header-logo" aria-label="{{ shop.name }} — Home">
-      <img src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name | escape }}" class="header-logo__img" width="160" height="40">
-    </a>
+    <div class="header-left">
+      {%- comment -%} Logo {%- endcomment -%}
+      <a href="/" class="header-logo" aria-label="{{ shop.name }} — Home">
+        <img src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name | escape }}" class="header-logo__img" width="160" height="40">
+      </a>
 
-    {%- comment -%} Primary navigation using Shopify linklists {%- endcomment -%}
-    <nav class="header-nav" aria-label="Main navigation">
-      {%- for link in linklists[section.settings.menu].links -%}
-        {%- if link.links.size > 0 -%}
-          <div style="position:relative;">
-            <button
-              class="header-nav__link"
-              data-mega-trigger="{{ link.handle }}"
-              aria-expanded="false"
-              aria-haspopup="true"
-            >
-              {{ link.title }}
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="mega-menu" data-mega-menu="{{ link.handle }}" role="region" aria-label="{{ link.title }} menu">
-              <div class="mega-menu__inner">
-                {%- comment -%} Group sub-links into columns of 4 {%- endcomment -%}
-                {%- assign cols = link.links | split: ',' -%}
-                {%- assign col_size = 4 -%}
-                {%- assign col_count = link.links.size | divided_by: col_size | ceil -%}
-                {%- for col_idx in (0..3) -%}
-                  <div>
-                    <p class="mega-menu__col-title" aria-hidden="true">
-                      {%- if col_idx == 0 -%}Shop by Pet{%- endif -%}
-                      {%- if col_idx == 1 -%}Categories{%- endif -%}
-                      {%- if col_idx == 2 -%}Health Concerns{%- endif -%}
-                      {%- if col_idx == 3 -%}Quick Links{%- endif -%}
-                    </p>
-                    {%- for sub_link in link.links -%}
-                      {%- assign sub_idx = forloop.index0 -%}
-                      {%- if sub_idx >= col_idx | times: col_size and sub_idx < col_idx | plus: 1 | times: col_size -%}
-                        <a href="{{ sub_link.url }}" class="mega-menu__link">
-                          <span class="mega-menu__link-icon" aria-hidden="true">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-                          </span>
-                          {{ sub_link.title }}
-                        </a>
-                      {%- endif -%}
-                    {%- endfor -%}
-                  </div>
-                {%- endfor -%}
-              </div>
-            </div>
-          </div>
-        {%- else -%}
-          <a href="{{ link.url }}" class="header-nav__link" {% if link.active %}aria-current="page"{% endif %}>
-            {{ link.title }}
-          </a>
-        {%- endif -%}
-      {%- endfor -%}
-    </nav>
+      {%- comment -%} Primary navigation {%- endcomment -%}
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="/" class="header-nav__link">Home</a>
+        <a href="/collections/dogs" class="header-nav__link">Dogs</a>
+        <a href="/collections/cats" class="header-nav__link">Cats</a>
+      </nav>
+    </div>
 
     {%- comment -%} Header action icons {%- endcomment -%}
     <div class="header-actions">

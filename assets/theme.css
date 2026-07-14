@@ -2918,6 +2918,43 @@ a:focus-visible, button:focus-visible {
 .pdp-sticky-atc__title { font-size: 14px; font-weight: 600; color: var(--ink); margin: 0 0 2px; }
 .pdp-sticky-atc__price { font-size: 15px; font-weight: 800; color: var(--primary); margin: 0; }
 
+@media (max-width: 1023px) {
+  .pdp-sticky-atc {
+    bottom: -150px;
+    z-index: 799; /* Just under the mobile bottom nav bar (z-index 800) */
+  }
+  .pdp-sticky-atc.is-visible {
+    bottom: 64px; /* Position right above the mobile bottom nav bar */
+  }
+}
+@media (max-width: 480px) {
+  .pdp-sticky-atc__img {
+    display: none;
+  }
+  .pdp-sticky-atc__title {
+    font-size: 12px;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .pdp-sticky-atc__price {
+    font-size: 13px;
+  }
+  .pdp-sticky-atc__inner {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    gap: 8px;
+  }
+  .pdp-sticky-atc .btn {
+    padding: 0 16px;
+    font-size: 13px;
+    height: 40px;
+    min-height: auto;
+  }
+}
+
+
 /* FBT Box */
 .fbt-box {
   border: 1px solid var(--border);

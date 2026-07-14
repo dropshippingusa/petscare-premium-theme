@@ -843,12 +843,32 @@ const PetsCare = {
       const data = window.PetsCareProductData;
       if (!data) return;
 
+      // Initialize Buy Now redirect logic
+      document.querySelectorAll('.pdp-buy-now-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const form = btn.closest('form');
+          if (form) {
+            let returnInput = form.querySelector('input[name="return_to"]');
+            if (!returnInput) {
+              returnInput = document.createElement('input');
+              returnInput.type = 'hidden';
+              returnInput.name = 'return_to';
+              returnInput.value = '/checkout';
+              form.appendChild(returnInput);
+            }
+            form.submit();
+          }
+        });
+      });
+
       const pillGroups = document.querySelectorAll('.variant-pills');
       const variantIdInput = document.getElementById('pdp-variant-id');
       const priceEl = document.getElementById('pdp-price');
       const compareEl = document.getElementById('pdp-compare');
       const discountEl = document.getElementById('pdp-discount');
-      const atcBtn = document.getElementById('pdp-atc-btn');
+      const atcBtnDesktop = document.getElementById('pdp-atc-btn-desktop');
+      const atcBtnMobile = document.getElementById('pdp-atc-btn-mobile');
       const stickyPrice = document.getElementById('pdp-sticky-price');
 
       // Track selected options
@@ -917,12 +937,26 @@ const PetsCare = {
               }
 
               // Update ATC state
-              if (atcBtn) {
-                atcBtn.disabled = !matchedVariant.available;
-                atcBtn.innerHTML = matchedVariant.available
-                  ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>Add to Bag`
+              const updateButtonState = (btn) => {
+                if (!btn) return;
+                btn.disabled = !matchedVariant.available;
+                btn.innerHTML = matchedVariant.available
+                  ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>Add to Cart`
                   : 'Sold Out';
-              }
+              };
+              updateButtonState(atcBtnDesktop);
+              updateButtonState(atcBtnMobile);
+
+              // Update Buy Now state
+              const buyNowBtns = document.querySelectorAll('.pdp-buy-now-btn');
+              buyNowBtns.forEach(btn => {
+                btn.disabled = !matchedVariant.available;
+                if (matchedVariant.available) {
+                  btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg><span class="buy-now-label">Buy at ${PetsCare.utils.formatMoney(matchedVariant.price)}</span>`;
+                } else {
+                  btn.innerHTML = 'Sold Out';
+                }
+              });
 
               // Update URL without reload
               const url = new URL(window.location.href);
@@ -979,7 +1013,7 @@ const PetsCare = {
 
     /* Sticky ATC bar — shows when main ATC scrolls out of viewport */
     _initStickyAtc() {
-      const mainAtc = document.getElementById('pdp-atc-btn');
+      const mainAtc = document.getElementById('pdp-atc-btn-desktop') || document.getElementById('pdp-atc-btn');
       const stickyBar = document.getElementById('pdp-sticky-atc');
       if (!mainAtc || !stickyBar) return;
 

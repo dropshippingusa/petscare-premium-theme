@@ -2598,9 +2598,68 @@ a:focus-visible, button:focus-visible {
 .qty-input:focus { outline: none; }
 
 /* PDP ATC row */
-.pdp-atc-row { display: flex; gap: 12px; align-items: center; }
-.pdp-atc-row .btn--primary { flex: 1; height: 54px; gap: 10px; font-size: 16px; }
-.pdp-atc-row .btn--secondary { height: 54px; width: 54px; padding: 0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.pdp-atc-row { display: flex; gap: 12px; align-items: center; width: 100%; }
+.pdp-atc-row .btn--add-to-cart {
+  flex: 1;
+  height: 54px;
+  gap: 8px;
+  font-size: 16px;
+  background-color: #ff9f00 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: var(--r-md);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color var(--t-fast);
+}
+.pdp-atc-row .btn--add-to-cart:hover {
+  background-color: #f39700 !important;
+}
+.pdp-atc-row .btn--buy-now {
+  flex: 1.2;
+  height: 54px;
+  gap: 8px;
+  font-size: 16px;
+  background-color: #fb641b !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: var(--r-md);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color var(--t-fast);
+}
+.pdp-atc-row .btn--buy-now:hover {
+  background-color: #e25816 !important;
+}
+.pdp-atc-row .btn--wishlist {
+  height: 54px;
+  width: 54px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background-color: #ffffff !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: background-color var(--t-fast), border-color var(--t-fast);
+}
+.pdp-atc-row .btn--wishlist:hover {
+  background-color: var(--bg-subtle) !important;
+  border-color: var(--ink-light) !important;
+}
+.pdp-atc-row .btn--wishlist.is-wishlisted svg {
+  fill: #ff3f6c;
+  stroke: #ff3f6c;
+}
 
 /* PDP trust row */
 .pdp-trust {

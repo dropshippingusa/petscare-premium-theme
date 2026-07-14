@@ -62,9 +62,20 @@
       {%- if media_count > 1 -%}
         <div class="pdp-gallery__thumbs" role="list" aria-label="Product images">
           {%- for media in product.media -%}
+            {%- assign show_overlay = false -%}
+            {%- assign is_hidden = false -%}
+            
+            {%- if media_count > 5 -%}
+              {%- if forloop.index == 5 -%}
+                {%- assign show_overlay = true -%}
+              {%- elsif forloop.index > 5 -%}
+                {%- assign is_hidden = true -%}
+              {%- endif -%}
+            {%- endif -%}
+
             <button
               type="button"
-              class="pdp-thumb {% if forloop.first %}is-active{% endif %}"
+              class="pdp-thumb {% if forloop.first %}is-active{% endif %} {% if is_hidden %}pdp-thumb--hidden{% endif %} {% if show_overlay %}pdp-thumb--more{% endif %}"
               data-src="{{ media | image_url: width: 1000 }}"
               data-media-id="{{ media.id }}"
               aria-label="{{ media.alt | default: product.title | escape }}, image {{ forloop.index }}"
@@ -81,6 +92,9 @@
                 width="72" height="72"
                 loading="lazy"
               >
+              {%- if show_overlay -%}
+                <span class="pdp-thumb__overlay">+{{ media_count | minus: 4 }}</span>
+              {%- endif -%}
             </button>
           {%- endfor -%}
         </div>

@@ -511,6 +511,46 @@
   {%- endif -%}
 {%- endif -%}
 
+{%- comment -%} ── PDP GALLERY LIGHTBOX MODAL ───────────────────────────── {%- endcomment -%}
+<div id="pdp-gallery-modal" class="pdp-modal pdp-gallery-modal" aria-hidden="true" role="dialog" aria-label="Product Image Gallery Modal">
+  <button type="button" class="pdp-gallery-modal__close" id="pdp-gallery-modal-close" aria-label="Close gallery">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  
+  <div class="pdp-gallery-modal__container">
+    <div class="pdp-gallery-modal__slider">
+      <button type="button" class="pdp-gallery-modal__arrow pdp-gallery-modal__prev" id="pdp-gallery-modal-prev" aria-label="Previous image">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      
+      <div class="pdp-gallery-modal__main-image-wrap">
+        <img id="pdp-gallery-modal-img" src="{{ product.featured_media | image_url: width: 1200 }}" alt="{{ product.title | escape }}" loading="lazy">
+      </div>
+      
+      <button type="button" class="pdp-gallery-modal__arrow pdp-gallery-modal__next" id="pdp-gallery-modal-next" aria-label="Next image">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+    
+    <div class="pdp-gallery-modal__thumbs-wrap">
+      <div class="pdp-gallery-modal__thumbs" role="list" aria-label="Gallery thumbnails">
+        {%- for media in product.media -%}
+          <button
+            type="button"
+            class="pdp-gallery-modal__thumb {% if forloop.first %}is-active{% endif %}"
+            data-src="{{ media | image_url: width: 1200 }}"
+            data-index="{{ forloop.index0 }}"
+            aria-label="View image {{ forloop.index }}"
+            role="listitem"
+          >
+            <img src="{{ media | image_url: width: 144 }}" alt="{{ media.alt | default: product.title | escape }}" loading="lazy">
+          </button>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
 {%- comment -%} ── PRODUCT VARIANT JS DATA ───────────────────────────────── {%- endcomment -%}
 <script>
   window.PetsCareProductData = {

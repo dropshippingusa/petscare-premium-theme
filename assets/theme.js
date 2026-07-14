@@ -641,6 +641,7 @@ const PetsCare = {
       this._initDeliveryEstimator();
       this._trackRecentlyViewed();
       this._initDescriptionToggle();
+      this._initLightbox();
 
       // Dispatch ViewContent Event on initial load
       const data = window.PetsCareProductData;
@@ -678,6 +679,101 @@ const PetsCare = {
             }, 180);
           }
         });
+      });
+    },
+
+    _initLightbox() {
+      const modal = document.getElementById('pdp-gallery-modal');
+      const mainGalleryImg = document.getElementById('pdp-main-img');
+      const closeBtn = document.getElementById('pdp-gallery-modal-close');
+      const prevBtn = document.getElementById('pdp-gallery-modal-prev');
+      const nextBtn = document.getElementById('pdp-gallery-modal-next');
+      const modalImg = document.getElementById('pdp-gallery-modal-img');
+      const modalThumbs = document.querySelectorAll('.pdp-gallery-modal__thumb');
+      const triggerMore = document.querySelector('.pdp-thumb--more');
+
+      if (!modal || !mainGalleryImg) return;
+
+      let currentIdx = 0;
+
+      const openModal = (idx = 0) => {
+        currentIdx = idx;
+        modal.classList.add('is-open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        updateModalSlide();
+      };
+
+      const closeModal = () => {
+        modal.classList.remove('is-open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      };
+
+      const updateModalSlide = () => {
+        modalThumbs.forEach((thumb, index) => {
+          if (index === currentIdx) {
+            thumb.classList.add('is-active');
+            modalImg.src = thumb.dataset.src;
+            thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          } else {
+            thumb.classList.remove('is-active');
+          }
+        });
+      };
+
+      mainGalleryImg.style.cursor = 'zoom-in';
+      mainGalleryImg.addEventListener('click', () => {
+        const activeThumb = document.querySelector('.pdp-thumb.is-active');
+        let startIdx = 0;
+        if (activeThumb) {
+          const thumbsArray = Array.from(document.querySelectorAll('.pdp-thumb'));
+          startIdx = thumbsArray.indexOf(activeThumb);
+        }
+        openModal(startIdx >= 0 ? startIdx : 0);
+      });
+
+      if (triggerMore) {
+        triggerMore.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          openModal(4);
+        });
+      }
+
+      closeBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal || e.target.classList.contains('pdp-gallery-modal__container')) {
+          closeModal();
+        }
+      });
+
+      prevBtn.addEventListener('click', () => {
+        currentIdx = currentIdx === 0 ? modalThumbs.length - 1 : currentIdx - 1;
+        updateModalSlide();
+      });
+
+      nextBtn.addEventListener('click', () => {
+        currentIdx = currentIdx === modalThumbs.length - 1 ? 0 : currentIdx + 1;
+        updateModalSlide();
+      });
+
+      modalThumbs.forEach(thumb => {
+        thumb.addEventListener('click', () => {
+          currentIdx = parseInt(thumb.dataset.index);
+          updateModalSlide();
+        });
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (!modal.classList.contains('is-open')) return;
+        if (e.key === 'Escape') {
+          closeModal();
+        } else if (e.key === 'ArrowLeft') {
+          prevBtn.click();
+        } else if (e.key === 'ArrowRight') {
+          nextBtn.click();
+        }
       });
     },
 

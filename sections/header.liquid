@@ -95,6 +95,8 @@
             <span>Home</span>
           </a>
 
+          <!-- DOGS: Dynamic submenu from product types in Dogs collection -->
+          {%- assign dogs_coll = collections['dogs'] -%}
           <div class="header-nav__dropdown">
             <a href="/collections/dogs" class="header-nav__link header-nav__link--has-dropdown">
               <span class="header-nav__icon">🐕</span>
@@ -102,15 +104,28 @@
               <svg class="header-nav__chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
             </a>
             <div class="header-nav__dropdown-menu">
-              <a href="/collections/dogs?filter.p.tag=dog-food" class="header-nav__dropdown-item">🦴 Dog Food &amp; Treats</a>
-              <a href="/collections/dogs?filter.p.tag=dog-toys" class="header-nav__dropdown-item">🎾 Dog Toys</a>
-              <a href="/collections/dogs?filter.p.tag=dog-grooming" class="header-nav__dropdown-item">✂️ Dog Grooming</a>
-              <a href="/collections/dogs?filter.p.tag=dog-health" class="header-nav__dropdown-item">💊 Dog Health &amp; Wellness</a>
-              <a href="/collections/dogs?filter.p.tag=dog-accessories" class="header-nav__dropdown-item">🎀 Dog Accessories</a>
+              {%- if dogs_coll -%}
+                {%- assign dogs_types = '' | split: '|' -%}
+                {%- for product in dogs_coll.products limit: 100 -%}
+                  {%- assign ptype = product.type | strip -%}
+                  {%- if ptype != blank and dogs_types contains ptype == false -%}
+                    {%- assign dogs_types = dogs_types | push: ptype -%}
+                  {%- endif -%}
+                {%- endfor -%}
+                {%- assign dogs_types = dogs_types | uniq | sort -%}
+                {%- for dtype in dogs_types -%}
+                  <a href="/collections/dogs?filter.p.product_type={{ dtype | url_encode }}" class="header-nav__dropdown-item">{{ dtype }}</a>
+                {%- endfor -%}
+                {%- if dogs_types.size == 0 -%}
+                  <a href="/collections/dogs" class="header-nav__dropdown-item">All Dog Products</a>
+                {%- endif -%}
+              {%- endif -%}
               <a href="/collections/dogs" class="header-nav__dropdown-item header-nav__dropdown-item--all">View All Dog Products →</a>
             </div>
           </div>
 
+          <!-- CATS: Dynamic submenu from product types in Cats collection -->
+          {%- assign cats_coll = collections['cats'] -%}
           <div class="header-nav__dropdown">
             <a href="/collections/cats" class="header-nav__link header-nav__link--has-dropdown">
               <span class="header-nav__icon">🐱</span>
@@ -118,11 +133,22 @@
               <svg class="header-nav__chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
             </a>
             <div class="header-nav__dropdown-menu">
-              <a href="/collections/cats?filter.p.tag=cat-food" class="header-nav__dropdown-item">🐟 Cat Food &amp; Treats</a>
-              <a href="/collections/cats?filter.p.tag=cat-toys" class="header-nav__dropdown-item">🧶 Cat Toys</a>
-              <a href="/collections/cats?filter.p.tag=cat-grooming" class="header-nav__dropdown-item">✨ Cat Grooming</a>
-              <a href="/collections/cats?filter.p.tag=cat-health" class="header-nav__dropdown-item">💊 Cat Health &amp; Wellness</a>
-              <a href="/collections/cats?filter.p.tag=cat-accessories" class="header-nav__dropdown-item">🏠 Cat Accessories &amp; Beds</a>
+              {%- if cats_coll -%}
+                {%- assign cats_types = '' | split: '|' -%}
+                {%- for product in cats_coll.products limit: 100 -%}
+                  {%- assign ptype = product.type | strip -%}
+                  {%- if ptype != blank and cats_types contains ptype == false -%}
+                    {%- assign cats_types = cats_types | push: ptype -%}
+                  {%- endif -%}
+                {%- endfor -%}
+                {%- assign cats_types = cats_types | uniq | sort -%}
+                {%- for ctype in cats_types -%}
+                  <a href="/collections/cats?filter.p.product_type={{ ctype | url_encode }}" class="header-nav__dropdown-item">{{ ctype }}</a>
+                {%- endfor -%}
+                {%- if cats_types.size == 0 -%}
+                  <a href="/collections/cats" class="header-nav__dropdown-item">All Cat Products</a>
+                {%- endif -%}
+              {%- endif -%}
               <a href="/collections/cats" class="header-nav__dropdown-item header-nav__dropdown-item--all">View All Cat Products →</a>
             </div>
           </div>

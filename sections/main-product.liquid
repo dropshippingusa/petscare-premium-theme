@@ -408,7 +408,7 @@
       onclick="document.getElementById('{{ product_form_id }}').requestSubmit()"
       {% unless current_variant.available %}disabled{% endunless %}
     >
-      {%- if current_variant.available -%}Add to Bag{%- else -%}Sold Out{%- endif -%}
+      {%- if current_variant.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
     </button>
   </div>
 </div>
@@ -462,7 +462,7 @@
           <div class="fbt-box__footer">
             <p class="fbt-total">Total: <span id="fbt-total">{{ current_variant.price | money }}</span></p>
             <button type="submit" class="btn btn--primary">
-              Add Bundle to Bag
+              Add Bundle to Cart
             </button>
           </div>
         </form>

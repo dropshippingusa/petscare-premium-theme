@@ -43,12 +43,12 @@
   {% section 'footer' %}
 
   {%- comment -%} Cart Drawer — rendered via AJAX, no app needed {%- endcomment -%}
-  <div id="cart-drawer" class="cart-drawer" aria-hidden="true" role="dialog" aria-label="Shopping bag">
+  <div id="cart-drawer" class="cart-drawer" aria-hidden="true" role="dialog" aria-label="Shopping cart">
     <div class="cart-drawer__overlay" onclick="PetsCare.cart.close()"></div>
     <div class="cart-drawer__panel">
       <div class="cart-drawer__header">
-        <h2 class="cart-drawer__title">My Bag <span id="cart-count-label">({{ cart.item_count }})</span></h2>
-        <button class="icon-btn" onclick="PetsCare.cart.close()" aria-label="Close bag">
+        <h2 class="cart-drawer__title">My Cart <span id="cart-count-label">({{ cart.item_count }})</span></h2>
+        <button class="icon-btn" onclick="PetsCare.cart.close()" aria-label="Close cart">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
@@ -80,7 +80,7 @@
         </div>
         <p class="cart-drawer__tax-note">Taxes and shipping calculated at checkout</p>
         <a href="/checkout" class="btn btn--primary btn--full btn--lg">Checkout</a>
-        <a href="/cart" class="btn btn--ghost btn--full">View full bag</a>
+        <a href="/cart" class="btn btn--ghost btn--full">View full cart</a>
       </div>
     </div>
   </div>
@@ -117,12 +117,12 @@
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <span>Search</span>
     </button>
-    <button type="button" class="mobile-nav-item mobile-nav-cart" onclick="PetsCare.cart.open()" aria-label="Open bag">
+    <button type="button" class="mobile-nav-item mobile-nav-cart" onclick="PetsCare.cart.open()" aria-label="Open cart">
       <span class="mobile-nav-cart__icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
         <span class="mobile-cart-badge" id="mobile-cart-badge" {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
       </span>
-      <span>Bag</span>
+      <span>Cart</span>
     </button>
     <a href="/account" class="mobile-nav-item {% if template.name contains 'customers' %}is-active{% endif %}" aria-label="Account">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -133,7 +133,7 @@
   {%- comment -%} Add-to-cart toast notification {%- endcomment -%}
   <div id="cart-toast" class="cart-toast" role="status" aria-live="polite" aria-atomic="true">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-    <span id="cart-toast-msg">Added to bag!</span>
+    <span id="cart-toast-msg">Added to cart!</span>
   </div>
 
   {%- if customer and customer.orders.size > 0 -%}

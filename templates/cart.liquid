@@ -9,7 +9,7 @@
     <ol class="breadcrumb" role="list">
       <li class="breadcrumb__item"><a href="/">Home</a></li>
       <li class="breadcrumb__item breadcrumb__sep" aria-hidden="true">/</li>
-      <li class="breadcrumb__item breadcrumb__item--current" aria-current="page">Your Bag</li>
+      <li class="breadcrumb__item breadcrumb__item--current" aria-current="page">Your Cart</li>
     </ol>
   </div>
 
@@ -19,7 +19,7 @@
         
         {%- comment -%} Left Column: Cart Items List {%- endcomment -%}
         <div class="cart-page-main">
-          <h1 class="cart-page-title">Your Bag <span class="cart-page-title__count">({{ cart.item_count }} items)</span></h1>
+          <h1 class="cart-page-title">Your Cart <span class="cart-page-title__count">({{ cart.item_count }} items)</span></h1>
           
           <form action="/cart" method="post" novalidate id="cart-form">
             <div class="cart-items-list">
@@ -56,7 +56,7 @@
                         type="button"
                         class="cart-page-item__remove icon-btn"
                         onclick="PetsCare.cart.change('{{ item.key }}', 0)"
-                        aria-label="Remove {{ item.product.title | escape }} from bag"
+                        aria-label="Remove {{ item.product.title | escape }} from cart"
                       >
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                       </button>
@@ -185,8 +185,8 @@
           <line x1="3" y1="6" x2="21" y2="6"/>
           <path d="M16 10a4 4 0 01-8 0"/>
         </svg>
-        <h1 class="cart-page-empty__title">Your Bag is Empty</h1>
-        <p class="cart-page-empty__text">Looks like you haven't added any products to your bag yet. Let's find some favorites!</p>
+        <h1 class="cart-page-empty__title">Your Cart is Empty</h1>
+        <p class="cart-page-empty__text">Looks like you haven't added any products to your cart yet. Let's find some favorites!</p>
         <a href="/collections/all" class="btn btn--primary">Browse Our Catalog</a>
       </div>
     {%- endif -%}

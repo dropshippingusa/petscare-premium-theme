@@ -99,7 +99,7 @@ const PetsCare = {
               <line x1="3" y1="6" x2="21" y2="6"/>
               <path d="M16 10a4 4 0 01-8 0"/>
             </svg>
-            <p>Your bag is empty</p>
+            <p>Your cart is empty</p>
             <a href="/collections/all" class="btn btn--primary btn--sm" onclick="PetsCare.cart.close()">Start Shopping</a>
           </div>`;
         if (footer) footer.hidden = true;
@@ -192,7 +192,7 @@ const PetsCare = {
           detail: { items, currency: 'USD' }
         }));
 
-        PetsCare.utils.showToast('Added to bag!');
+        PetsCare.utils.showToast('Added to cart!');
         if (openDrawer) this.open();
         else this.refresh();
       } catch(e) {

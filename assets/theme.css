@@ -485,9 +485,10 @@ a:focus-visible, button:focus-visible {
 
 /* ─── CATEGORY NAV BAR ──────────────────────────────────────────── */
 .header-nav-row {
-  background: #1a2336;
+  background: #e0f4ff;
   width: 100%;
-  border-top: 1px solid rgba(255,255,255,0.06);
+  border-top: 1px solid #b3e0f7;
+  border-bottom: 1px solid #b3e0f7;
 }
 .header-nav {
   display: flex;
@@ -510,7 +511,7 @@ a:focus-visible, button:focus-visible {
   padding: 0 18px;
   font-size: 13.5px;
   font-weight: 600;
-  color: rgba(255,255,255,0.88);
+  color: #0d4f7a;
   border-radius: 0;
   transition: background 0.18s ease, color 0.18s ease;
   position: relative;
@@ -519,8 +520,8 @@ a:focus-visible, button:focus-visible {
   text-decoration: none;
 }
 .header-nav__link:hover {
-  background: rgba(255,255,255,0.1);
-  color: #fff;
+  background: rgba(0,120,200,0.1);
+  color: #0a3d5c;
 }
 /* Active underline bar on hover */
 .header-nav__link::after {
@@ -545,20 +546,22 @@ a:focus-visible, button:focus-visible {
 }
 .header-nav__chevron {
   margin-left: 2px;
-  opacity: 0.65;
+  opacity: 0.5;
+  color: #0d4f7a;
   transition: transform 0.2s ease;
 }
 
 /* Deals badge */
 .header-nav__link--deals {
-  color: #fbbf24;
+  color: #c2410c;
+  font-weight: 700;
 }
 .header-nav__link--deals:hover {
-  color: #fbbf24;
-  background: rgba(251,191,36,0.12);
+  color: #9a3412;
+  background: rgba(194,65,12,0.08);
 }
 .header-nav__link--deals::after {
-  background: #fbbf24;
+  background: #c2410c;
 }
 
 /* ─── DROPDOWN ──────────────────────────────────────────────────── */
@@ -569,8 +572,8 @@ a:focus-visible, button:focus-visible {
   transform: rotate(180deg);
 }
 .header-nav__dropdown:hover > .header-nav__link {
-  background: rgba(255,255,255,0.1);
-  color: #fff;
+  background: rgba(0,120,200,0.1);
+  color: #0a3d5c;
 }
 .header-nav__dropdown:hover > .header-nav__link::after {
   opacity: 1;
@@ -1115,6 +1118,7 @@ a:focus-visible, button:focus-visible {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--primary);
+  margin-top: 16px;
 }
 .hero__eyebrow::before {
   content: '';

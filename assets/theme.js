@@ -157,7 +157,7 @@ const PetsCare = {
     _updateShippingBar(totalPrice) {
       const bar = document.getElementById('shipping-bar');
       if (!bar) return;
-      const threshold = 4900; // $49.00 in cents
+      const threshold = 9900; // $99.00 in cents
       const remaining = threshold - totalPrice;
       const deliveryEst = PetsCare.utils.getDeliveryEstimateString();
       if (remaining <= 0) {
@@ -920,7 +920,7 @@ const PetsCare = {
               // Update shipping progress bar dynamically
               const shippingBar = document.getElementById('pdp-shipping-bar');
               if (shippingBar) {
-                const threshold = 4900;
+                const threshold = 9900;
                 const price = matchedVariant.price;
                 const barFill = document.getElementById('pdp-shipping-bar-fill');
                 const barText = shippingBar.querySelector('.pdp-shipping-bar__text');

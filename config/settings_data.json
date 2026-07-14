@@ -120,10 +120,17 @@
           "show_newsletter": true,
           "newsletter_placeholder": "Your email address",
           "newsletter_button": "Subscribe",
-          "social_instagram": "",
+          "social_instagram": "https://www.instagram.com/petscareusa.in?igsh=enBsYWQzc2c1NnB0",
           "social_facebook": "",
           "social_pinterest": "",
           "social_tiktok": ""
+        }
+      },
+      "main-collection": {
+        "type": "main-collection",
+        "settings": {
+          "show_banner": true,
+          "products_per_page": 24
         }
       }
     },

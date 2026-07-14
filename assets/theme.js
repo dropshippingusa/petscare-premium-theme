@@ -582,14 +582,9 @@ const PetsCare = {
             mainImg.style.opacity = '0';
             mainImg.style.transition = 'opacity 180ms ease';
             setTimeout(() => {
-              mainImg.onload = () => {
-                mainImg.style.opacity = '1';
-              };
+              mainImg.removeAttribute('srcset');
               mainImg.src = newSrc;
-              // Fallback for cached images where onload might not fire
-              if (mainImg.complete) {
-                mainImg.style.opacity = '1';
-              }
+              mainImg.style.opacity = '1';
             }, 180);
           }
         });

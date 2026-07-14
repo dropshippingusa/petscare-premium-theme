@@ -1,12 +1,17 @@
 {%- liquid
+  # Read sub-category filter from URL (set by nav dropdown)
+  assign filter_product_type = ''
+  if request.params['filter.p.product_type'] != blank
+    assign filter_product_type = request.params['filter.p.product_type'] | strip
+  endif
+
   # Detect pet parameter in query string or URL path
   assign filter_pet = ''
-  if request.path contains 'dogs'
+  if request.path contains '/dogs'
     assign filter_pet = 'dogs'
-  elsif request.path contains 'cats'
+  elsif request.path contains '/cats'
     assign filter_pet = 'cats'
   else
-    # Parse query string from content_for_header
     assign page_url = content_for_header | split: '"pageurl":"' | last | split: '"' | first | downcase | replace: '%2f', '/' | replace: '%3f', '?' | replace: '%3d', '='
     if page_url contains 'pet=dogs'
       assign filter_pet = 'dogs'
@@ -15,8 +20,10 @@
     endif
   endif
 
+  # Dogs and Cats are now real Smart Collections — use native Shopify rendering
+  # Only fall back to keyword loop if collection is empty or uses the ?pet= param
   assign is_fallback = false
-  if collection.handle == 'dogs' or collection.handle == 'cats' or collection.products.size == 0 or filter_pet != blank
+  if collection.products.size == 0 or filter_pet != blank
     assign is_fallback = true
   endif
 
@@ -24,18 +31,31 @@
   if is_fallback
     for product in collections.all.products
       assign title_downcase = product.title | downcase
-      assign type_downcase = product.type | downcase
-      assign tags_string = product.tags | join: ',' | downcase
-      
-      if collection.handle == 'dogs' or filter_pet == 'dogs'
+      assign type_downcase  = product.type  | downcase
+      assign tags_string    = product.tags  | join: ',' | downcase
+
+      assign pet_match = false
+      if filter_pet == 'dogs'
         if title_downcase contains 'dog' or type_downcase contains 'dog' or tags_string contains 'dog' or product.handle contains 'dog'
-          assign fallback_count = fallback_count | plus: 1
+          assign pet_match = true
         endif
-      elsif collection.handle == 'cats' or filter_pet == 'cats'
+      elsif filter_pet == 'cats'
         if title_downcase contains 'cat' or type_downcase contains 'cat' or tags_string contains 'cat' or product.handle contains 'cat'
-          assign fallback_count = fallback_count | plus: 1
+          assign pet_match = true
         endif
       else
+        assign pet_match = true
+      endif
+
+      # Also apply product_type filter if set
+      assign type_match = true
+      if filter_product_type != blank
+        if product.type != filter_product_type
+          assign type_match = false
+        endif
+      endif
+
+      if pet_match and type_match
         assign fallback_count = fallback_count | plus: 1
       endif
     endfor
@@ -48,6 +68,15 @@
   else
     assign total_products = collection.all_products_count
     assign current_products = collection.products_count
+    if filter_product_type != blank
+      # Count matching products for display
+      assign current_products = 0
+      for product in collection.products
+        if product.type == filter_product_type
+          assign current_products = current_products | plus: 1
+        endif
+      endfor
+    endif
   endif
 
   # Define dynamic collection banner using downloaded local assets
@@ -305,21 +334,33 @@
           {%- for product in collections.all.products -%}
             {%- assign should_render = false -%}
             {%- assign title_downcase = product.title | downcase -%}
-            {%- assign type_downcase = product.type | downcase -%}
-            {%- assign tags_string = product.tags | join: ',' | downcase -%}
-            
-            {%- if collection.handle == 'dogs' or filter_pet == 'dogs' -%}
+            {%- assign type_downcase  = product.type  | downcase -%}
+            {%- assign tags_string    = product.tags  | join: ',' | downcase -%}
+
+            {%- assign pet_ok = false -%}
+            {%- if filter_pet == 'dogs' -%}
               {%- if title_downcase contains 'dog' or type_downcase contains 'dog' or tags_string contains 'dog' or product.handle contains 'dog' -%}
-                {%- assign should_render = true -%}
+                {%- assign pet_ok = true -%}
               {%- endif -%}
-            {%- elsif collection.handle == 'cats' or filter_pet == 'cats' -%}
+            {%- elsif filter_pet == 'cats' -%}
               {%- if title_downcase contains 'cat' or type_downcase contains 'cat' or tags_string contains 'cat' or product.handle contains 'cat' -%}
-                {%- assign should_render = true -%}
+                {%- assign pet_ok = true -%}
               {%- endif -%}
             {%- else -%}
+              {%- assign pet_ok = true -%}
+            {%- endif -%}
+
+            {%- assign type_ok = true -%}
+            {%- if filter_product_type != blank -%}
+              {%- if product.type != filter_product_type -%}
+                {%- assign type_ok = false -%}
+              {%- endif -%}
+            {%- endif -%}
+
+            {%- if pet_ok and type_ok -%}
               {%- assign should_render = true -%}
             {%- endif -%}
-            
+
             {%- if should_render -%}
               {%- render 'product-card', product: product -%}
             {%- endif -%}
@@ -338,7 +379,13 @@
       {%- if collection.products.size > 0 -%}
         <div class="product-grid" id="collection-grid">
           {%- for product in collection.products -%}
-            {%- render 'product-card', product: product -%}
+            {%- if filter_product_type != blank -%}
+              {%- if product.type == filter_product_type -%}
+                {%- render 'product-card', product: product -%}
+              {%- endif -%}
+            {%- else -%}
+              {%- render 'product-card', product: product -%}
+            {%- endif -%}
           {%- endfor -%}
         </div>
 

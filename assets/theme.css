@@ -1218,18 +1218,36 @@ a:focus-visible, button:focus-visible {
 
 @media (max-width: 1023px) {
   .hero {
-    grid-template-columns: 1fr;
-    padding: var(--sp-4) var(--gutter);
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "leftimg rightimg"
+      "content content";
+    padding: var(--sp-3) var(--gutter);
     min-height: auto;
     gap: var(--sp-4);
   }
   .hero__visual--left {
-    display: none;
+    display: block !important;
+    grid-area: leftimg;
+    max-width: 100%;
+    margin: 0;
   }
   .hero__visual--right {
-    max-width: 280px;
-    margin: 0 auto;
-    order: -1;
+    display: block !important;
+    grid-area: rightimg;
+    max-width: 100%;
+    margin: 0;
+  }
+  .hero__content {
+    grid-area: content;
+    text-align: center;
+    align-items: center;
+  }
+  .hero__headline {
+    font-size: clamp(24px, 5.5vw, 36px);
+  }
+  .hero__trust {
+    justify-content: center;
   }
 }
 
@@ -3974,4 +3992,184 @@ a.fbt-item__title:hover { color: var(--primary); }
   margin-left: 2px;
   letter-spacing: 0.5px;
 }
+
+/* =============================================================================
+   MOBILE LAYOUT REFINEMENTS
+   ============================================================================= */
+@media (max-width: 768px) {
+  /* Make product card Add to Cart and wishlist buttons visible on touch/mobile */
+  .product-card__add {
+    transform: translateY(0);
+    padding: 10px;
+    font-size: 12.5px;
+    background: rgba(17, 24, 39, 0.9);
+  }
+  .product-card__actions {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .header-actions {
+    gap: 10px;
+  }
+  .header-container {
+    gap: 12px;
+  }
+}
+
+/* =============================================================================
+   INSTAGRAM FEED
+   ============================================================================= */
+.instagram-gallery {
+  background: #ffffff;
+}
+.insta-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-4);
+}
+.insta-item {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background-color: var(--bg-subtle);
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  border: 1px solid var(--border);
+}
+.insta-item:nth-child(1) { background-image: url('https://cdn.shopify.com/s/files/1/0086/0795/7054/files/Saras_Wholesome_Food_e98d8515-7c28-4865-9da1-46527afa9353.webp?v=1742375228'); }
+.insta-item:nth-child(2) { background-image: url('https://cdn.shopify.com/s/files/1/0086/0795/7054/files/CLH_for_dogs.webp?v=1742375228'); }
+.insta-item:nth-child(3) { background-image: url('https://cdn.shopify.com/s/files/1/0086/0795/7054/files/Yakies_for_dogs.webp?v=1742375228'); }
+.insta-item:nth-child(4) { background-image: url('https://cdn.shopify.com/s/files/1/0086/0795/7054/files/cat_toys_79bf694c-2c5c-4f18-8cac-626ccf76c503.webp?v=1742375228'); }
+
+.insta-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity var(--t-base) var(--ease);
+}
+.insta-item:hover .insta-overlay {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .insta-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-2);
+  }
+}
+
+/* =============================================================================
+   HEALTH GUIDES
+   ============================================================================= */
+.health-guide {
+  background: var(--bg-alt);
+}
+.health-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-4);
+}
+.health-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: var(--sp-5);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: all var(--t-base) var(--ease);
+}
+.health-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+}
+.health-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
+}
+.health-card p {
+  font-size: 13px;
+  color: var(--ink-3);
+  line-height: 1.5;
+  margin: 0;
+}
+.health-card span {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-top: auto;
+  transition: gap 0.2s ease;
+}
+.health-card:hover span {
+  color: var(--primary-dark);
+}
+
+@media (max-width: 1024px) {
+  .health-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 480px) {
+  .health-grid {
+    grid-template-columns: 1fr;
+    gap: var(--sp-3);
+  }
+}
+
+/* =============================================================================
+   TESTIMONIALS
+   ============================================================================= */
+.testimonials {
+  background: var(--bg);
+}
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-4);
+}
+.test-card {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: var(--sp-5);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: var(--shadow-sm);
+}
+.test-card p {
+  font-size: 14px;
+  font-style: italic;
+  color: var(--ink-2);
+  line-height: 1.6;
+  margin: 0;
+}
+.test-card strong {
+  font-size: 13px;
+  color: var(--ink);
+  font-weight: 700;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+    gap: var(--sp-3);
+  }
+}
+
 

@@ -387,12 +387,15 @@ const PetsCare = {
     init() {
       const header = document.querySelector('.site-header');
       if (header) {
-        // Set header height custom property dynamically
-        const updateHeaderHeight = () => {
+        // Set announcement & header height custom property dynamically
+        const announcement = document.querySelector('.announcement-bar');
+        const updateHeights = () => {
+          const annHeight = announcement ? announcement.offsetHeight : 0;
+          document.documentElement.style.setProperty('--announcement-h', `${annHeight}px`);
           document.documentElement.style.setProperty('--header-h', `${header.offsetHeight}px`);
         };
-        updateHeaderHeight();
-        window.addEventListener('resize', updateHeaderHeight);
+        updateHeights();
+        window.addEventListener('resize', updateHeights);
 
         // Sticky / scroll tracking logic
         let lastScrollY = window.scrollY;

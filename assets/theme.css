@@ -245,7 +245,7 @@ a:focus-visible, button:focus-visible {
    ============================================================================= */
 .site-header {
   position: sticky;
-  top: 0;
+  top: var(--announcement-h, 36px);
   z-index: 900;
   background: rgba(255,255,255,0.96);
   backdrop-filter: blur(12px);
@@ -305,7 +305,9 @@ a:focus-visible, button:focus-visible {
   font-weight: 600;
   padding: 8px var(--gutter);
   letter-spacing: 0.02em;
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 950;
   overflow: hidden;
   height: 36px;
   display: flex;

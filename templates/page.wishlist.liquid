@@ -1,0 +1,23 @@
+<div class="page-standard section container">
+  <h1 class="section-title" style="text-align:center; margin-bottom:40px;">{{ page.title }}</h1>
+  
+  <div id="wishlist-loading" class="text-center" style="padding: 40px 0;">
+    <div class="loading-spinner" style="margin: 0 auto var(--sp-3); width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite;"></div>
+    <p style="color: var(--ink-3);">Loading your wishlist...</p>
+  </div>
+
+  <div id="wishlist-empty" class="text-center" style="display: none; padding: 40px 0;">
+    <p style="margin-bottom: 20px; color: var(--ink-3);">Your wishlist is currently empty.</p>
+    <a href="/collections/all" class="btn btn--primary">Shop Now</a>
+  </div>
+
+  <div id="wishlist-grid" class="product-grid" style="display: none;">
+    <!-- Wishlist items will be rendered here dynamically via JS -->
+  </div>
+</div>
+
+<style>
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+</style>

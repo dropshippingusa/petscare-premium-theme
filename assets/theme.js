@@ -471,8 +471,53 @@ const PetsCare = {
           const added = this.toggle(id);
           btn.classList.toggle('is-wishlisted', added);
           PetsCare.utils.showToast(added ? 'Added to wishlist' : 'Removed from wishlist');
+          if (document.getElementById('wishlist-grid')) {
+            this.renderPage();
+          }
         });
       });
+
+      if (document.getElementById('wishlist-grid')) {
+        this.renderPage();
+      }
+    },
+    async renderPage() {
+      const grid = document.getElementById('wishlist-grid');
+      const empty = document.getElementById('wishlist-empty');
+      const loading = document.getElementById('wishlist-loading');
+      if (!grid) return;
+
+      const list = this.get();
+      if (list.length === 0) {
+        if (loading) loading.style.display = 'none';
+        if (empty) empty.style.display = 'block';
+        grid.style.display = 'none';
+        return;
+      }
+
+      if (loading) loading.style.display = 'block';
+      if (empty) empty.style.display = 'none';
+      grid.style.display = 'none';
+
+      const q = list.map(id => `id:${id}`).join(' OR ');
+      try {
+        const url = `/search?view=recently-viewed&type=product&q=${encodeURIComponent(q)}`;
+        const r = await fetch(url);
+        const html = await r.text();
+        if (html && html.trim().length > 10) {
+          grid.innerHTML = html;
+          if (loading) loading.style.display = 'none';
+          grid.style.display = 'grid';
+          this.init(); // rebind buttons
+        } else {
+          if (loading) loading.style.display = 'none';
+          if (empty) empty.style.display = 'block';
+        }
+      } catch(e) {
+        console.error('[PetsCare] renderWishlist failed', e);
+        if (loading) loading.style.display = 'none';
+        if (empty) empty.style.display = 'block';
+      }
     }
   },
 

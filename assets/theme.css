@@ -3708,7 +3708,11 @@ a.fbt-item__title:hover { color: var(--primary); }
 .template-page-terms-of-service .page-standard,
 .template-page-shipping-policy .page-standard,
 .template-page-contact-information .page-standard,
-.template-page-legal-notice .page-standard {
+.template-page-legal-notice .page-standard,
+.template-page-shipping-returns .page-standard,
+.template-page-legal-protection .page-standard,
+.template-page-compliance .page-standard,
+.template-page-supplier-transparency .page-standard {
   max-width: 100% !important;
   width: 100% !important;
   padding-left: var(--gutter) !important;
@@ -3722,7 +3726,11 @@ a.fbt-item__title:hover { color: var(--primary); }
 .template-page-terms-of-service .page-content,
 .template-page-shipping-policy .page-content,
 .template-page-contact-information .page-content,
-.template-page-legal-notice .page-content {
+.template-page-legal-notice .page-content,
+.template-page-shipping-returns .page-content,
+.template-page-legal-protection .page-content,
+.template-page-compliance .page-content,
+.template-page-supplier-transparency .page-content {
   max-width: 100% !important;
   width: 100% !important;
   font-size: 13px !important;

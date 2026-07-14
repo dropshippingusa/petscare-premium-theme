@@ -68,11 +68,12 @@
     <div class="footer-bottom__left">
       <p>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.</p>
       <div class="footer-policies" aria-label="Store policies">
-        {%- for policy in shop.policies -%}
-          {%- if policy != blank -%}
-            <a href="{{ policy.url }}" class="footer-policy-link">{{ policy.title }}</a>
-          {%- endif -%}
-        {%- endfor -%}
+        <a href="/pages/terms-of-service" class="footer-policy-link">Terms of Service</a>
+        <a href="/pages/privacy-policy" class="footer-policy-link">Privacy Policy</a>
+        <a href="/pages/shipping-returns" class="footer-policy-link">Shipping & Returns</a>
+        <a href="/pages/legal-protection" class="footer-policy-link">Legal Protection</a>
+        <a href="/pages/compliance" class="footer-policy-link">Compliance</a>
+        <a href="/pages/supplier-transparency" class="footer-policy-link">Supplier Transparency</a>
       </div>
     </div>
     <div class="footer-payment-icons" aria-label="Accepted payment methods">

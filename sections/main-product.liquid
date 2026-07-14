@@ -266,84 +266,93 @@
       </div>
     </div>
 
-    {%- comment -%} Product Info Tabs {%- endcomment -%}
-    <div class="pdp-tabs">
-      <div class="pdp-tabs__nav" role="tablist">
-        <button class="pdp-tab-btn is-active" role="tab" aria-selected="true" data-tab="tab-description" id="tab-btn-description">Description</button>
-        {%- if product.metafields.custom.ingredients != blank -%}
-          <button class="pdp-tab-btn" role="tab" aria-selected="false" data-tab="tab-ingredients" id="tab-btn-ingredients">Ingredients</button>
-        {%- endif -%}
-        {%- if product.metafields.custom.directions != blank -%}
-          <button class="pdp-tab-btn" role="tab" aria-selected="false" data-tab="tab-directions" id="tab-btn-directions">Directions</button>
-        {%- endif -%}
-        {%- if product.metafields.custom.specifications != blank -%}
-          <button class="pdp-tab-btn" role="tab" aria-selected="false" data-tab="tab-specs" id="tab-btn-specs">Specifications</button>
-        {%- endif -%}
-        {%- if product.metafields.custom.faqs != blank -%}
-          <button class="pdp-tab-btn" role="tab" aria-selected="false" data-tab="tab-faqs" id="tab-btn-faqs">FAQs</button>
-        {%- endif -%}
-        {%- comment -%} Reviews tab placeholder — filled by Judge.me/Okendo app injection {%- endcomment -%}
-        {%- if product.metafields.reviews.rating.value != blank -%}
-          <button class="pdp-tab-btn" role="tab" aria-selected="false" data-tab="tab-reviews" id="tab-btn-reviews">Reviews</button>
-        {%- endif -%}
-      </div>
+  </div>
+</div>
 
-      {%- comment -%} Description tab {%- endcomment -%}
-      <div id="tab-description" class="pdp-tab-panel is-active" role="tabpanel" aria-labelledby="tab-btn-description">
-        {%- if product.description != blank -%}
-          <div class="rte">{{ product.description }}</div>
-        {%- else -%}
-          <p class="text-muted">No description available for this product.</p>
-        {%- endif -%}
-      </div>
-
-      {%- comment -%} Ingredients tab (metafield: custom.ingredients) {%- endcomment -%}
+<div class="pdp-tabs-container container">
+  {%- comment -%} Product Info Tabs {%- endcomment -%}
+  <div class="pdp-tabs">
+    <div class="pdp-tabs__nav" role="tablist">
+      <button class="pdp-tab-btn is-active" role="tab" aria-selected="true" data-tab="tab-description" id="tab-btn-description">Description</button>
       {%- if product.metafields.custom.ingredients != blank -%}
-        <div id="tab-ingredients" class="pdp-tab-panel" role="tabpanel" aria-labelledby="tab-btn-ingredients" hidden>
-          <div class="rte">{{ product.metafields.custom.ingredients.value }}</div>
-        </div>
+        <button class="pdp-tab-btn" role="tab" aria-selected="false" data-tab="tab-ingredients" id="tab-btn-ingredients">Ingredients</button>
       {%- endif -%}
-
-      {%- comment -%} Directions tab (metafield: custom.directions) {%- endcomment -%}
       {%- if product.metafields.custom.directions != blank -%}
-        <div id="tab-directions" class="pdp-tab-panel" role="tabpanel" aria-labelledby="tab-btn-directions" hidden>
-          <div class="rte">{{ product.metafields.custom.directions.value }}</div>
-        </div>
+        <button class="pdp-tab-btn" role="tab" aria-selected="false" data-tab="tab-directions" id="tab-btn-directions">Directions</button>
       {%- endif -%}
-
-      {%- comment -%} Specifications tab (metafield: custom.specifications) {%- endcomment -%}
       {%- if product.metafields.custom.specifications != blank -%}
-        <div id="tab-specs" class="pdp-tab-panel" role="tabpanel" aria-labelledby="tab-btn-specs" hidden>
-          <div class="rte">{{ product.metafields.custom.specifications.value }}</div>
-        </div>
+        <button class="pdp-tab-btn" role="tab" aria-selected="false" data-tab="tab-specs" id="tab-btn-specs">Specifications</button>
       {%- endif -%}
-
-      {%- comment -%} FAQs tab (metafield: custom.faqs) {%- endcomment -%}
       {%- if product.metafields.custom.faqs != blank -%}
-        <div id="tab-faqs" class="pdp-tab-panel" role="tabpanel" aria-labelledby="tab-btn-faqs" hidden>
-          <div class="rte">{{ product.metafields.custom.faqs.value }}</div>
-        </div>
+        <button class="pdp-tab-btn" role="tab" aria-selected="false" data-tab="tab-faqs" id="tab-btn-faqs">FAQs</button>
       {%- endif -%}
-
-      {%- comment -%} Reviews tab — injection point for Judge.me / Okendo {%- endcomment -%}
+      {%- comment -%} Reviews tab placeholder — filled by Judge.me/Okendo app injection {%- endcomment -%}
       {%- if product.metafields.reviews.rating.value != blank -%}
-        <div id="tab-reviews" class="pdp-tab-panel" role="tabpanel" aria-labelledby="tab-btn-reviews" hidden>
-          <div id="reviews">
-            {%- comment -%} Reviews app injects here via product.id {%- endcomment -%}
-            {% render 'judge-me-review-widget', context: product %}
-          </div>
-        </div>
+        <button class="pdp-tab-btn" role="tab" aria-selected="false" data-tab="tab-reviews" id="tab-btn-reviews">Reviews</button>
       {%- endif -%}
     </div>
 
-    {%- comment -%} Universal Product Review App Embed Hooks (Judge.me, Loox, Stamped, Yotpo, SPR) {%- endcomment -%}
-    <div class="pdp-universal-reviews container" style="margin-top:var(--sp-4);">
-      <div id="judgeme_product_reviews" class="jdgm-widget jdgm-review-widget" data-id="{{ product.id }}"></div>
-      <div id="shopify-product-reviews" data-id="{{ product.id }}">{{ product.metafields.spr.reviews }}</div>
-      <div class="stamped-main-widget" id="stamped-main-widget" data-product-id="{{ product.id }}" data-name="{{ product.title | escape }}" data-url="{{ shop.url }}{{ product.url }}" data-image-url="{{ product.featured_image | image_url: width: 120 }}" data-description="{{ product.description | escape }}"></div>
-      <div class="yotpo yotpo-main-widget" data-product-id="{{ product.id }}" data-name="{{ product.title | escape }}" data-url="{{ shop.url }}{{ product.url }}" data-image-url="{{ product.featured_image | image_url: width: 120 }}" data-description="{{ product.description | escape }}"></div>
+    {%- comment -%} Description tab {%- endcomment -%}
+    <div id="tab-description" class="pdp-tab-panel is-active" role="tabpanel" aria-labelledby="tab-btn-description">
+      {%- if product.description != blank -%}
+        <div class="pdp-description-wrapper" id="pdp-desc-wrapper">
+          <div class="rte" id="pdp-desc-content">{{ product.description }}</div>
+          <div class="pdp-description-fade" id="pdp-desc-fade"></div>
+        </div>
+        <button type="button" class="btn-see-more" id="pdp-desc-toggle" style="display: none;">
+          See More
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:2px;"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      {%- else -%}
+        <p class="text-muted">No description available for this product.</p>
+      {%- endif -%}
     </div>
 
+    {%- comment -%} Ingredients tab (metafield: custom.ingredients) {%- endcomment -%}
+    {%- if product.metafields.custom.ingredients != blank -%}
+      <div id="tab-ingredients" class="pdp-tab-panel" role="tabpanel" aria-labelledby="tab-btn-ingredients" hidden>
+        <div class="rte">{{ product.metafields.custom.ingredients.value }}</div>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Directions tab (metafield: custom.directions) {%- endcomment -%}
+    {%- if product.metafields.custom.directions != blank -%}
+      <div id="tab-directions" class="pdp-tab-panel" role="tabpanel" aria-labelledby="tab-btn-directions" hidden>
+        <div class="rte">{{ product.metafields.custom.directions.value }}</div>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Specifications tab (metafield: custom.specifications) {%- endcomment -%}
+    {%- if product.metafields.custom.specifications != blank -%}
+      <div id="tab-specs" class="pdp-tab-panel" role="tabpanel" aria-labelledby="tab-btn-specs" hidden>
+        <div class="rte">{{ product.metafields.custom.specifications.value }}</div>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} FAQs tab (metafield: custom.faqs) {%- endcomment -%}
+    {%- if product.metafields.custom.faqs != blank -%}
+      <div id="tab-faqs" class="pdp-tab-panel" role="tabpanel" aria-labelledby="tab-btn-faqs" hidden>
+        <div class="rte">{{ product.metafields.custom.faqs.value }}</div>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Reviews tab — injection point for Judge.me / Okendo {%- endcomment -%}
+    {%- if product.metafields.reviews.rating.value != blank -%}
+      <div id="tab-reviews" class="pdp-tab-panel" role="tabpanel" aria-labelledby="tab-btn-reviews" hidden>
+        <div id="reviews">
+          {%- comment -%} Reviews app injects here via product.id {%- endcomment -%}
+          {% render 'judge-me-review-widget', context: product %}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} Universal Product Review App Embed Hooks (Judge.me, Loox, Stamped, Yotpo, SPR) {%- endcomment -%}
+  <div class="pdp-universal-reviews" style="margin-top:var(--sp-4);">
+    <div id="judgeme_product_reviews" class="jdgm-widget jdgm-review-widget" data-id="{{ product.id }}"></div>
+    <div id="shopify-product-reviews" data-id="{{ product.id }}">{{ product.metafields.spr.reviews }}</div>
+    <div class="stamped-main-widget" id="stamped-main-widget" data-product-id="{{ product.id }}" data-name="{{ product.title | escape }}" data-url="{{ shop.url }}{{ product.url }}" data-image-url="{{ product.featured_image | image_url: width: 120 }}" data-description="{{ product.description | escape }}"></div>
+    <div class="yotpo yotpo-main-widget" data-product-id="{{ product.id }}" data-name="{{ product.title | escape }}" data-url="{{ shop.url }}{{ product.url }}" data-image-url="{{ product.featured_image | image_url: width: 120 }}" data-description="{{ product.description | escape }}"></div>
   </div>
 </div>
 

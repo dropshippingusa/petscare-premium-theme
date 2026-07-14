@@ -2383,7 +2383,7 @@ a:focus-visible, button:focus-visible {
 /* PDP layout */
 .pdp-layout {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 4fr 6fr;
   gap: var(--sp-6);
   padding-top: var(--sp-4);
   padding-bottom: var(--sp-7);
@@ -2391,7 +2391,13 @@ a:focus-visible, button:focus-visible {
 }
 
 /* Gallery */
-.pdp-gallery { position: sticky; top: calc(var(--header-h) + 24px); }
+.pdp-gallery {
+  position: sticky;
+  top: calc(var(--header-h) + 24px);
+  display: flex;
+  gap: 16px;
+  align-items: start;
+}
 .pdp-gallery__main {
   aspect-ratio: 1;
   border-radius: 20px;
@@ -2399,6 +2405,8 @@ a:focus-visible, button:focus-visible {
   background: var(--bg-subtle);
   cursor: zoom-in;
   border: 1px solid var(--border);
+  flex-grow: 1;
+  order: 2;
 }
 .pdp-gallery__main-img {
   width: 100%; height: 100%; object-fit: cover;
@@ -2408,8 +2416,19 @@ a:focus-visible, button:focus-visible {
 
 /* Thumbnail strip */
 .pdp-gallery__thumbs {
-  display: flex; gap: 10px; margin-top: 14px;
-  overflow-x: auto; scrollbar-width: thin; padding-bottom: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 80px;
+  flex-shrink: 0;
+  order: 1;
+  margin-top: 0;
+  overflow-y: auto;
+  max-height: 500px;
+  scrollbar-width: none;
+}
+.pdp-gallery__thumbs::-webkit-scrollbar {
+  display: none;
 }
 .pdp-thumb {
   position: relative; flex-shrink: 0;
@@ -2429,11 +2448,19 @@ a:focus-visible, button:focus-visible {
   background: rgba(0,0,0,0.35);
 }
 
+/* PDP form with gap spacing */
+.pdp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 15px;
+}
+
 /* PDP info column */
 .pdp-info { display: flex; flex-direction: column; gap: 20px; }
 .pdp-brand { font-size: 11px; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.06em; text-decoration: none; }
 .pdp-brand:hover { color: var(--primary); }
-.pdp-title { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; color: var(--ink); margin: 0; }
+.pdp-title { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; color: var(--ink); margin: 0; }
 
 /* Rating */
 .pdp-rating { display: flex; align-items: center; gap: 8px; }
@@ -2526,6 +2553,55 @@ a:focus-visible, button:focus-visible {
 .pdp-tab-btn.is-active { color: var(--primary); border-bottom-color: var(--primary); }
 .pdp-tab-panel { padding: var(--sp-3) 0; display: none; }
 .pdp-tab-panel.is-active { display: block; }
+
+/* Full-width PDP tabs container */
+.pdp-tabs-container {
+  margin-top: var(--sp-6);
+  margin-bottom: var(--sp-6);
+  border-top: 1px solid var(--border);
+  padding-top: var(--sp-4);
+}
+.pdp-tabs-container .pdp-tabs {
+  border-top: none;
+}
+.pdp-description-wrapper {
+  position: relative;
+  max-height: 220px;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+.pdp-description-wrapper.is-expanded {
+  max-height: none;
+}
+.pdp-description-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.pdp-description-wrapper.is-expanded .pdp-description-fade {
+  opacity: 0;
+}
+.btn-see-more {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 8px 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+}
+.btn-see-more:hover {
+  text-decoration: underline;
+}
 
 /* RTE — rich text editor output */
 .rte { font-size: 15px; line-height: 1.7; color: var(--ink-2); }
@@ -2690,8 +2766,19 @@ a.fbt-item__title:hover { color: var(--primary); }
 
   /* PDP: stacked */
   .pdp-layout { grid-template-columns: 1fr; }
-  .pdp-gallery { position: static; }
-  .pdp-title { font-size: 24px; }
+  .pdp-gallery { display: block; position: static; }
+  .pdp-gallery__main { max-width: 100%; order: unset; margin-bottom: 12px; }
+  .pdp-gallery__thumbs {
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    order: unset;
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-height: none;
+    margin-top: 12px;
+  }
+  .pdp-title { font-size: 20px; }
   .pdp-trust { grid-template-columns: 1fr 1fr; }
   .pdp-atc-row .btn--primary { font-size: 15px; height: 52px; }
 

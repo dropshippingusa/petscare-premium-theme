@@ -447,121 +447,7 @@ const PetsCare = {
     }
   },
 
-  /* ─── PDP INTERACTIONS ──────────────────────────────────────────────────── */
-  pdp: {
-    init() {
-      this._initGallery();
-      this._initVariants();
-      this._initQty();
-      this._initTabs();
-      this._initFbt();
-    },
 
-    _initGallery() {
-      const mainImg = document.getElementById('pdp-main-img');
-      const thumbs = document.querySelectorAll('.pdp-thumb');
-      if (!mainImg || !thumbs.length) return;
-      thumbs.forEach(thumb => {
-        thumb.addEventListener('click', () => {
-          thumbs.forEach(t => t.classList.remove('is-active'));
-          thumb.classList.add('is-active');
-          const src = thumb.dataset.src;
-          if (src) {
-            mainImg.style.opacity = '0';
-            setTimeout(() => { mainImg.src = src; mainImg.style.opacity = '1'; }, 180);
-          }
-        });
-      });
-    },
-
-    _initVariants() {
-      const pills = document.querySelectorAll('.variant-pill');
-      const priceEl = document.getElementById('pdp-price');
-      const comparePriceEl = document.getElementById('pdp-compare-price');
-      const variantInput = document.getElementById('pdp-variant-id');
-
-      pills.forEach(pill => {
-        pill.addEventListener('click', () => {
-          // Deselect siblings in same option group
-          const group = pill.closest('.variant-pills');
-          group?.querySelectorAll('.variant-pill').forEach(p => p.classList.remove('is-selected'));
-          pill.classList.add('is-selected');
-
-          // Update selected display text
-          const label = pill.closest('.variant-group')?.querySelector('.variant-group__label span');
-          if (label) label.textContent = pill.dataset.value;
-
-          // If variant id provided, update hidden input and prices
-          const variantId = pill.dataset.variantId;
-          const price = pill.dataset.price;
-          const comparePrice = pill.dataset.comparePrice;
-
-          if (variantInput && variantId) variantInput.value = variantId;
-          if (priceEl && price) priceEl.textContent = PetsCare.utils.formatMoney(parseInt(price));
-          if (comparePriceEl) {
-            if (comparePrice && parseInt(comparePrice) > parseInt(price)) {
-              comparePriceEl.textContent = PetsCare.utils.formatMoney(parseInt(comparePrice));
-              comparePriceEl.hidden = false;
-            } else {
-              comparePriceEl.hidden = true;
-            }
-          }
-        });
-      });
-    },
-
-    _initQty() {
-      const input = document.getElementById('pdp-qty');
-      document.querySelectorAll('[data-qty-change]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          if (!input) return;
-          const delta = parseInt(btn.dataset.qtyChange);
-          const val = Math.max(1, (parseInt(input.value) || 1) + delta);
-          input.value = val;
-        });
-      });
-    },
-
-    _initTabs() {
-      const btns = document.querySelectorAll('.pdp-tab-btn');
-      const panels = document.querySelectorAll('.pdp-tab-panel');
-      btns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          btns.forEach(b => b.classList.remove('is-active'));
-          panels.forEach(p => p.classList.remove('is-active'));
-          btn.classList.add('is-active');
-          const panel = document.getElementById(btn.dataset.tab);
-          if (panel) panel.classList.add('is-active');
-        });
-      });
-    },
-
-    _initFbt() {
-      const fbtForm = document.getElementById('fbt-form');
-      if (!fbtForm) return;
-      const totalEl = document.getElementById('fbt-total');
-
-      const recalc = () => {
-        let total = 0;
-        fbtForm.querySelectorAll('.fbt-item__check:checked').forEach(cb => {
-          total += parseInt(cb.dataset.price || 0);
-        });
-        if (totalEl) totalEl.textContent = PetsCare.utils.formatMoney(total);
-      };
-
-      fbtForm.querySelectorAll('.fbt-item__check').forEach(cb => cb.addEventListener('change', recalc));
-      recalc();
-
-      fbtForm.addEventListener('submit', async e => {
-        e.preventDefault();
-        const items = [];
-        fbtForm.querySelectorAll('.fbt-item__check:checked').forEach(cb => {
-          if (cb.dataset.variantId) items.push({ id: parseInt(cb.dataset.variantId), quantity: 1 });
-        });
-        if (items.length) await PetsCare.cart.add(items);
-      });
-    }
-  },
 
   /* ─── WISHLIST (localStorage — session, no app needed) ──────────────────── */
   wishlist: {
@@ -664,6 +550,7 @@ const PetsCare = {
       this._initFbt();
       this._initDeliveryEstimator();
       this._trackRecentlyViewed();
+      this._initDescriptionToggle();
 
       // Dispatch ViewContent Event on initial load
       const data = window.PetsCareProductData;
@@ -695,11 +582,37 @@ const PetsCare = {
             mainImg.style.opacity = '0';
             mainImg.style.transition = 'opacity 180ms ease';
             setTimeout(() => {
+              mainImg.onload = () => {
+                mainImg.style.opacity = '1';
+              };
               mainImg.src = newSrc;
-              mainImg.onload = () => { mainImg.style.opacity = '1'; };
+              // Fallback for cached images where onload might not fire
+              if (mainImg.complete) {
+                mainImg.style.opacity = '1';
+              }
             }, 180);
           }
         });
+      });
+    },
+
+    _initDescriptionToggle() {
+      const wrapper = document.getElementById('pdp-desc-wrapper');
+      const content = document.getElementById('pdp-desc-content');
+      const toggleBtn = document.getElementById('pdp-desc-toggle');
+      const fade = document.getElementById('pdp-desc-fade');
+      if (!wrapper || !content || !toggleBtn) return;
+
+      const limit = 220;
+      if (content.scrollHeight > limit) {
+        toggleBtn.style.display = 'inline-flex';
+      } else {
+        if (fade) fade.style.display = 'none';
+      }
+
+      toggleBtn.addEventListener('click', () => {
+        const isExpanded = wrapper.classList.toggle('is-expanded');
+        toggleBtn.textContent = isExpanded ? 'See Less' : 'See More';
       });
     },
 

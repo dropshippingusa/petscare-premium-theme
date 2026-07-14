@@ -1,17 +1,19 @@
 {%- liquid
-  assign msg_1 = section.settings.announcement_1 | default: 'Free shipping on orders $49+'
-  assign msg_2 = section.settings.announcement_2 | default: 'Secure Checkout: Shop with confidence'
-  assign msg_3 = section.settings.announcement_3 | default: 'Fast US Shipping: Formulated & Packaged in the USA'
-  assign msg_4 = section.settings.announcement_4 | default: 'Hassle-Free Returns: Shop Risk-Free'
+  assign msg_1 = section.settings.announcement_1 | default: '🐾 Welcome to PETS CARE USA • Enjoy 10% OFF Your First Order • Use Code: WELCOME10'
+  assign msg_2 = section.settings.announcement_2 | default: 'Free shipping on orders $49+'
+  assign msg_3 = section.settings.announcement_3 | default: 'Secure Checkout: Shop with confidence'
+  assign msg_4 = section.settings.announcement_4 | default: 'Fast US Shipping: Formulated & Packaged in the USA'
+  assign msg_5 = section.settings.announcement_5 | default: 'Hassle-Free Returns: Shop Risk-Free'
 -%}
 
 <div class="site-header-wrapper" id="site-header-wrapper">
 <div class="announcement-bar" id="announcement-bar-ticker" role="region" aria-label="Announcements">
   <div class="announcement-bar__ticker">
-    <div class="announcement-slide is-active" role="group" aria-label="1 of 4">{{ msg_1 }}</div>
-    <div class="announcement-slide" role="group" aria-label="2 of 4" style="display: none;">{{ msg_2 }}</div>
-    <div class="announcement-slide" role="group" aria-label="3 of 4" style="display: none;">{{ msg_3 }}</div>
-    <div class="announcement-slide" role="group" aria-label="4 of 4" style="display: none;">{{ msg_4 }}</div>
+    <div class="announcement-slide is-active" role="group" aria-label="1 of 5">{{ msg_1 }}</div>
+    <div class="announcement-slide" role="group" aria-label="2 of 5" style="display: none;">{{ msg_2 }}</div>
+    <div class="announcement-slide" role="group" aria-label="3 of 5" style="display: none;">{{ msg_3 }}</div>
+    <div class="announcement-slide" role="group" aria-label="4 of 5" style="display: none;">{{ msg_4 }}</div>
+    <div class="announcement-slide" role="group" aria-label="5 of 5" style="display: none;">{{ msg_5 }}</div>
   </div>
 </div>
 
@@ -118,24 +120,30 @@
       "type": "text",
       "id": "announcement_1",
       "label": "Message 1",
-      "default": "Free shipping on orders $49+"
+      "default": "🐾 Welcome to PETS CARE USA • Enjoy 10% OFF Your First Order • Use Code: WELCOME10"
     },
     {
       "type": "text",
       "id": "announcement_2",
       "label": "Message 2",
-      "default": "Secure Checkout: Shop with confidence"
+      "default": "Free shipping on orders $49+"
     },
     {
       "type": "text",
       "id": "announcement_3",
       "label": "Message 3",
-      "default": "Fast US Shipping: Formulated & Packaged in the USA"
+      "default": "Secure Checkout: Shop with confidence"
     },
     {
       "type": "text",
       "id": "announcement_4",
       "label": "Message 4",
+      "default": "Fast US Shipping: Formulated & Packaged in the USA"
+    },
+    {
+      "type": "text",
+      "id": "announcement_5",
+      "label": "Message 5",
       "default": "Hassle-Free Returns: Shop Risk-Free"
     }
   ]

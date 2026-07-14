@@ -14,10 +14,11 @@
         "type": "header",
         "settings": {
           "menu": "main-menu",
-          "announcement_1": "Free shipping on orders $49+",
-          "announcement_2": "Secure Checkout: Shop with confidence",
-          "announcement_3": "Fast US Shipping: Formulated & Packaged in the USA",
-          "announcement_4": "Hassle-Free Returns: Shop Risk-Free"
+          "announcement_1": "🐾 Welcome to PETS CARE USA • Enjoy 10% OFF Your First Order • Use Code: WELCOME10",
+          "announcement_2": "Free shipping on orders $49+",
+          "announcement_3": "Secure Checkout: Shop with confidence",
+          "announcement_4": "Fast US Shipping: Formulated & Packaged in the USA",
+          "announcement_5": "Hassle-Free Returns: Shop Risk-Free"
         }
       },
       "hero": {

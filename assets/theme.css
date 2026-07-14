@@ -253,8 +253,15 @@ a:focus-visible, button:focus-visible {
 .site-header-wrapper.header-hide {
   transform: translateY(-120%);
 }
-.site-header-wrapper.is-sticky {
+.site-header-wrapper.is-sticky,
+.template-product .site-header-wrapper {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0;
+  right: 0;
+  z-index: 1000 !important;
   box-shadow: var(--shadow-sm);
+  background: #fff;
 }
 .site-header-wrapper.is-scrolled { box-shadow: var(--shadow-sm); }
 
@@ -280,9 +287,9 @@ a:focus-visible, button:focus-visible {
 .template-product .site-header-wrapper .header-logo--sticky {
   display: block !important;
 }
-.template-product .site-header-wrapper {
-  box-shadow: var(--shadow-sm);
-  background: #fff;
+
+.template-product #MainContent {
+  padding-top: var(--header-h, 120px);
 }
 
 /* Compact sticky header overrides (Flipkart style) */

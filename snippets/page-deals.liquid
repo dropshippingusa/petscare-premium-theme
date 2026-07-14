@@ -1,0 +1,365 @@
+<style>
+/* ── DEALS PAGE ─────────────────────────────────────────────── */
+.deals-page {
+  min-height: 80vh;
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated background blobs */
+.deals-page::before,
+.deals-page::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.25;
+  animation: blobFloat 8s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+.deals-page::before {
+  width: 500px; height: 500px;
+  background: #f59e0b;
+  top: -100px; left: -100px;
+}
+.deals-page::after {
+  width: 400px; height: 400px;
+  background: #3b82f6;
+  bottom: -80px; right: -80px;
+  animation-delay: -4s;
+}
+@keyframes blobFloat {
+  from { transform: scale(1) translate(0,0); }
+  to   { transform: scale(1.15) translate(30px, 20px); }
+}
+
+/* Floating paw prints */
+.deals-paws {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.deals-paw {
+  position: absolute;
+  font-size: 28px;
+  opacity: 0.06;
+  animation: pawFloat linear infinite;
+}
+
+/* ── MAIN CARD ──────────────────────────────────────────────── */
+.deals-card {
+  position: relative;
+  z-index: 2;
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 28px;
+  max-width: 620px;
+  width: 100%;
+  padding: 56px 52px;
+  text-align: center;
+  box-shadow:
+    0 32px 80px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(245,158,11,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.1);
+  animation: cardIn 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Ribbon badge */
+.deals-ribbon {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, #f59e0b, #ef4444);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 5px 22px;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(245,158,11,0.45);
+  white-space: nowrap;
+  animation: ribbonPulse 2s ease-in-out infinite;
+}
+@keyframes ribbonPulse {
+  0%,100% { box-shadow: 0 4px 14px rgba(245,158,11,0.45); }
+  50%      { box-shadow: 0 4px 28px rgba(245,158,11,0.75); }
+}
+
+/* Icon */
+.deals-icon {
+  font-size: 72px;
+  line-height: 1;
+  margin-bottom: 16px;
+  display: block;
+  animation: iconBounce 2.4s ease-in-out infinite;
+}
+@keyframes iconBounce {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+/* Headline */
+.deals-headline {
+  font-size: clamp(36px, 5vw, 52px);
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.05;
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+.deals-headline span {
+  background: linear-gradient(90deg, #fbbf24, #f59e0b, #ef4444);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.deals-subline {
+  font-size: 17px;
+  color: rgba(255,255,255,0.65);
+  margin: 0 0 32px;
+  line-height: 1.5;
+}
+
+/* Code box */
+.deals-code-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(245,158,11,0.1);
+  border: 1.5px dashed #f59e0b;
+  border-radius: 14px;
+  padding: 14px 24px;
+  margin-bottom: 32px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.deals-code-box:hover {
+  background: rgba(245,158,11,0.18);
+  transform: scale(1.03);
+}
+.deals-code-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.45);
+  text-transform: uppercase;
+  display: block;
+  text-align: left;
+}
+.deals-code-value {
+  font-size: 26px;
+  font-weight: 900;
+  color: #fbbf24;
+  letter-spacing: 0.08em;
+  display: block;
+  text-align: left;
+  font-family: 'Courier New', monospace;
+}
+.deals-copy-btn {
+  background: rgba(245,158,11,0.2);
+  border: 1px solid rgba(245,158,11,0.35);
+  color: #fbbf24;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.deals-copy-btn:hover {
+  background: #f59e0b;
+  color: #000;
+}
+
+/* Perks list */
+.deals-perks {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+.deals-perk {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.7);
+  font-weight: 500;
+}
+.deals-perk-icon {
+  font-size: 16px;
+}
+
+/* CTA button */
+.deals-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(90deg, #f59e0b 0%, #ef4444 100%);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 800;
+  padding: 18px 48px;
+  border-radius: 999px;
+  text-decoration: none;
+  box-shadow: 0 8px 32px rgba(245,158,11,0.4), 0 2px 8px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  letter-spacing: 0.01em;
+  position: relative;
+  overflow: hidden;
+}
+.deals-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(255,255,255,0.15), transparent);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.deals-cta:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 14px 40px rgba(245,158,11,0.5), 0 4px 12px rgba(0,0,0,0.3);
+}
+.deals-cta:hover::before { opacity: 1; }
+.deals-cta:active {
+  transform: translateY(0) scale(0.99);
+}
+.deals-cta-arrow {
+  font-size: 20px;
+  transition: transform 0.2s ease;
+}
+.deals-cta:hover .deals-cta-arrow {
+  transform: translateX(4px);
+}
+
+.deals-note {
+  margin-top: 16px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+}
+
+/* Floating paw animation */
+@keyframes pawFloat {
+  from { transform: translateY(110vh) rotate(0deg); opacity: 0.06; }
+  to   { transform: translateY(-10vh) rotate(30deg); opacity: 0; }
+}
+
+/* Toast notification */
+.deals-toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: #1a2336;
+  color: #fbbf24;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: 999px;
+  border: 1px solid rgba(245,158,11,0.3);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  z-index: 99999;
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+.deals-toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  .deals-card { padding: 40px 24px; }
+  .deals-perks { gap: 12px; }
+  .deals-cta { font-size: 15px; padding: 16px 32px; }
+}
+</style>
+
+<!-- Floating paw prints -->
+<div class="deals-paws" aria-hidden="true">
+  {% assign paws = "🐾,🐾,🐾,🐾,🐾,🐾,🐾,🐾" | split: "," %}
+  {% for paw in paws %}
+    <span class="deals-paw" style="left:{{ forloop.index | times: 12 }}%; animation-duration:{{ forloop.index | plus: 6 }}s; animation-delay:-{{ forloop.index | times: 2 }}s;">{{ paw }}</span>
+  {% endfor %}
+</div>
+
+<div class="deals-page">
+  <div class="deals-card">
+
+    <div class="deals-ribbon">🔥 Limited Time Offer</div>
+
+    <span class="deals-icon">🎁</span>
+
+    <h1 class="deals-headline">
+      Welcome Bonus<br><span>10% OFF</span>
+    </h1>
+    <p class="deals-subline">
+      Exclusive for new customers — save on your very first order.<br>
+      Apply code at checkout and the discount is yours instantly.
+    </p>
+
+    <!-- Promo code copy box -->
+    <div class="deals-code-box" onclick="copyCode()" title="Click to copy">
+      <div>
+        <span class="deals-code-label">Your Promo Code</span>
+        <span class="deals-code-value" id="deals-code-text">WELCOME10</span>
+      </div>
+      <button class="deals-copy-btn" id="deals-copy-btn" type="button">Copy</button>
+    </div>
+
+    <!-- Perks -->
+    <div class="deals-perks">
+      <div class="deals-perk"><span class="deals-perk-icon">✅</span> New Customers Only</div>
+      <div class="deals-perk"><span class="deals-perk-icon">🛒</span> All Products Included</div>
+      <div class="deals-perk"><span class="deals-perk-icon">🔒</span> Auto-Applied at Checkout</div>
+    </div>
+
+    <!-- CTA -->
+    <a href="/discount/WELCOME10?redirect=/collections/all" class="deals-cta">
+      Grab Offer &amp; Shop Now
+      <span class="deals-cta-arrow">→</span>
+    </a>
+
+    <p class="deals-note">* Valid for first-time customers only. One use per email address.</p>
+
+  </div>
+</div>
+
+<!-- Copy toast -->
+<div class="deals-toast" id="deals-toast">✅ Code WELCOME10 copied!</div>
+
+<script>
+function copyCode() {
+  var code = document.getElementById('deals-code-text').innerText;
+  navigator.clipboard.writeText(code).then(function() {
+    var btn = document.getElementById('deals-copy-btn');
+    btn.innerText = 'Copied!';
+    setTimeout(function() { btn.innerText = 'Copy'; }, 2000);
+    var toast = document.getElementById('deals-toast');
+    toast.classList.add('show');
+    setTimeout(function() { toast.classList.remove('show'); }, 2500);
+  }).catch(function() {
+    var btn = document.getElementById('deals-copy-btn');
+    btn.innerText = 'Copied!';
+    setTimeout(function() { btn.innerText = 'Copy'; }, 2000);
+  });
+}
+</script>

@@ -243,24 +243,27 @@ a:focus-visible, button:focus-visible {
 /* =============================================================================
    HEADER
    ============================================================================= */
-.site-header {
+.site-header-wrapper {
   position: sticky;
   top: 0;
   z-index: 900;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  width: 100%;
+}
+.site-header-wrapper.header-hide {
+  transform: translateY(-120%);
+}
+.site-header-wrapper.is-sticky {
+  box-shadow: var(--shadow-sm);
+}
+.site-header-wrapper.is-scrolled { box-shadow: var(--shadow-sm); }
+
+.site-header {
   background: rgba(255,255,255,0.96);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, background 0.3s ease;
 }
-.site-header.header-hide {
-  transform: translateY(-120%);
-}
-.site-header.is-sticky {
-  box-shadow: var(--shadow-sm);
-  background: #fff;
-}
-.site-header.is-scrolled { box-shadow: var(--shadow-sm); }
 
 /* Default Logo vs Sticky Logo */
 .header-logo--default {
@@ -269,32 +272,32 @@ a:focus-visible, button:focus-visible {
 .header-logo--sticky {
   display: none !important;
 }
-.site-header.is-sticky .header-logo--default,
-.template-product .site-header .header-logo--default {
+.site-header-wrapper.is-sticky .header-logo--default,
+.template-product .site-header-wrapper .header-logo--default {
   display: none !important;
 }
-.site-header.is-sticky .header-logo--sticky,
-.template-product .site-header .header-logo--sticky {
+.site-header-wrapper.is-sticky .header-logo--sticky,
+.template-product .site-header-wrapper .header-logo--sticky {
   display: block !important;
 }
-.template-product .site-header {
+.template-product .site-header-wrapper {
   box-shadow: var(--shadow-sm);
   background: #fff;
 }
 
 /* Compact sticky header overrides (Flipkart style) */
-.site-header.is-sticky .header-location-row,
-.site-header.is-sticky .header-nav-row,
-.template-product .site-header .header-location-row,
-.template-product .site-header .header-nav-row {
+.site-header-wrapper.is-sticky .header-location-row,
+.site-header-wrapper.is-sticky .header-nav-row,
+.template-product .site-header-wrapper .header-location-row,
+.template-product .site-header-wrapper .header-nav-row {
   display: none !important;
 }
-.site-header.is-sticky .header-container,
-.template-product .site-header .header-container {
+.site-header-wrapper.is-sticky .header-container,
+.template-product .site-header-wrapper .header-container {
   padding: 8px var(--gutter) !important;
 }
-.site-header.is-sticky .header-logo__img,
-.template-product .site-header .header-logo__img {
+.site-header-wrapper.is-sticky .header-logo__img,
+.template-product .site-header-wrapper .header-logo__img {
   max-height: 24px !important;
 }
 

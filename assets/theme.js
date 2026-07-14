@@ -385,7 +385,7 @@ const PetsCare = {
   /* ─── HEADER SCROLL & ANNOUNCEMENT BAR ──────────────────────────────────── */
   header: {
     init() {
-      const header = document.querySelector('.site-header');
+      const header = document.querySelector('.site-header-wrapper');
       if (header) {
         // Set announcement & header height custom property dynamically
         const announcement = document.querySelector('.announcement-bar');

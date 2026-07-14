@@ -5,6 +5,7 @@
   assign msg_4 = section.settings.announcement_4 | default: '30-Day Money Back Guarantee: 100% Risk-Free'
 -%}
 
+<div class="site-header-wrapper" id="site-header-wrapper">
 <div class="announcement-bar" id="announcement-bar-ticker" role="region" aria-label="Announcements">
   <div class="announcement-bar__ticker">
     <div class="announcement-slide is-active" role="group" aria-label="1 of 4">{{ msg_1 }}</div>
@@ -23,65 +24,61 @@
       <img src="{{ 'logo-sticky.png' | asset_url }}" alt="{{ shop.name | escape }}" class="header-logo__img header-logo--sticky" style="display: none;">
     </a>
     
-    <!-- Right side: Three stacked rows -->
+    <!-- Right Stack -->
     <div class="header-right-stacked">
       
-      <!-- Row 1: Location Bar (Top Right) -->
+      <!-- Row 1: Location picker -->
       <div class="header-location-row">
-        <div class="header-location-picker">
-          <svg class="loc-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span class="loc-zip">90210</span>
-          <span class="loc-link">Select delivery location <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 2px; display: inline-block; vertical-align: middle;"><polyline points="9 18 15 12 9 6"/></svg></span>
-        </div>
+        <button type="button" class="header-location-btn" id="header-location-trigger" aria-haspopup="dialog" aria-expanded="false">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span class="header-location-btn__label">Select delivery location</span>
+        </button>
       </div>
 
-      <!-- Row 2: Search and Actions -->
+      <!-- Row 2: Main row (Search, Wishlist, Cart) -->
       <div class="header-main-row">
-        <!-- Search Bar -->
-        <form action="/search" method="get" class="header-search-form" role="search">
-          <span class="header-search-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          </span>
-          <input 
-            type="text" 
-            name="q" 
-            placeholder="Search for Products, Brands and More" 
-            class="header-search-input"
-            aria-label="Search store"
-          >
+        <!-- Search -->
+        <form action="/search" method="get" class="header-search" role="search">
+          <input type="text" name="q" placeholder="Search for Products, Brands and More" aria-label="Search store">
+          <button type="submit" aria-label="Submit search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </button>
         </form>
 
-        <!-- Actions (Flipkart style) -->
+        <!-- Actions -->
         <div class="header-actions">
-          <!-- Login Link -->
-          <div class="header-action-dropdown">
-            {%- if customer -%}
-              <a href="/account" class="header-action-link">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                <span>Account</span>
-                <svg class="chevron-down" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-              </a>
-            {%- else -%}
-              <a href="/account/login" class="header-action-link">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                <span>Login</span>
-                <svg class="chevron-down" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-              </a>
-            {%- endif -%}
-          </div>
+          <!-- Account -->
+          {%- if shop.customer_accounts_enabled -%}
+            <div class="header-action-item header-account-dropdown-trigger">
+              <button type="button" class="header-action-btn" aria-haspopup="menu" aria-expanded="false">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span class="header-action-btn__text">Login</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-left:2px;"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="header-account-dropdown" role="menu">
+                {%- if customer -%}
+                  <a href="/account" role="menuitem">My Account</a>
+                  <a href="/account/logout" role="menuitem">Logout</a>
+                {%- else -%}
+                  <a href="/account/login" role="menuitem">Sign In</a>
+                  <a href="/account/register" role="menuitem">Create Account</a>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
 
-          <!-- Wishlist Link -->
-          <a href="/pages/wishlist" class="header-action-link">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-            <span>Wishlist</span>
+          <!-- Wishlist -->
+          <a href="/pages/wishlist" class="header-action-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            <span class="header-action-btn__text">Wishlist</span>
           </a>
 
-          <!-- Cart Link (Simple, matching Flipkart style) -->
-          <button type="button" class="header-action-link header-cart-btn" data-open-cart>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
-            <span>Cart</span>
-            <span class="cart-count-badge" id="header-cart-count" {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
-          </button>
+          <!-- Cart -->
+          <a href="/cart" class="header-action-btn header-cart-trigger" aria-label="Shopping Cart">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+            <span class="header-action-btn__text">Cart</span>
+            <span class="header-cart-count">0</span>
+          </a>
         </div>
       </div>
 
@@ -97,6 +94,7 @@
     </div>
   </div>
 </header>
+</div>
 
 {% schema %}
 {

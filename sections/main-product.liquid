@@ -27,34 +27,6 @@
   <div class="pdp-gallery" id="pdp-gallery">
     
     <div class="pdp-gallery__images">
-      {%- comment -%} Thumbnail strip — Shopify product.media object {%- endcomment -%}
-      {%- if media_count > 1 -%}
-        <div class="pdp-gallery__thumbs" role="list" aria-label="Product images">
-          {%- for media in product.media -%}
-            <button
-              type="button"
-              class="pdp-thumb {% if forloop.first %}is-active{% endif %}"
-              data-src="{{ media | image_url: width: 1000 }}"
-              data-media-id="{{ media.id }}"
-              aria-label="{{ media.alt | default: product.title | escape }}, image {{ forloop.index }}"
-              role="listitem"
-            >
-              {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
-                <span class="pdp-thumb__video-icon" aria-hidden="true">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                </span>
-              {%- endif -%}
-              <img
-                src="{{ media | image_url: width: 144 }}"
-                alt="{{ media.alt | default: product.title | escape }}"
-                width="72" height="72"
-                loading="lazy"
-              >
-            </button>
-          {%- endfor -%}
-        </div>
-      {%- endif -%}
-
       {%- comment -%} Main image {%- endcomment -%}
       <div class="pdp-gallery__main" id="pdp-main-media" role="img" aria-label="{{ product.featured_media.alt | default: product.title | escape }}">
         {%- if product.featured_media != blank -%}
@@ -85,6 +57,34 @@
           </div>
         {%- endif -%}
       </div>
+
+      {%- comment -%} Thumbnail strip — Shopify product.media object {%- endcomment -%}
+      {%- if media_count > 1 -%}
+        <div class="pdp-gallery__thumbs" role="list" aria-label="Product images">
+          {%- for media in product.media -%}
+            <button
+              type="button"
+              class="pdp-thumb {% if forloop.first %}is-active{% endif %}"
+              data-src="{{ media | image_url: width: 1000 }}"
+              data-media-id="{{ media.id }}"
+              aria-label="{{ media.alt | default: product.title | escape }}, image {{ forloop.index }}"
+              role="listitem"
+            >
+              {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
+                <span class="pdp-thumb__video-icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                </span>
+              {%- endif -%}
+              <img
+                src="{{ media | image_url: width: 144 }}"
+                alt="{{ media.alt | default: product.title | escape }}"
+                width="72" height="72"
+                loading="lazy"
+              >
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
     </div>
 
     <!-- Buy Box Row for Desktop (underneath image) -->

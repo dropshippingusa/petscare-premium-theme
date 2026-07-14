@@ -411,6 +411,7 @@ const PetsCare = {
 
           if (isProductPage) {
             // Keep it sticky at the top always on product pages
+            updateHeights();
             return;
           }
 
@@ -430,6 +431,7 @@ const PetsCare = {
             header.classList.remove('is-sticky', 'header-hide');
           }
 
+          updateHeights();
           lastScrollY = currentScrollY;
         };
 

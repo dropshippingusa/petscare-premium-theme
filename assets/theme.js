@@ -387,55 +387,44 @@ const PetsCare = {
     init() {
       const header = document.querySelector('.site-header-wrapper');
       if (header) {
-        // Set announcement & header height custom property dynamically
-        const announcement = document.querySelector('.announcement-bar');
-        const updateHeights = () => {
-          const annHeight = announcement ? announcement.offsetHeight : 0;
-          document.documentElement.style.setProperty('--announcement-h', `${annHeight}px`);
-          document.documentElement.style.setProperty('--header-h', `${header.offsetHeight}px`);
-        };
-        updateHeights();
-        window.addEventListener('resize', updateHeights);
-
-        // Sticky / scroll tracking logic
-        let lastScrollY = window.scrollY;
         const isProductPage = document.body.classList.contains('template-product');
-
         if (isProductPage) {
           header.classList.add('is-sticky');
         }
 
+        // Set initial header height for content padding offset
+        const setInitialHeight = () => {
+          document.documentElement.style.setProperty('--header-initial-h', `${header.offsetHeight}px`);
+        };
+        setInitialHeight();
+        setTimeout(setInitialHeight, 100);
+
+        // Update heights for other sticky elements (like the PDP gallery)
+        const updateHeights = () => {
+          document.documentElement.style.setProperty('--header-h', `${header.offsetHeight}px`);
+        };
+        updateHeights();
+
+        // Scroll tracking logic - always sticky, compact on scroll down
         const onScroll = () => {
           const currentScrollY = window.scrollY;
           header.classList.toggle('is-scrolled', currentScrollY > 10);
 
-          if (isProductPage) {
-            // Keep it sticky at the top always on product pages
-            updateHeights();
-            return;
-          }
-
-          // Home & other pages: sticky on scroll up, hide on scroll down
-          if (currentScrollY > 150) {
-            if (currentScrollY < lastScrollY) {
-              // Scrolling up: show sticky header
+          if (!isProductPage) {
+            if (currentScrollY > 50) {
               header.classList.add('is-sticky');
-              header.classList.remove('header-hide');
             } else {
-              // Scrolling down: hide header
               header.classList.remove('is-sticky');
-              header.classList.add('header-hide');
             }
-          } else {
-            // Close to top: restore default state
-            header.classList.remove('is-sticky', 'header-hide');
           }
-
           updateHeights();
-          lastScrollY = currentScrollY;
         };
 
         window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', () => {
+          setInitialHeight();
+          updateHeights();
+        });
         onScroll();
       }
       this._initAnnouncementTicker();

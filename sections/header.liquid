@@ -29,14 +29,6 @@
     <!-- Right side: Three stacked rows -->
     <div class="header-right-stacked">
       
-      <!-- Row 1: Location Bar (Top Right) -->
-      <div class="header-location-row">
-        <div class="header-location-picker">
-          <svg class="loc-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span class="loc-zip">90210</span>
-          <span class="loc-link">Select delivery location <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 2px; display: inline-block; vertical-align: middle;"><polyline points="9 18 15 12 9 6"/></svg></span>
-        </div>
-      </div>
 
       <!-- Row 2: Search and Actions -->
       <div class="header-main-row">
@@ -56,6 +48,12 @@
 
         <!-- Actions (Flipkart style) -->
         <div class="header-actions">
+        <!-- Location Icon (before Login) -->
+          <a href="#" class="header-action-link header-location-icon-btn" id="header-loc-btn" title="Select delivery location" aria-label="Select delivery location">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span class="loc-zip-inline">90210</span>
+          </a>
+
           <!-- Login Link -->
           <div class="header-action-dropdown">
             {%- if customer -%}

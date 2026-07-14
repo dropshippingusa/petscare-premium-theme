@@ -287,9 +287,7 @@ a:focus-visible, button:focus-visible {
 
 /* Compact sticky header overrides (Flipkart style) */
 .site-header-wrapper.is-sticky .header-location-row,
-.site-header-wrapper.is-sticky .header-nav-row,
-.template-product .site-header-wrapper .header-location-row,
-.template-product .site-header-wrapper .header-nav-row {
+.template-product .site-header-wrapper .header-location-row {
   display: none !important;
 }
 .site-header-wrapper.is-sticky .header-container,
@@ -483,7 +481,22 @@ a:focus-visible, button:focus-visible {
   line-height: 1;
 }
 
+/* Location icon inline in actions */
+.header-location-icon-btn {
+  gap: 4px;
+  padding: 8px 10px;
+}
+.loc-zip-inline {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1F2937;
+}
+.header-location-icon-btn:hover .loc-zip-inline {
+  color: #0284C7;
+}
+
 /* ─── CATEGORY NAV BAR ──────────────────────────────────────────── */
+
 .header-nav-row {
   background: #e0f4ff;
   width: 100%;
@@ -1075,7 +1088,7 @@ a:focus-visible, button:focus-visible {
   grid-template-columns: 280px 1fr 280px;
   align-items: center;
   gap: var(--sp-6);
-  padding: var(--sp-6) var(--gutter);
+  padding: var(--sp-3) var(--gutter);
   max-width: var(--max-w);
   margin: 0 auto;
 }
@@ -1118,7 +1131,7 @@ a:focus-visible, button:focus-visible {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--primary);
-  margin-top: 16px;
+  margin-top: 0;
 }
 .hero__eyebrow::before {
   content: '';

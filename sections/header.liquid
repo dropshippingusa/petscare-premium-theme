@@ -19,7 +19,8 @@
     
     <!-- Left side: Combined Height Logo -->
     <a href="/" class="header-logo-container" aria-label="{{ shop.name }} — Home">
-      <img src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name | escape }}" class="header-logo__img">
+      <img src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name | escape }}" class="header-logo__img header-logo--default">
+      <img src="{{ 'logo-sticky.png' | asset_url }}" alt="{{ shop.name | escape }}" class="header-logo__img header-logo--sticky" style="display: none;">
     </a>
     
     <!-- Right side: Three stacked rows -->

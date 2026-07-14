@@ -387,9 +387,49 @@ const PetsCare = {
     init() {
       const header = document.querySelector('.site-header');
       if (header) {
-        const onScroll = () => {
-          header.classList.toggle('is-scrolled', window.scrollY > 10);
+        // Set header height custom property dynamically
+        const updateHeaderHeight = () => {
+          document.documentElement.style.setProperty('--header-h', `${header.offsetHeight}px`);
         };
+        updateHeaderHeight();
+        window.addEventListener('resize', updateHeaderHeight);
+
+        // Sticky / scroll tracking logic
+        let lastScrollY = window.scrollY;
+        const isProductPage = document.body.classList.contains('template-product');
+
+        if (isProductPage) {
+          header.classList.add('is-sticky');
+        }
+
+        const onScroll = () => {
+          const currentScrollY = window.scrollY;
+          header.classList.toggle('is-scrolled', currentScrollY > 10);
+
+          if (isProductPage) {
+            // Keep it sticky at the top always on product pages
+            return;
+          }
+
+          // Home & other pages: sticky on scroll up, hide on scroll down
+          if (currentScrollY > 150) {
+            if (currentScrollY < lastScrollY) {
+              // Scrolling up: show sticky header
+              header.classList.add('is-sticky');
+              header.classList.remove('header-hide');
+            } else {
+              // Scrolling down: hide header
+              header.classList.remove('is-sticky');
+              header.classList.add('header-hide');
+            }
+          } else {
+            // Close to top: restore default state
+            header.classList.remove('is-sticky', 'header-hide');
+          }
+
+          lastScrollY = currentScrollY;
+        };
+
         window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
       }

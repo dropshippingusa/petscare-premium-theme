@@ -251,9 +251,36 @@ a:focus-visible, button:focus-visible {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
-  transition: box-shadow var(--t-base) var(--ease);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, background 0.3s ease;
+}
+.site-header.header-hide {
+  transform: translateY(-120%);
+}
+.site-header.is-sticky {
+  box-shadow: var(--shadow-sm);
+  background: #fff;
 }
 .site-header.is-scrolled { box-shadow: var(--shadow-sm); }
+
+/* Default Logo vs Sticky Logo */
+.header-logo--default {
+  display: block;
+}
+.header-logo--sticky {
+  display: none !important;
+}
+.site-header.is-sticky .header-logo--default,
+.template-product .site-header .header-logo--default {
+  display: none !important;
+}
+.site-header.is-sticky .header-logo--sticky,
+.template-product .site-header .header-logo--sticky {
+  display: block !important;
+}
+.template-product .site-header {
+  box-shadow: var(--shadow-sm);
+  background: #fff;
+}
 
 .announcement-bar {
   background: var(--ink);
@@ -2390,13 +2417,29 @@ a:focus-visible, button:focus-visible {
   align-items: start;
 }
 
+/* Helper Visibility Classes for Buy Box Layout */
+.pdp-desktop-only {
+  display: block;
+}
+.pdp-mobile-only {
+  display: none !important;
+}
+
 /* Gallery */
 .pdp-gallery {
   position: sticky;
   top: calc(var(--header-h) + 24px);
   display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-self: start;
+}
+.pdp-gallery__images {
+  display: flex;
+  flex-direction: row;
   gap: 16px;
   align-items: start;
+  width: 100%;
 }
 .pdp-gallery__main {
   aspect-ratio: 1;
@@ -2406,7 +2449,6 @@ a:focus-visible, button:focus-visible {
   cursor: zoom-in;
   border: 1px solid var(--border);
   flex-grow: 1;
-  order: 2;
 }
 .pdp-gallery__main-img {
   width: 100%; height: 100%; object-fit: cover;
@@ -2421,7 +2463,6 @@ a:focus-visible, button:focus-visible {
   gap: 12px;
   width: 80px;
   flex-shrink: 0;
-  order: 1;
   margin-top: 0;
   overflow-y: auto;
   max-height: 500px;
@@ -2767,20 +2808,29 @@ a.fbt-item__title:hover { color: var(--primary); }
   /* PDP: stacked */
   .pdp-layout { grid-template-columns: 1fr; }
   .pdp-gallery { display: block; position: static; }
-  .pdp-gallery__main { max-width: 100%; order: unset; margin-bottom: 12px; }
+  .pdp-gallery__images { display: flex; flex-direction: column-reverse; gap: var(--sp-2); }
+  .pdp-gallery__main { max-width: 100%; margin-bottom: 0; }
   .pdp-gallery__thumbs {
     display: flex;
     flex-direction: row;
     width: auto;
-    order: unset;
     overflow-x: auto;
     overflow-y: hidden;
     max-height: none;
-    margin-top: 12px;
+    margin-top: 0;
+    gap: 8px;
   }
   .pdp-title { font-size: 20px; }
   .pdp-trust { grid-template-columns: 1fr 1fr; }
   .pdp-atc-row .btn--primary { font-size: 15px; height: 52px; }
+
+  /* Helper Visibility Classes for Buy Box Layout */
+  .pdp-desktop-only {
+    display: none !important;
+  }
+  .pdp-mobile-only {
+    display: block !important;
+  }
 
   .collection-banner { height: 200px; }
   .collection-banner__title { font-size: 28px; }

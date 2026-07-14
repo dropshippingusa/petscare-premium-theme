@@ -218,10 +218,8 @@
       {%- endif -%}
     </div>
 
-    {%- comment -%} Product Form {%- endcomment -%}
-    {%- form 'product', product, id: product_form_id, class: 'pdp-form', novalidate: 'novalidate' -%}
-
-      <input type="hidden" name="id" id="pdp-variant-id" value="{{ current_variant.id }}">
+    {%- comment -%} Product Form Container {%- endcomment -%}
+    <div class="pdp-form">
 
       {%- comment -%} Variant selectors — pills for each option {%- endcomment -%}
       {%- unless product.has_only_default_variant -%}
@@ -419,6 +417,7 @@
       </div>
 
     </div>
+  </div>
   {%- endform -%}
 
 {%- comment -%} ── STICKY ADD TO BAG BAR (appears on scroll past main ATC) ── {%- endcomment -%}

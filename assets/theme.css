@@ -3700,3 +3700,47 @@ a.fbt-item__title:hover { color: var(--primary); }
   }
 }
 
+/* Policy Pages Layout (Full width, small font size) */
+.page-policy, 
+.template-policy .page-standard,
+.template-page-privacy-policy .page-standard,
+.template-page-refund-policy .page-standard,
+.template-page-terms-of-service .page-standard,
+.template-page-shipping-policy .page-standard,
+.template-page-contact-information .page-standard,
+.template-page-legal-notice .page-standard {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding-left: var(--gutter) !important;
+  padding-right: var(--gutter) !important;
+}
+
+.policy-content,
+.template-policy .page-content,
+.template-page-privacy-policy .page-content,
+.template-page-refund-policy .page-content,
+.template-page-terms-of-service .page-content,
+.template-page-shipping-policy .page-content,
+.template-page-contact-information .page-content,
+.template-page-legal-notice .page-content {
+  max-width: 100% !important;
+  width: 100% !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  color: var(--ink-light) !important;
+}
+
+.policy-content h1, .policy-content h2, .policy-content h3, .policy-content h4,
+.template-policy .page-content h1, .template-policy .page-content h2, .template-policy .page-content h3, .template-policy .page-content h4 {
+  font-size: 15px !important;
+  margin-top: 24px !important;
+  margin-bottom: 8px !important;
+  color: var(--ink) !important;
+  font-weight: 600 !important;
+}
+
+.policy-content p, .policy-content li,
+.template-policy .page-content p, .template-policy .page-content li {
+  margin-bottom: 12px !important;
+}
+

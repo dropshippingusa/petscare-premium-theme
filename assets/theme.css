@@ -344,7 +344,6 @@ a:focus-visible, button:focus-visible {
   padding: 0 var(--gutter);
   gap: 16px;
   box-sizing: border-box;
-  overflow: hidden;
 }
 .header-logo-container {
   flex-shrink: 0;
@@ -404,7 +403,6 @@ a:focus-visible, button:focus-visible {
   gap: 12px;
   width: 100%;
   min-width: 0;
-  overflow: hidden;
 }
 .header-search-form {
   position: relative;

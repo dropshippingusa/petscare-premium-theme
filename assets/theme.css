@@ -834,24 +834,27 @@ a:focus-visible, button:focus-visible {
 @media (max-width: 1023px) {
   .header-container {
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
     justify-content: space-between;
-    padding: 8px var(--gutter);
+    padding: 6px var(--gutter);
     gap: 8px;
   }
   .header-logo-container {
     order: 1;
     margin-right: auto;
+    flex-shrink: 0;
   }
   .header-actions {
     order: 2;
     margin-left: auto;
-    gap: 12px;
+    gap: 10px;
+    flex-shrink: 0;
   }
+  .header-location-icon-btn { display: none !important; }
   .header-action-link span { display: none; }
   .header-action-link .chevron-down { display: none; }
-  .header-logo__img { max-height: 28px; }
+  .header-logo__img { max-height: 24px; }
 
   /* Search wrap occupies full-width on its own line below logo/actions */
   .header-search-wrap {

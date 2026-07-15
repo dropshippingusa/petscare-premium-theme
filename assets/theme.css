@@ -3072,11 +3072,21 @@ a:focus-visible, button:focus-visible {
 
 .variant-pills {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   gap: 12px;
+  padding: 8px 16px;
+  margin: -8px -16px;
+  scrollbar-width: none; /* Hide scrollbar on Firefox */
+}
+
+.variant-pills::-webkit-scrollbar {
+  display: none; /* Hide scrollbar on Chrome/Safari/Edge */
 }
 
 .variant-pill {
+  flex-shrink: 0;
   position: relative;
   display: inline-flex;
   align-items: center;

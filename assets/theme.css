@@ -3048,7 +3048,14 @@ a:focus-visible, button:focus-visible {
 }
 
 /* PDP info column */
-.pdp-info { display: flex; flex-direction: column; gap: 20px; }
+.pdp-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;        /* CRITICAL: grid cells default to min-width:auto which lets content overflow 1fr */
+  overflow: hidden;    /* Clip anything that still escapes */
+  width: 100%;
+}
 .pdp-brand { font-size: 11px; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.06em; text-decoration: none; }
 .pdp-brand:hover { color: var(--primary); }
 .pdp-title { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; color: var(--ink); margin: 0; }
@@ -3078,9 +3085,16 @@ a:focus-visible, button:focus-visible {
   background: #ffffff;
   border: 1px solid var(--border);
   border-radius: 12px;
-  overflow: hidden;
+  overflow: visible;   /* Don't clip — let variant-pills scroll; border-radius uses clip below */
   margin-bottom: 10px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  min-width: 0;        /* Prevent expanding beyond grid cell */
+  width: 100%;
+}
+/* Apply clip separately so border-radius still shows */
+.pdp-option-card__body {
+  border-radius: 0 0 12px 12px;
+  overflow: hidden;    /* Clip pills at card edge */
 }
 
 .pdp-option-card__header {
@@ -3115,6 +3129,8 @@ a:focus-visible, button:focus-visible {
   gap: 8px;
   padding: 8px 12px;  /* Padding inside the scroll area */
   margin: 0;           /* No negative margin — was causing off-screen overflow */
+  width: 100%;         /* Explicitly constrain to parent width so overflow triggers scroll */
+  box-sizing: border-box;
   scrollbar-width: none; /* Hide scrollbar on Firefox */
 }
 

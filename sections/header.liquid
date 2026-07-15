@@ -97,12 +97,22 @@
       <!-- Home -->
       <a href="/" class="header-nav__link">Home</a>
 
+      <!-- Top Picks — highlighted, pinned right after Home -->
+      <a href="/collections/top-picks" class="header-nav__link header-nav__link--hot header-nav__coll-link">
+        Top Picks <span class="nav-hot-badge">🔥</span>
+      </a>
+
       <!-- All Products -->
       <a href="/collections/all" class="header-nav__link">All Products</a>
 
-      <!-- ALL collections rendered — JS hides overflow ones into See More -->
-      {%- for collection in collections -%}
-        {%- unless collection.handle == 'frontpage' or collection.handle == 'all' or collection.handle == 'dogs' or collection.handle == 'cats' -%}
+      <!-- ALL collections rendered (limit:50 to show more than default 20) -->
+      <!-- JS hides overflow ones into See More dropdown -->
+      {%- for collection in collections limit: 50 -%}
+        {%- unless collection.handle == 'frontpage'
+          or collection.handle == 'all'
+          or collection.handle == 'dogs'
+          or collection.handle == 'cats'
+          or collection.handle == 'top-picks' -%}
           <a href="{{ collection.url }}" class="header-nav__link header-nav__coll-link">{{ collection.title }}</a>
         {%- endunless -%}
       {%- endfor -%}

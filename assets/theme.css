@@ -704,6 +704,26 @@ a:focus-visible, button:focus-visible {
   background: #c2410c;
 }
 
+/* Top Picks — highlighted nav link */
+.header-nav__link--hot {
+  color: var(--primary) !important;   /* orange brand color */
+  font-weight: 700;
+}
+.header-nav__link--hot:hover {
+  color: var(--primary-dark) !important;
+  background: rgba(253, 133, 66, 0.10);
+}
+.header-nav__link--hot::after {
+  background: var(--primary);
+  opacity: 1;             /* always show the underline bar for hot link */
+  transform: scaleX(1);
+}
+.nav-hot-badge {
+  font-size: 13px;
+  line-height: 1;
+  display: inline-block;
+}
+
 /* ─── DROPDOWN ──────────────────────────────────────────────────── */
 .header-nav__dropdown {
   position: relative;

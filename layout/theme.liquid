@@ -74,10 +74,26 @@
         {%- render 'cart-line-items', cart: cart -%}
       </div>
       <div class="cart-drawer__footer" id="cart-drawer-footer" {% if cart.item_count == 0 %}hidden{% endif %}>
+        {%- assign total_savings = 0 -%}
+        {%- for item in cart.items -%}
+          {%- if item.variant.compare_at_price > item.variant.price -%}
+            {%- assign savings_diff = item.variant.compare_at_price | minus: item.variant.price | times: item.quantity -%}
+            {%- assign total_savings = total_savings | plus: savings_diff -%}
+          {%- endif -%}
+        {%- endfor -%}
+        
         <div class="cart-subtotal">
           <span class="cart-subtotal__label">Subtotal</span>
           <span class="cart-subtotal__amount" id="cart-subtotal-amount">{{ cart.total_price | money }}</span>
         </div>
+        
+        {%- if total_savings > 0 -%}
+          <div class="cart-savings-row" id="cart-drawer-savings-row">
+            <span class="cart-savings__label">🎉 Total Savings</span>
+            <span class="cart-savings__amount" id="cart-drawer-savings-amount">-{{ total_savings | money }}</span>
+          </div>
+        {%- endif -%}
+        
         <p class="cart-drawer__tax-note">Taxes and shipping calculated at checkout</p>
         <a href="/checkout" class="btn btn--primary btn--full btn--lg">Checkout</a>
         <a href="/cart" class="btn btn--ghost btn--full">View full cart</a>

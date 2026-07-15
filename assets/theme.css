@@ -1255,6 +1255,23 @@ a:focus-visible, button:focus-visible {
   font-weight: 700;
 }
 .cart-subtotal__label { color: var(--ink-3); font-weight: 500; }
+.cart-savings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f0fdf4;
+  border: 1px dashed #bbf7d0;
+  color: #16a34a;
+  padding: 8px 12px;
+  border-radius: var(--r-md);
+  font-size: 13.5px;
+  font-weight: 700;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+.cart-savings__amount, .cart-savings__val {
+  font-size: 14.5px;
+}
 .cart-drawer__tax-note { font-size: 12px; color: var(--ink-4); text-align: center; }
 
 /* Cart Toast */

@@ -45,31 +45,43 @@ const PetsCare = {
     /** Re-fetch cart state and re-render the drawer & full page */
     async refresh() {
       try {
-        const r = await fetch('/cart.js');
-        const cart = await r.json();
-        this._renderLines(cart);
-        this._updateCount(cart.item_count);
-        this._updateShippingBar(cart.total_price);
-        
-        // Dynamic full cart page update if active
-        if (document.getElementById('cart-page-container')) {
-          await this._refreshCartPage();
-        }
-      } catch(e) { console.error('[PetsCare] cart.refresh failed', e); }
-    },
-
-    async _refreshCartPage() {
-      try {
-        const r = await fetch(window.location.pathname + window.location.search);
+        const r = await fetch(window.location.pathname + window.location.search, { cache: 'no-store' });
         const htmlText = await r.text();
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlText, 'text/html');
-        const newContainer = doc.getElementById('cart-page-container');
-        const oldContainer = document.getElementById('cart-page-container');
-        if (newContainer && oldContainer) {
-          oldContainer.innerHTML = newContainer.innerHTML;
+
+        const newLines = doc.getElementById('cart-drawer-lines');
+        const oldLines = document.getElementById('cart-drawer-lines');
+        if (newLines && oldLines) {
+          oldLines.innerHTML = newLines.innerHTML;
         }
-      } catch(e) { console.error('[PetsCare] _refreshCartPage failed', e); }
+
+        const newFooter = doc.getElementById('cart-drawer-footer');
+        const oldFooter = document.getElementById('cart-drawer-footer');
+        if (newFooter && oldFooter) {
+          oldFooter.innerHTML = newFooter.innerHTML;
+          oldFooter.hidden = newFooter.hasAttribute('hidden') || newFooter.style.display === 'none';
+        }
+
+        const newShipping = doc.getElementById('shipping-bar');
+        const oldShipping = document.getElementById('shipping-bar');
+        if (newShipping && oldShipping) {
+          oldShipping.innerHTML = newShipping.innerHTML;
+        }
+
+        const cartJsonRequest = await fetch('/cart.js');
+        const cart = await cartJsonRequest.json();
+        this._updateCount(cart.item_count);
+
+        const oldCartPage = document.getElementById('cart-page-container');
+        const newCartPage = doc.getElementById('cart-page-container');
+        if (oldCartPage && newCartPage) {
+          oldCartPage.innerHTML = newCartPage.innerHTML;
+        }
+      } catch(e) {
+        console.error('[PetsCare] cart.refresh failed, reloading page', e);
+        window.location.reload();
+      }
     },
 
     async updateNote(note) {

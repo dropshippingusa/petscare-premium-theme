@@ -332,7 +332,7 @@ a:focus-visible, button:focus-visible {
   padding: 4px 0;
 }
 .header-logo__img {
-  max-height: 110px;
+  max-height: 42px;
   width: auto;
   object-fit: contain;
   display: block;

@@ -265,41 +265,20 @@ a:focus-visible, button:focus-visible {
   border-bottom: 1px solid var(--border);
 }
 
-/* Default Logo vs Sticky Logo */
+/* Logo — always visible on every page */
 .header-logo--default {
   display: block;
 }
 .header-logo--sticky {
-  display: none !important;
-}
-.site-header-wrapper.is-sticky .header-logo--default,
-.template-product .site-header-wrapper .header-logo--default {
-  display: none !important;
-}
-.site-header-wrapper.is-sticky .header-logo--sticky,
-.template-product .site-header-wrapper .header-logo--sticky {
-  display: block !important;
+  display: none !important;   /* sticky logo disabled — use one logo always */
 }
 
 #MainContent {
   padding-top: var(--header-initial-h, 120px);
 }
 
-/* Compact sticky header overrides (Flipkart style) */
-.site-header-wrapper.is-sticky .header-location-row,
-.template-product .site-header-wrapper .header-location-row {
-  display: none !important;
-}
-.site-header-wrapper.is-sticky .header-container,
-.template-product .site-header-wrapper .header-container {
-  padding: 8px var(--gutter) !important;
-}
-.site-header-wrapper.is-sticky .header-logo__img,
-.template-product .site-header-wrapper .header-logo__img {
-  max-height: 24px !important;
-}
-
 .announcement-bar {
+
   background: var(--ink);
   color: #fff;
   font-size: 13px;

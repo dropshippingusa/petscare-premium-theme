@@ -3461,6 +3461,19 @@ a.fbt-item__title:hover { color: var(--primary); }
   .pdp-trust { grid-template-columns: 1fr; }
   .pdp-gallery__thumbs { gap: 8px; }
   .pdp-thumb { width: 60px; height: 60px; }
+  .pdp-delivery-box {
+    padding: 10px !important;
+    gap: 8px !important;
+  }
+  .pdp-delivery {
+    padding: 8px 10px !important;
+    font-size: 12.5px !important;
+  }
+  .pdp-delivery svg {
+    width: 16px !important;
+    height: 16px !important;
+    margin-top: 1px !important;
+  }
   .pdp-atc-row {
     flex-direction: row !important;
     align-items: center !important;

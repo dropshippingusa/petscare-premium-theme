@@ -1081,7 +1081,7 @@ const PetsCare = {
       };
       const start = addBusinessDays(new Date(), 3);
       const end = addBusinessDays(new Date(), 5);
-      return `Arrives: ${days[start.getDay()]}, ${months[start.getMonth()]} ${start.getDate()} – ${days[end.getDay()]}, ${months[end.getMonth()]} ${end.getDate()} (Fast US Shipping)`;
+      return `Arrives: ${days[start.getDay()]}, ${months[start.getMonth()]} ${start.getDate()} – ${days[end.getDay()]}, ${months[end.getMonth()]} ${end.getDate()}`;
     },
 
     showToast(msg, isError = false) {

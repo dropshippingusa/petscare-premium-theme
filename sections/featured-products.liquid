@@ -24,24 +24,28 @@
     {%- endif -%}
 
     {%- if products_list.size > 0 -%}
-      <div class="product-grid">
-        {%- for product in products_list limit: products_to_show -%}
-          {%- render 'product-card', product: product -%}
-        {%- endfor -%}
+      <div class="featured-products__scroll-container">
+        <div class="featured-products__scroll">
+          {%- for product in products_list limit: products_to_show -%}
+            {%- render 'product-card', product: product -%}
+          {%- endfor -%}
+        </div>
       </div>
     {%- elsif section.settings.show_placeholder -%}
-      <div class="product-grid">
-        {%- for i in (1..4) -%}
-          <div class="product-card" aria-hidden="true">
-            <div class="product-card__media skeleton" style="aspect-ratio:1"></div>
-            <div class="product-card__body" style="gap:10px">
-              <div class="skeleton" style="height:12px;width:60%;border-radius:4px"></div>
-              <div class="skeleton" style="height:16px;width:90%;border-radius:4px"></div>
-              <div class="skeleton" style="height:12px;width:40%;border-radius:4px"></div>
-              <div class="skeleton" style="height:20px;width:50%;border-radius:4px"></div>
+      <div class="featured-products__scroll-container">
+        <div class="featured-products__scroll">
+          {%- for i in (1..4) -%}
+            <div class="product-card" aria-hidden="true">
+              <div class="product-card__media skeleton" style="aspect-ratio:1"></div>
+              <div class="product-card__body" style="gap:10px">
+                <div class="skeleton" style="height:12px;width:60%;border-radius:4px"></div>
+                <div class="skeleton" style="height:16px;width:90%;border-radius:4px"></div>
+                <div class="skeleton" style="height:12px;width:40%;border-radius:4px"></div>
+                <div class="skeleton" style="height:20px;width:50%;border-radius:4px"></div>
+              </div>
             </div>
-          </div>
-        {%- endfor -%}
+          {%- endfor -%}
+        </div>
       </div>
       <p class="text-center text-muted" style="margin-top:20px;font-size:14px">
         Select a collection in the Theme Editor to display products here.
@@ -56,6 +60,50 @@
 .featured-products-section {
   padding-top: 24px !important;    /* 60% spacing reduction from 64px */
   padding-bottom: 24px !important; /* 60% spacing reduction from 64px */
+}
+.featured-products__scroll-container {
+  position: relative;
+  width: 100%;
+}
+.featured-products__scroll {
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  gap: 20px;
+  padding: 10px 4px 24px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) transparent;
+}
+.featured-products__scroll::-webkit-scrollbar {
+  height: 6px;
+}
+.featured-products__scroll::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 9999px;
+}
+.featured-products__scroll::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 9999px;
+  opacity: 0.7;
+}
+.featured-products__scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}
+.featured-products__scroll .product-card {
+  flex: 0 0 280px;
+  min-width: 280px;
+  scroll-snap-align: start;
+  background: #ffffff;
+  border-radius: var(--r-xl);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease);
+}
+.featured-products__scroll .product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
 }
 </style>
 

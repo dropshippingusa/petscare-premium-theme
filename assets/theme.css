@@ -1797,12 +1797,14 @@ a:focus-visible, button:focus-visible {
   position: relative;
   overflow: hidden;
   aspect-ratio: 1;
-  background: var(--bg-subtle);
+  background: #ffffff;   /* White bg for object-fit:contain */
 }
 .product-card__img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;         /* Show full product — no cropping */
+  object-position: center;
+  padding: 6px;                /* Small inset so image doesn't touch edges */
   transition: opacity var(--t-slow) ease, transform var(--t-slow) var(--ease);
   position: absolute;
   inset: 0;
@@ -2979,7 +2981,10 @@ a:focus-visible, button:focus-visible {
   touch-action: manipulation;
 }
 .pdp-gallery__main-img {
-  width: 100%; height: 100%; object-fit: cover;
+  width: 100%; height: 100%;
+  object-fit: contain;         /* Show full product image — no cropping */
+  object-position: center;
+  background: var(--bg);
   transition: transform 400ms ease-out;
 }
 .pdp-gallery__main:hover .pdp-gallery__main-img { transform: scale(1.04); }

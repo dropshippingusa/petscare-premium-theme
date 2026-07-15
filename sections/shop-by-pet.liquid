@@ -1,121 +1,148 @@
-{%- assign dogs_image = section.settings.dogs_image -%}
-{%- assign cats_image = section.settings.cats_image -%}
-{%- assign dogs_collection = section.settings.dogs_collection -%}
-{%- assign cats_collection = section.settings.cats_collection -%}
+{%- assign collection = section.settings.collection -%}
+{%- if collection == blank -%}
+  {%- assign collection = collections['top-picks'] -%}
+{%- endif -%}
+{%- if collection == blank or collection.products.size == 0 -%}
+  {%- assign collection = collections.all -%}
+{%- endif -%}
 
-<section class="section" id="shop-by-pet" aria-labelledby="shop-by-pet-title">
+{%- assign products_to_show = section.settings.products_to_show | default: 10 -%}
+{%- assign title = section.settings.title | default: 'Top Picks' -%}
+{%- assign label = section.settings.label | default: 'Trending' -%}
+
+<section class="section top-picks-section" aria-labelledby="top-picks-title">
   <div class="container">
-    <div class="section-head">
+    <div class="section-head" style="margin-bottom: var(--sp-4);">
       <div>
-        <span class="section-label">Shop by Pet</span>
-        <h2 class="section-title" id="shop-by-pet-title">Built for Every Pet</h2>
+        <span class="section-label">{{ label }}</span>
+        <h2 class="section-title" id="top-picks-title">{{ title }}</h2>
       </div>
+      {%- if collection != blank -%}
+        <a href="{{ collection.url }}" class="view-all-link">
+          View All
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      {%- endif -%}
     </div>
 
-    <div class="shop-by-pet__grid">
-
-      {%- comment -%} Dogs Card {%- endcomment -%}
-      {%- assign dogs_url = dogs_collection.url | default: '/collections/all?pet=dogs' -%}
-      <a href="{{ dogs_url }}" class="pet-card" aria-label="Shop dog products">
-        {%- if dogs_image != blank -%}
-          <img
-            src="{{ dogs_image | image_url: width: 800 }}"
-            srcset="{{ dogs_image | image_url: width: 500 }} 500w, {{ dogs_image | image_url: width: 800 }} 800w"
-            sizes="(max-width: 640px) 100vw, 50vw"
-            alt="{{ dogs_image.alt | default: 'Shop dog products' }}"
-            class="pet-card__img"
-            loading="lazy"
-            width="800" height="600"
-          >
+    <div class="top-picks__scroll-container">
+      <div class="top-picks__scroll">
+        {%- for product in collection.products limit: products_to_show -%}
+          {%- render 'product-card', product: product -%}
         {%- else -%}
-          <img
-            src="https://cdn.shopify.com/s/files/1/0086/0795/7054/files/CLH_for_dogs.webp?v=1742375228"
-            alt="Shop dog products"
-            class="pet-card__img"
-            loading="lazy"
-            width="800" height="600"
-          >
-        {%- endif -%}
-        <div class="pet-card__overlay"></div>
-        <div class="pet-card__content">
-          <h3 class="pet-card__title">Dogs</h3>
-          {%- if dogs_collection != blank -%}
-            <p class="pet-card__count">{{ dogs_collection.all_products_count }} products</p>
-          {%- endif -%}
-          <span class="pet-card__cta">
-            Shop Now
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </span>
-        </div>
-      </a>
-
-      {%- comment -%} Cats Card {%- endcomment -%}
-      {%- assign cats_url = cats_collection.url | default: '/collections/all?pet=cats' -%}
-      <a href="{{ cats_url }}" class="pet-card" aria-label="Shop cat products">
-        {%- if cats_image != blank -%}
-          <img
-            src="{{ cats_image | image_url: width: 800 }}"
-            srcset="{{ cats_image | image_url: width: 500 }} 500w, {{ cats_image | image_url: width: 800 }} 800w"
-            sizes="(max-width: 640px) 100vw, 50vw"
-            alt="{{ cats_image.alt | default: 'Shop cat products' }}"
-            class="pet-card__img"
-            loading="lazy"
-            width="800" height="600"
-          >
-        {%- else -%}
-          <img
-            src="https://cdn.shopify.com/s/files/1/0086/0795/7054/files/cat_toys_79bf694c-2c5c-4f18-8cac-626ccf76c503.webp?v=1742375228"
-            alt="Shop cat products"
-            class="pet-card__img"
-            loading="lazy"
-            width="800" height="600"
-          >
-        {%- endif -%}
-        <div class="pet-card__overlay"></div>
-        <div class="pet-card__content">
-          <h3 class="pet-card__title">Cats</h3>
-          {%- if cats_collection != blank -%}
-            <p class="pet-card__count">{{ cats_collection.all_products_count }} products</p>
-          {%- endif -%}
-          <span class="pet-card__cta">
-            Shop Now
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </span>
-        </div>
-      </a>
-
+          {%- for i in (1..5) -%}
+            <div class="product-card" aria-hidden="true">
+              <div class="product-card__media skeleton" style="aspect-ratio:1"></div>
+              <div class="product-card__body" style="gap:10px">
+                <div class="skeleton" style="height:12px;width:60%;border-radius:4px"></div>
+                <div class="skeleton" style="height:16px;width:90%;border-radius:4px"></div>
+                <div class="skeleton" style="height:12px;width:40%;border-radius:4px"></div>
+                <div class="skeleton" style="height:20px;width:50%;border-radius:4px"></div>
+              </div>
+            </div>
+          {%- endfor -%}
+        {%- endfor -%}
+      </div>
     </div>
   </div>
 </section>
 
+<style>
+.top-picks-section {
+  background-color: var(--bg-alt);
+  padding: var(--sp-6) 0;
+}
+.top-picks__scroll-container {
+  position: relative;
+  width: 100%;
+}
+.top-picks__scroll {
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  gap: 20px;
+  padding: 10px 4px 24px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) transparent;
+}
+.top-picks__scroll::-webkit-scrollbar {
+  height: 6px;
+}
+.top-picks__scroll::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 9999px;
+}
+.top-picks__scroll::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 9999px;
+  opacity: 0.7;
+}
+.top-picks__scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}
+.top-picks__scroll .product-card {
+  flex: 0 0 280px;
+  min-width: 280px;
+  scroll-snap-align: start;
+  background: #ffffff;
+  border-radius: var(--r-xl);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease);
+}
+.top-picks__scroll .product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary);
+}
+@media (max-width: 768px) {
+  .top-picks__scroll {
+    gap: 12px;
+    padding-bottom: 16px;
+  }
+  .top-picks__scroll .product-card {
+    flex: 0 0 220px;
+    min-width: 220px;
+  }
+}
+</style>
+
 {% schema %}
 {
-  "name": "Shop by Pet",
+  "name": "Top Picks",
   "settings": [
     {
-      "type": "image_picker",
-      "id": "dogs_image",
-      "label": "Dogs card image"
+      "type": "text",
+      "id": "label",
+      "label": "Section label",
+      "default": "Trending"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Top Picks"
     },
     {
       "type": "collection",
-      "id": "dogs_collection",
-      "label": "Dogs collection"
+      "id": "collection",
+      "label": "Collection to display"
     },
     {
-      "type": "image_picker",
-      "id": "cats_image",
-      "label": "Cats card image"
-    },
-    {
-      "type": "collection",
-      "id": "cats_collection",
-      "label": "Cats collection"
+      "type": "range",
+      "id": "products_to_show",
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "label": "Number of products",
+      "default": 10
     }
   ],
   "presets": [
     {
-      "name": "Shop by Pet"
+      "name": "Top Picks"
     }
   ]
 }

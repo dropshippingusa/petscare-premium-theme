@@ -131,8 +131,8 @@
         {%- endunless -%}
       {%- endfor -%}
 
-      <!-- See More: ALWAYS at right end — has dropdown for overflow items -->
-      <div class="header-nav__more-wrap">
+      <!-- See More: hidden by default — only shown by JS when items overflow -->
+      <div class="header-nav__more-wrap" id="nav-more-wrap" style="display:none">
         <button type="button" class="header-nav__link header-nav__see-more-btn" id="nav-see-more-btn" aria-expanded="false" aria-haspopup="listbox">
           See More <span class="see-more-chevron">▾</span>
         </button>
@@ -151,31 +151,39 @@
 (function() {
   function initNavOverflow() {
     var nav      = document.querySelector('.header-nav');
+    var wrap     = document.getElementById('nav-more-wrap');
     var btn      = document.getElementById('nav-see-more-btn');
     var dropdown = document.getElementById('nav-see-more-dropdown');
-    if (!nav || !btn || !dropdown) return;
+    if (!nav || !btn || !dropdown || !wrap) return;
 
     // All collection links (candidates for overflow)
     var collLinks = Array.from(nav.querySelectorAll('.header-nav__coll-link'));
     var overflowLinks = [];
 
     function compute() {
-      // 1. Reset: show all collection links, clear dropdown
+      // 1. Reset: show all collection links, clear dropdown, hide See More
       collLinks.forEach(function(el) { el.hidden = false; });
       dropdown.innerHTML = '';
       dropdown.hidden = true;
       btn.setAttribute('aria-expanded', 'false');
       btn.querySelector('.see-more-chevron').textContent = '\u25BE';
       overflowLinks = [];
+      wrap.style.display = 'none'; // hide See More so nav measures without it
 
-      // 2. Hide collection links from the right until nav fits
+      // 2. If nav already fits with all items visible — done, no See More needed
+      if (nav.scrollWidth <= nav.clientWidth) return;
+
+      // 3. Nav overflows — show See More button so its width is included in measurement
+      wrap.style.display = '';
+
+      // 4. Hide collection links from the right one-by-one until nav fits
       for (var i = collLinks.length - 1; i >= 0; i--) {
         if (nav.scrollWidth <= nav.clientWidth) break;
         collLinks[i].hidden = true;
         overflowLinks.unshift(collLinks[i]);
       }
 
-      // 3. Build dropdown links from overflow items
+      // 5. Build dropdown links from overflow items
       overflowLinks.forEach(function(el) {
         var a = document.createElement('a');
         a.href = el.href;
@@ -183,12 +191,17 @@
         a.className = 'header-nav__more-drop-item';
         dropdown.appendChild(a);
       });
+
+      // 6. If nothing ended up overflowing after showing See More, hide it again
+      if (overflowLinks.length === 0) {
+        wrap.style.display = 'none';
+      }
     }
 
     // Toggle dropdown on See More click
     btn.addEventListener('click', function(e) {
       e.stopPropagation();
-      if (overflowLinks.length === 0) return; // nothing to show
+      if (overflowLinks.length === 0) return;
       var isOpen = !dropdown.hidden;
       dropdown.hidden = isOpen;
       btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
@@ -197,22 +210,23 @@
 
     // Close dropdown on outside click
     document.addEventListener('click', function(e) {
-      if (!btn.parentElement.contains(e.target)) {
+      if (!wrap.contains(e.target)) {
         dropdown.hidden = true;
         btn.setAttribute('aria-expanded', 'false');
         btn.querySelector('.see-more-chevron').textContent = '\u25BE';
       }
     });
 
-    // Debounced resize
+    // Debounced resize — recompute whenever browser window changes
     var resizeTimer;
     window.addEventListener('resize', function() {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(compute, 120);
     });
 
-    // Delay so fonts finish rendering before we measure
+    // Run after fonts finish rendering, then again for safety
     setTimeout(compute, 80);
+    setTimeout(compute, 450);
   }
 
   if (document.readyState === 'loading') {

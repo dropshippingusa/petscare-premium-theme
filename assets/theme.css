@@ -1048,7 +1048,8 @@ a:focus-visible, button:focus-visible {
   .header-search-toggle-btn {
     display: inline-flex !important;
   }
-  .header-location-icon-btn { display: none !important; }
+  .header-location-icon-btn { display: inline-flex !important; }
+  .header-account-btn { display: none !important; }
   .header-action-link { position: relative; }
   .header-action-link span { display: none; }
   .header-action-link span.cart-count-badge {

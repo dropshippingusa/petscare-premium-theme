@@ -3444,9 +3444,49 @@ a.fbt-item__title:hover { color: var(--primary); }
   .pdp-trust { grid-template-columns: 1fr; }
   .pdp-gallery__thumbs { gap: 8px; }
   .pdp-thumb { width: 60px; height: 60px; }
-  .pdp-atc-row { flex-direction: column; align-items: stretch; gap: 8px; }
-  .pdp-atc-row .btn--add-to-cart,
-  .pdp-atc-row .btn--buy-now { width: 100% !important; margin: 0 !important; }
+  .pdp-atc-row {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  .pdp-atc-row .btn--wishlist {
+    flex: 0 0 48px !important;
+    width: 48px !important;
+    height: 48px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: var(--r-md) !important;
+    margin: 0 !important;
+  }
+  .pdp-atc-row .btn--add-to-cart {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    height: 48px !important;
+    font-size: 12.5px !important;
+    gap: 4px !important;
+    padding: 0 8px !important;
+    margin: 0 !important;
+  }
+  .pdp-atc-row .btn--add-to-cart svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+  .pdp-atc-row .btn--buy-now {
+    flex: 1.2 1 auto !important;
+    width: auto !important;
+    height: 48px !important;
+    font-size: 12.5px !important;
+    gap: 4px !important;
+    padding: 0 8px !important;
+    margin: 0 !important;
+  }
+  .pdp-atc-row .btn--buy-now svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
 }
 
 /* =============================================================================

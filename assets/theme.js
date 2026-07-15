@@ -914,6 +914,11 @@ const PetsCare = {
               if (priceEl) priceEl.textContent = PetsCare.utils.formatMoney(matchedVariant.price);
               if (stickyPrice) stickyPrice.textContent = PetsCare.utils.formatMoney(matchedVariant.price);
 
+              const qtyInput = document.getElementById('pdp-qty');
+              if (qtyInput) {
+                qtyInput.dataset.price = matchedVariant.price;
+              }
+
               // Update compare/discount
               if (matchedVariant.compare_at_price > matchedVariant.price) {
                 const pct = Math.round((matchedVariant.compare_at_price - matchedVariant.price) / matchedVariant.compare_at_price * 100);
@@ -952,14 +957,20 @@ const PetsCare = {
 
               // Update Buy Now state
               const buyNowBtns = document.querySelectorAll('.pdp-buy-now-btn');
+              const currentQty = parseInt(document.getElementById('pdp-qty')?.value, 10) || 1;
               buyNowBtns.forEach(btn => {
                 btn.disabled = !matchedVariant.available;
                 if (matchedVariant.available) {
-                  btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg><span class="buy-now-label">Buy at ${PetsCare.utils.formatMoney(matchedVariant.price)}</span>`;
+                  btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> <span class="buy-now-label">Buy at ${PetsCare.utils.formatMoney(matchedVariant.price * currentQty)}</span>`;
                 } else {
                   btn.innerHTML = 'Sold Out';
                 }
               });
+
+              const qtyInputEvent = document.getElementById('pdp-qty');
+              if (qtyInputEvent) {
+                qtyInputEvent.dispatchEvent(new Event('input'));
+              }
 
               // Update URL without reload
               const url = new URL(window.location.href);
@@ -987,14 +998,51 @@ const PetsCare = {
     _initQtyControls() {
       const qtyInput = document.getElementById('pdp-qty');
       if (!qtyInput) return;
+
+      const subtotalEl = document.getElementById('pdp-qty-subtotal');
+      const subtotalValEl = document.getElementById('pdp-qty-subtotal-val');
+      const buyNowBtns = document.querySelectorAll('.pdp-buy-now-btn');
+
+      const updatePrices = () => {
+        const qty = parseInt(qtyInput.value, 10) || 1;
+        const price = parseInt(qtyInput.dataset.price, 10) || 0;
+        const total = price * qty;
+
+        // 1. Update inline subtotal display
+        if (qty > 1 && total > 0) {
+          if (subtotalValEl) subtotalValEl.textContent = PetsCare.utils.formatMoney(total);
+          if (subtotalEl) subtotalEl.style.display = 'block';
+        } else {
+          if (subtotalEl) subtotalEl.style.display = 'none';
+        }
+
+        // 2. Update Buy Now button label
+        buyNowBtns.forEach(btn => {
+          if (!btn.disabled && btn.querySelector('.buy-now-label')) {
+            const labelEl = btn.querySelector('.buy-now-label');
+            if (labelEl) labelEl.textContent = `Buy at ${PetsCare.utils.formatMoney(total)}`;
+          }
+        });
+      };
+
+      // Watch for quantity clicks
       document.querySelectorAll('[data-qty-change]').forEach(btn => {
         btn.addEventListener('click', () => {
           const delta = parseInt(btn.dataset.qtyChange, 10);
           const current = parseInt(qtyInput.value, 10) || 1;
           const next = Math.max(1, current + delta);
           qtyInput.value = next;
+          // Trigger update
+          updatePrices();
         });
       });
+
+      // Watch for manual typing changes
+      qtyInput.addEventListener('input', updatePrices);
+      qtyInput.addEventListener('change', updatePrices);
+
+      // Initial run on page load
+      updatePrices();
     },
 
     /* Tab switching */

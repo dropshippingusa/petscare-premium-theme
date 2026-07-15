@@ -226,7 +226,7 @@
       {%- endunless -%}
 
       {%- comment -%} Quantity {%- endcomment -%}
-      <div class="pdp-qty-row">
+      <div class="pdp-qty-row" style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
         <label for="pdp-qty" class="sr-only">Quantity</label>
         <div class="qty-control" role="group" aria-label="Product quantity">
           <button type="button" class="qty-btn" data-qty-change="-1" aria-label="Decrease quantity">−</button>
@@ -238,8 +238,12 @@
             value="1"
             min="1"
             aria-label="Quantity"
+            data-price="{{ current_variant.price }}"
           >
           <button type="button" class="qty-btn" data-qty-change="1" aria-label="Increase quantity">+</button>
+        </div>
+        <div class="pdp-qty-subtotal" id="pdp-qty-subtotal" style="display: none; font-size: 14.5px; font-weight: 700; color: var(--ink);">
+          Subtotal: <span id="pdp-qty-subtotal-val"></span>
         </div>
       </div>
 

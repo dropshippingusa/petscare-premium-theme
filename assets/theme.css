@@ -1976,14 +1976,31 @@ a:focus-visible, button:focus-visible {
   grid-template-columns: repeat(4, 1fr);
   gap: var(--sp-3);
 }
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
   .flash-deals__scroll {
-    grid-template-columns: repeat(4, 280px);
+    display: flex;
     overflow-x: auto;
-    padding-bottom: 8px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    gap: 12px;
+    padding-bottom: 12px;
   }
   .flash-deals__scroll::-webkit-scrollbar { display: none; }
+  .flash-deals__scroll .product-card {
+    flex: 0 0 210px;
+    min-width: 210px;
+    scroll-snap-align: start;
+  }
+}
+@media (max-width: 480px) {
+  .flash-deals__scroll {
+    gap: 8px;
+  }
+  .flash-deals__scroll .product-card {
+    flex: 0 0 155px;
+    min-width: 155px;
+  }
 }
 
 /* =============================================================================

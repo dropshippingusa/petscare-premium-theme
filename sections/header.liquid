@@ -98,25 +98,18 @@
         {%- endunless -%}
       {%- endfor -%}
 
-      <!-- Render collections: first 6 visible, rest hidden behind "See More" -->
-      {%- assign nav_idx = 0 -%}
+
+      <!-- ALL collections rendered — JS handles overflow detection -->
       {%- for collection in collections -%}
         {%- unless collection.handle == 'frontpage' or collection.handle == 'all' or collection.handle == 'dogs' or collection.handle == 'cats' -%}
-          {%- assign nav_idx = nav_idx | plus: 1 -%}
-          {%- if nav_idx <= 6 -%}
-            <a href="{{ collection.url }}" class="header-nav__link">{{ collection.title }}</a>
-          {%- else -%}
-            <a href="{{ collection.url }}" class="header-nav__link header-nav__more-item" style="display:none;">{{ collection.title }}</a>
-          {%- endif -%}
+          <a href="{{ collection.url }}" class="header-nav__link header-nav__coll-link">{{ collection.title }}</a>
         {%- endunless -%}
       {%- endfor -%}
 
-      <!-- See More button (only if more than 6 collections) -->
-      {%- if nav_total > 6 -%}
-        <button type="button" class="header-nav__link header-nav__see-more-btn" id="nav-see-more-btn" aria-expanded="false">
-          See More ▾
-        </button>
-      {%- endif -%}
+      <!-- See More: hidden by default, shown by JS only when nav overflows -->
+      <button type="button" class="header-nav__link header-nav__see-more-btn" id="nav-see-more-btn" hidden aria-expanded="false">
+        See More ▾
+      </button>
 
     </nav>
   </div>
@@ -125,18 +118,62 @@
 </div>
 
 <script>
-  // See More toggle
-  (function() {
+(function() {
+  function initNavOverflow() {
+    var nav = document.querySelector('.header-nav');
     var btn = document.getElementById('nav-see-more-btn');
-    if (!btn) return;
+    if (!nav || !btn) return;
+
+    // Only collection links are candidates for hiding
+    var collLinks = Array.from(nav.querySelectorAll('.header-nav__coll-link'));
+    var overflowLinks = []; // links currently hidden due to overflow
+
+    function compute() {
+      // 1. Restore all hidden links, hide button
+      collLinks.forEach(function(el) { el.hidden = false; });
+      btn.hidden = true;
+      btn.setAttribute('aria-expanded', 'false');
+      btn.textContent = 'See More \u25BE';
+      overflowLinks = [];
+
+      // 2. If no overflow — done
+      if (nav.scrollWidth <= nav.offsetWidth) return;
+
+      // 3. Overflow exists — show button (it needs space too)
+      btn.hidden = false;
+
+      // 4. Hide links from the right until nav fits
+      for (var i = collLinks.length - 1; i >= 0; i--) {
+        if (nav.scrollWidth <= nav.offsetWidth) break;
+        collLinks[i].hidden = true;
+        overflowLinks.unshift(collLinks[i]);
+      }
+    }
+
+    // Toggle overflow items on See More click
     btn.addEventListener('click', function() {
-      var items = document.querySelectorAll('.header-nav__more-item');
       var expanded = this.getAttribute('aria-expanded') === 'true';
-      items.forEach(function(el) { el.style.display = expanded ? 'none' : 'inline-flex'; });
+      overflowLinks.forEach(function(el) { el.hidden = expanded; });
       this.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-      this.textContent = expanded ? 'See More ▾' : 'See Less ▴';
+      this.textContent = expanded ? 'See More \u25BE' : 'See Less \u25B4';
     });
-  })();
+
+    // Debounced resize handler
+    var resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(compute, 120);
+    });
+
+    compute();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNavOverflow);
+  } else {
+    initNavOverflow();
+  }
+})();
 </script>
 
 {% schema %}

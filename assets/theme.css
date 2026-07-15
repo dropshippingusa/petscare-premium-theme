@@ -5109,3 +5109,41 @@ a.fbt-item__title:hover { color: var(--primary); }
     align-items: flex-start;
   }
 }
+
+/* ── Mobile Spacing Optimizations (iPhone 15/16 Pro & Max Layouts) ── */
+@media (max-width: 768px) {
+  /* Hide the trust bar block wrapper if empty */
+  .trust-bar:has(.trust-bar__inner:empty) {
+    display: none !important;
+  }
+  .trust-bar__inner:empty {
+    padding: 0 !important;
+    height: 0 !important;
+    border: none !important;
+  }
+
+  /* Tighten global section vertical paddings (reduce from 64px to 32px) */
+  .section {
+    padding: var(--sp-4) 0 !important;
+  }
+
+  /* Tighten space below section headings (reduce from 48px to 24px) */
+  .section-head {
+    margin-bottom: var(--sp-3) !important;
+  }
+
+  /* Reduce Top Picks section custom padding spacing */
+  .top-picks-section {
+    padding-bottom: var(--sp-3) !important;
+  }
+
+  /* Reduce PDP main container bottom padding (reduce from 96px to 32px) */
+  .pdp-layout {
+    padding-bottom: var(--sp-4) !important;
+  }
+
+  /* Reduce Footer top padding (reduce from 96px to 32px) */
+  .footer-main {
+    padding-top: var(--sp-4) !important;
+  }
+}

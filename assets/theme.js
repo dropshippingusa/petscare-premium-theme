@@ -639,6 +639,7 @@ const PetsCare = {
       this._initTabs();
       this._initStickyAtc();
       this._initFbt();
+      this._initProductFormSubmit();
       this._initDeliveryEstimator();
       this._trackRecentlyViewed();
       this._initDescriptionToggle();
@@ -1105,6 +1106,36 @@ const PetsCare = {
           }
         });
         if (items.length) await PetsCare.cart.add(items, true);
+      });
+    },
+
+    /* AJAX Interception for the main Product Form */
+    _initProductFormSubmit() {
+      const forms = document.querySelectorAll('form[action*="/cart/add"]');
+      forms.forEach(form => {
+        if (form.id === 'fbt-form') return; // Handled by FBT listener
+
+        form.addEventListener('submit', async e => {
+          // If native submit triggered by Buy Now, do not prevent default
+          if (e.submitter && e.submitter.classList.contains('pdp-buy-now-btn')) {
+            return;
+          }
+          
+          e.preventDefault();
+
+          const variantInput = form.querySelector('[name="id"]');
+          const qtyInput = form.querySelector('[name="quantity"]');
+          if (!variantInput) return;
+
+          const variantId = parseInt(variantInput.value, 10);
+          const quantity = qtyInput ? parseInt(qtyInput.value, 10) || 1 : 1;
+
+          if (variantId) {
+            const items = [{ id: variantId, quantity: quantity }];
+            // Add to cart and display toast WITHOUT opening the cart drawer
+            await PetsCare.cart.add(items, false);
+          }
+        });
       });
     }
   },

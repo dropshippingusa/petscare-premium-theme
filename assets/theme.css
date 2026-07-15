@@ -3043,31 +3043,31 @@ a:focus-visible, button:focus-visible {
   border: 1px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.02);
 }
 
 .pdp-option-card__header {
   background: #FFF8F6; /* Light peach tint */
   border-bottom: 1px solid rgba(255, 107, 53, 0.08);
-  padding: 12px 16px;
+  padding: 6px 12px;
   display: flex;
   align-items: center;
 }
 
 .pdp-option-card__title {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--ink);
   letter-spacing: 0.05em;
 }
 
 .pdp-option-card__body {
-  padding: 16px;
+  padding: 8px 12px;
 }
 
 .pdp-qty-body {
-  padding: 12px 16px;
+  padding: 8px 12px;
 }
 
 .variant-pills {
@@ -3075,9 +3075,9 @@ a:focus-visible, button:focus-visible {
   flex-wrap: nowrap;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  gap: 12px;
-  padding: 8px 16px;
-  margin: -8px -16px;
+  gap: 10px;
+  padding: 6px 12px;
+  margin: -6px -12px;
   scrollbar-width: none; /* Hide scrollbar on Firefox */
 }
 
@@ -3091,13 +3091,13 @@ a:focus-visible, button:focus-visible {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 42px;
-  padding: 0 18px;
-  border-radius: 8px;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 6px;
   border: 1.5px solid var(--border);
   background: #ffffff;
   font-family: var(--font);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--ink);
   cursor: pointer;
@@ -3120,10 +3120,10 @@ a:focus-visible, button:focus-visible {
 .variant-pill .pill-check {
   display: none;
   position: absolute;
-  top: -8px;
-  right: -8px;
-  width: 16px;
-  height: 16px;
+  top: -6px;
+  right: -6px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: var(--primary);
   color: #ffffff;
@@ -3155,9 +3155,9 @@ a:focus-visible, button:focus-visible {
 .pdp-qty-row { display: flex; align-items: center; gap: 12px; }
 .qty-control {
   display: flex; align-items: center; gap: 0;
-  border: 1.5px solid var(--border); border-radius: var(--r-md);
+  border: 1.5px solid var(--border); border-radius: 6px;
   overflow: hidden; background: var(--bg);
-  height: 48px; width: 140px;
+  height: 34px; width: 110px;
 }
 .qty-btn {
   flex: 1; height: 100%; background: none; border: none;
@@ -3563,19 +3563,6 @@ a.fbt-item__title:hover { color: var(--primary); }
   .pdp-trust { grid-template-columns: 1fr; }
   .pdp-gallery__thumbs { gap: 8px; }
   .pdp-thumb { width: 60px; height: 60px; }
-  .pdp-delivery-box {
-    padding: 10px !important;
-    gap: 8px !important;
-  }
-  .pdp-delivery {
-    padding: 8px 10px !important;
-    font-size: 12.5px !important;
-  }
-  .pdp-delivery svg {
-    width: 16px !important;
-    height: 16px !important;
-    margin-top: 1px !important;
-  }
   .pdp-atc-row {
     flex-direction: row !important;
     align-items: center !important;
@@ -3956,19 +3943,19 @@ a.fbt-item__title:hover { color: var(--primary); }
   background: var(--bg-alt);
   border: 1px solid var(--border);
   border-radius: var(--r-md);
-  padding: 10px 14px;
+  padding: 6px 12px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
-.pdp-delivery {
+.pdp-delivery-line {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 13px;
+  gap: 8px;
+  font-size: 12.5px;
 }
-.pdp-delivery svg {
-  color: var(--primary);
+.pdp-delivery-line svg {
+  color: var(--primary) !important;
   flex-shrink: 0;
 }
 .pdp-delivery__status {

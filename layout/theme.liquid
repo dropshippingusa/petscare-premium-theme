@@ -26,7 +26,9 @@
   <!-- Fonts: Rubik (Heads Up For Tails Style) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <!-- Preload Rubik font to prevent FOIT on mobile -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet"></noscript>
 
   {{ 'theme.css' | asset_url | stylesheet_tag }}
 
@@ -120,7 +122,7 @@
   </div>
 
   {%- comment -%} Mobile bottom navigation (SVG icons only, no emojis) {%- endcomment -%}
-  <nav class="mobile-bottom-nav" aria-label="Main navigation">
+  <nav class="mobile-bottom-nav" aria-label="Bottom navigation">
     <a href="/" class="mobile-nav-item {% if template.name == 'index' %}is-active{% endif %}" aria-label="Home">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       <span>Home</span>

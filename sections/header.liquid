@@ -95,63 +95,47 @@
             <span>Home</span>
           </a>
 
-          <!-- DOGS: Dynamic submenu from product types in Dogs collection -->
-          {%- assign dogs_coll = collections['dogs'] -%}
-          <div class="header-nav__dropdown">
-            <a href="/collections/dogs" class="header-nav__link header-nav__link--has-dropdown">
-              <span class="header-nav__icon">🐕</span>
-              <span>Dogs</span>
-              <svg class="header-nav__chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-            </a>
-            <div class="header-nav__dropdown-menu">
-              {%- if dogs_coll -%}
-                {%- assign dogs_types = '' | split: '|' -%}
-                {%- for product in dogs_coll.products limit: 100 -%}
+          <!-- DYNAMIC COLLECTIONS: Auto-renders all collections from Shopify -->
+          {%- for collection in collections -%}
+            {%- unless collection.handle == 'frontpage' or collection.handle == 'all' -%}
+            <div class="header-nav__dropdown">
+              <a href="{{ collection.url }}" class="header-nav__link header-nav__link--has-dropdown">
+                <span class="header-nav__icon">
+                  {%- case collection.handle -%}
+                    {%- when 'dogs' -%}🐕
+                    {%- when 'cats' -%}🐱
+                    {%- when 'birds' -%}🐦
+                    {%- when 'fish' -%}🐠
+                    {%- when 'reptiles' -%}🦎
+                    {%- when 'small-animals' -%}🐹
+                    {%- when 'deals' or 'sale' -%}🔥
+                    {%- when 'new-arrivals' -%}✨
+                    {%- else -%}🐾
+                  {%- endcase -%}
+                </span>
+                <span>{{ collection.title }}</span>
+                <svg class="header-nav__chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </a>
+              <div class="header-nav__dropdown-menu">
+                {%- assign coll_types = '' | split: '|' -%}
+                {%- for product in collection.products limit: 100 -%}
                   {%- assign ptype = product.type | strip -%}
-                  {%- if ptype != blank and dogs_types contains ptype == false -%}
-                    {%- assign dogs_types = dogs_types | push: ptype -%}
+                  {%- if ptype != blank and coll_types contains ptype == false -%}
+                    {%- assign coll_types = coll_types | push: ptype -%}
                   {%- endif -%}
                 {%- endfor -%}
-                {%- assign dogs_types = dogs_types | uniq | sort -%}
-                {%- for dtype in dogs_types -%}
-                  <a href="/collections/dogs?filter.p.product_type={{ dtype | url_encode }}" class="header-nav__dropdown-item">{{ dtype }}</a>
+                {%- assign coll_types = coll_types | uniq | sort -%}
+                {%- for ptype in coll_types -%}
+                  <a href="{{ collection.url }}?filter.p.product_type={{ ptype | url_encode }}" class="header-nav__dropdown-item">{{ ptype }}</a>
                 {%- endfor -%}
-                {%- if dogs_types.size == 0 -%}
-                  <a href="/collections/dogs" class="header-nav__dropdown-item">All Dog Products</a>
+                {%- if coll_types.size == 0 -%}
+                  <a href="{{ collection.url }}" class="header-nav__dropdown-item">All {{ collection.title }} Products</a>
                 {%- endif -%}
-              {%- endif -%}
-              <a href="/collections/dogs" class="header-nav__dropdown-item header-nav__dropdown-item--all">View All Dog Products →</a>
+                <a href="{{ collection.url }}" class="header-nav__dropdown-item header-nav__dropdown-item--all">View All {{ collection.title }} →</a>
+              </div>
             </div>
-          </div>
-
-          <!-- CATS: Dynamic submenu from product types in Cats collection -->
-          {%- assign cats_coll = collections['cats'] -%}
-          <div class="header-nav__dropdown">
-            <a href="/collections/cats" class="header-nav__link header-nav__link--has-dropdown">
-              <span class="header-nav__icon">🐱</span>
-              <span>Cats</span>
-              <svg class="header-nav__chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-            </a>
-            <div class="header-nav__dropdown-menu">
-              {%- if cats_coll -%}
-                {%- assign cats_types = '' | split: '|' -%}
-                {%- for product in cats_coll.products limit: 100 -%}
-                  {%- assign ptype = product.type | strip -%}
-                  {%- if ptype != blank and cats_types contains ptype == false -%}
-                    {%- assign cats_types = cats_types | push: ptype -%}
-                  {%- endif -%}
-                {%- endfor -%}
-                {%- assign cats_types = cats_types | uniq | sort -%}
-                {%- for ctype in cats_types -%}
-                  <a href="/collections/cats?filter.p.product_type={{ ctype | url_encode }}" class="header-nav__dropdown-item">{{ ctype }}</a>
-                {%- endfor -%}
-                {%- if cats_types.size == 0 -%}
-                  <a href="/collections/cats" class="header-nav__dropdown-item">All Cat Products</a>
-                {%- endif -%}
-              {%- endif -%}
-              <a href="/collections/cats" class="header-nav__dropdown-item header-nav__dropdown-item--all">View All Cat Products →</a>
-            </div>
-          </div>
+            {%- endunless -%}
+          {%- endfor -%}
 
           <a href="/collections/all" class="header-nav__link">
             <span class="header-nav__icon">🛍️</span>

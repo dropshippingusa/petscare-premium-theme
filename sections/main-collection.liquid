@@ -86,7 +86,9 @@
 
   # Define dynamic collection banner using downloaded local assets
   assign banner_img_url = ''
-  if filter_pet == 'dogs' or collection.handle == 'dogs'
+  if collection.handle == 'all'
+    assign banner_img_url = 'banner-all.png' | asset_url
+  elsif filter_pet == 'dogs' or collection.handle == 'dogs'
     assign banner_img_url = 'banner-dogs.webp' | asset_url
   elsif filter_pet == 'cats' or collection.handle == 'cats'
     assign banner_img_url = 'banner-cats.webp' | asset_url

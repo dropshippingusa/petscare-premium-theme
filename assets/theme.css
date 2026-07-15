@@ -3490,6 +3490,33 @@ a:focus-visible, button:focus-visible {
   stroke: #ff3f6c;
 }
 
+/* Dynamic checkout buttons styling */
+.pdp-payment-buttons {
+  width: 100%;
+}
+.shopify-payment-button__button {
+  height: 54px !important;
+  border-radius: var(--r-md) !important;
+  font-family: var(--font) !important;
+  font-weight: 700 !important;
+  font-size: 16px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.02em !important;
+  transition: opacity var(--t-fast) var(--ease) !important;
+}
+.shopify-payment-button__button:hover {
+  opacity: 0.95 !important;
+}
+.shopify-payment-button__more-options {
+  font-family: var(--font) !important;
+  font-size: 12.5px !important;
+  color: var(--ink-3) !important;
+  text-decoration: underline !important;
+  margin-top: 8px !important;
+  display: block;
+  text-align: center;
+}
+
 /* PDP trust row */
 .pdp-trust {
   display: grid; grid-template-columns: 1fr 1fr;

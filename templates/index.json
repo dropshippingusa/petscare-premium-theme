@@ -1,0 +1,37 @@
+{
+  "name": "Index",
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {}
+    },
+    "why-us": {
+      "type": "why-us",
+      "settings": {}
+    },
+    "shop-by-pet": {
+      "type": "shop-by-pet",
+      "settings": {}
+    },
+    "shop-by-category": {
+      "type": "shop-by-category",
+      "settings": {}
+    },
+    "featured-products": {
+      "type": "featured-products",
+      "settings": {}
+    },
+    "recently-viewed": {
+      "type": "recently-viewed",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "why-us",
+    "shop-by-pet",
+    "shop-by-category",
+    "featured-products",
+    "recently-viewed"
+  ]
+}

@@ -284,19 +284,26 @@
               Sold Out
             {%- endif -%}
           </button>
-          <button
-            type="button"
-            class="btn btn--buy-now pdp-buy-now-btn"
-            {% unless current_variant.available %}disabled aria-disabled="true"{% endunless %}
-          >
-            {%- if current_variant.available -%}
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-              <span class="buy-now-label">Buy at {{ current_variant.price | money }}</span>
-            {%- else -%}
-              Sold Out
-            {%- endif -%}
-          </button>
+          {%- unless section.settings.show_dynamic_checkout -%}
+            <button
+              type="button"
+              class="btn btn--buy-now pdp-buy-now-btn"
+              {% unless current_variant.available %}disabled aria-disabled="true"{% endunless %}
+            >
+              {%- if current_variant.available -%}
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <span class="buy-now-label">Buy at {{ current_variant.price | money }}</span>
+              {%- else -%}
+                Sold Out
+              {%- endif -%}
+            </button>
+          {%- endunless -%}
         </div>
+        {%- if section.settings.show_dynamic_checkout and current_variant.available -%}
+          <div class="pdp-payment-buttons" style="margin-top:12px;">
+            {{ form | payment_button }}
+          </div>
+        {%- endif -%}
       </div>
 
       {%- comment -%} Trust row {%- endcomment -%}
@@ -575,6 +582,12 @@
       "id": "fbt_collection",
       "label": "Frequently Bought Together collection",
       "info": "Products from this collection will appear in the FBT bundle widget below the main product"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "Show dynamic checkout buttons",
+      "default": true
     }
   ]
 }

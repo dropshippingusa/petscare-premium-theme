@@ -1,6 +1,11 @@
 {%- assign collection = section.settings.collection -%}
 {%- if collection == blank -%}
-  {%- assign collection = collections['top-picks'] -%}
+  {%- for coll in collections -%}
+    {%- if coll.title == 'Top Picks' -%}
+      {%- assign collection = coll -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
 {%- endif -%}
 {%- if collection == blank or collection.products.size == 0 -%}
   {%- assign collection = collections.all -%}

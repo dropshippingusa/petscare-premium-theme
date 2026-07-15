@@ -98,12 +98,14 @@
       <a href="/" class="header-nav__link{% if request.path == '/' %} is-active{% endif %}">Home</a>
 
       <!-- Top Picks — highlighted, pinned right after Home -->
-      {%- assign top_picks_coll = collections['top-picks'] -%}
-      {%- if top_picks_coll != blank -%}
-        {%- assign top_picks_url = '/collections/top-picks' -%}
-      {%- else -%}
-        {%- assign top_picks_url = '/collections/all' -%}
-      {%- endif -%}
+      <!-- Top Picks — highlighted, pinned right after Home -->
+      {%- assign top_picks_url = '/collections/all' -%}
+      {%- for coll in collections -%}
+        {%- if coll.title == 'Top Picks' -%}
+          {%- assign top_picks_url = coll.url -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
       <a href="{{ top_picks_url }}" class="header-nav__link header-nav__link--hot header-nav__coll-link{% if request.path == top_picks_url %} is-active{% endif %}">
         Top Picks <span class="nav-hot-badge">🔥</span>
       </a>

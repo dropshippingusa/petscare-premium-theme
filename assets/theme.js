@@ -657,15 +657,10 @@ const PetsCare = {
           thumbs.forEach(t => t.classList.remove('is-active'));
           thumb.classList.add('is-active');
           const newSrc = thumb.dataset.src;
-          if (newSrc) {
-            // Crossfade
-            mainImg.style.opacity = '0';
-            mainImg.style.transition = 'opacity 180ms ease';
-            setTimeout(() => {
-              mainImg.removeAttribute('srcset');
-              mainImg.src = newSrc;
-              mainImg.style.opacity = '1';
-            }, 180);
+          if (newSrc && mainImg.src !== newSrc) {
+            // Set both src and srcset to force browsers (especially mobile) to update instantly
+            mainImg.src = newSrc;
+            mainImg.srcset = newSrc;
           }
         });
       });

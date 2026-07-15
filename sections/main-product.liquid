@@ -191,59 +191,94 @@
     {%- comment -%} Product Form Container {%- endcomment -%}
     <div class="pdp-form">
 
-      {%- comment -%} Variant selectors — pills for each option {%- endcomment -%}
+      {%- comment -%} Variant selectors — cards for each option {%- endcomment -%}
       {%- unless product.has_only_default_variant -%}
         {%- for option in product.options_with_values -%}
-          <div class="variant-group">
-            <p class="variant-group__label">
-              {{ option.name }}:
-              <span id="selected-{{ option.position }}">{{ option.selected_value }}</span>
-            </p>
-            <div class="variant-pills" role="group" aria-label="{{ option.name }} options">
-              {%- for value in option.values -%}
-                {%- comment -%} Check if this option value leads to an available variant {%- endcomment -%}
-                {%- assign variant_available = false -%}
-                {%- for variant in product.variants -%}
-                  {%- assign opt_pos = option.position | minus: 1 -%}
-                  {%- if variant.options[opt_pos] == value and variant.available -%}
-                    {%- assign variant_available = true -%}
-                  {%- endif -%}
+          {%- assign opt_name_down = option.name | downcase -%}
+          {%- assign is_color = false -%}
+          {%- if opt_name_down contains 'color' or opt_name_down contains 'colour' -%}
+            {%- assign is_color = true -%}
+          {%- endif -%}
+          <div class="pdp-option-card">
+            <div class="pdp-option-card__header">
+              <span class="pdp-option-card__icon-wrapper">
+                {%- if is_color -%}
+                  <!-- Paint Palette Icon -->
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 14.7255 3.09032 17.1962 4.85857 19C5.32168 19.4631 5.46782 20.1558 5.23438 20.7394C5.08639 21.1093 5.00845 21.5057 5.00845 21.9202C5.00845 21.9643 5.04423 22 5.08836 22H12Z"/><circle cx="7.5" cy="10.5" r="1.5" fill="currentColor"/><circle cx="11.5" cy="7.5" r="1.5" fill="currentColor"/><circle cx="16.5" cy="9.5" r="1.5" fill="currentColor"/><circle cx="15.5" cy="14.5" r="1.5" fill="currentColor"/></svg>
+                {%- else -%}
+                  <!-- Size / Expand Icon -->
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                {%- endif -%}
+              </span>
+              <span class="pdp-option-card__title">{{ option.name | upcase }}</span>
+            </div>
+            <div class="pdp-option-card__body">
+              <div class="variant-pills" role="group" aria-label="{{ option.name }} options">
+                {%- for value in option.values -%}
+                  {%- assign variant_available = false -%}
+                  {%- for variant in product.variants -%}
+                    {%- assign opt_pos = option.position | minus: 1 -%}
+                    {%- if variant.options[opt_pos] == value and variant.available -%}
+                      {%- assign variant_available = true -%}
+                      {%- break -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                  {%- assign is_selected = false -%}
+                  {%- if option.selected_value == value -%}{%- assign is_selected = true -%}{%- endif -%}
+                  <button
+                    type="button"
+                    class="variant-pill {% if is_color %}variant-pill--color{% else %}variant-pill--size{% endif %} {% if is_selected %}is-selected{% endif %} {% unless variant_available %}is-unavailable{% endunless %}"
+                    data-option-position="{{ option.position }}"
+                    data-value="{{ value | escape }}"
+                    {% unless variant_available %}aria-disabled="true"{% endunless %}
+                    aria-label="{{ option.name }}: {{ value }}"
+                  >
+                    {%- if is_color -%}
+                      <svg class="pill-paint-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 14.7255 3.09032 17.1962 4.85857 19C5.32168 19.4631 5.46782 20.1558 5.23438 20.7394C5.08639 21.1093 5.00845 21.5057 5.00845 21.9202C5.00845 21.9643 5.04423 22 5.08836 22H12Z"/><circle cx="7.5" cy="10.5" r="1.5" fill="currentColor"/><circle cx="11.5" cy="7.5" r="1.5" fill="currentColor"/><circle cx="16.5" cy="9.5" r="1.5" fill="currentColor"/><circle cx="15.5" cy="14.5" r="1.5" fill="currentColor"/></svg>
+                      <span class="pill-text">{{ value }}</span>
+                      <span class="pill-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    {%- else -%}
+                      <span class="pill-text">{{ value }}</span>
+                      <span class="size-pill-badge"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    {%- endif -%}
+                  </button>
                 {%- endfor -%}
-                <button
-                  type="button"
-                  class="variant-pill {% if option.selected_value == value %}is-selected{% endif %} {% unless variant_available %}is-unavailable{% endunless %}"
-                  data-option-position="{{ option.position }}"
-                  data-value="{{ value | escape }}"
-                  {% unless variant_available %}aria-disabled="true"{% endunless %}
-                  aria-label="{{ option.name }}: {{ value }}"
-                >
-                  {{ value }}
-                </button>
-              {%- endfor -%}
+              </div>
             </div>
           </div>
         {%- endfor -%}
       {%- endunless -%}
 
-      {%- comment -%} Quantity {%- endcomment -%}
-      <div class="pdp-qty-row" style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
-        <label for="pdp-qty" class="sr-only">Quantity</label>
-        <div class="qty-control" role="group" aria-label="Product quantity">
-          <button type="button" class="qty-btn" data-qty-change="-1" aria-label="Decrease quantity">−</button>
-          <input
-            type="number"
-            id="pdp-qty"
-            name="quantity"
-            class="qty-input"
-            value="1"
-            min="1"
-            aria-label="Quantity"
-            data-price="{{ current_variant.price }}"
-          >
-          <button type="button" class="qty-btn" data-qty-change="1" aria-label="Increase quantity">+</button>
+      {%- comment -%} Quantity Card {%- endcomment -%}
+      <div class="pdp-option-card">
+        <div class="pdp-option-card__header">
+          <span class="pdp-option-card__icon-wrapper">
+            <!-- Box/Package Icon -->
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><polygon points="12 22.08 12 12 3 6.85 3 16.92 12 22.08"/><polygon points="12 22.08 12 12 21 6.85 21 16.92 12 22.08"/><polygon points="12 12 3 6.85 12 1.7 21 6.85 12 12"/></svg>
+          </span>
+          <span class="pdp-option-card__title">QTY</span>
         </div>
-        <div class="pdp-qty-subtotal" id="pdp-qty-subtotal" style="display: none; font-size: 14.5px; font-weight: 700; color: var(--ink);">
-          Subtotal: <span id="pdp-qty-subtotal-val"></span>
+        <div class="pdp-option-card__body pdp-qty-body">
+          <div class="pdp-qty-row" style="display: flex; align-items: center; gap: 16px;">
+            <label for="pdp-qty" class="sr-only">Quantity</label>
+            <div class="qty-control" role="group" aria-label="Product quantity">
+              <button type="button" class="qty-btn" data-qty-change="-1" aria-label="Decrease quantity">−</button>
+              <input
+                type="number"
+                id="pdp-qty"
+                name="quantity"
+                class="qty-input"
+                value="1"
+                min="1"
+                aria-label="Quantity"
+                data-price="{{ current_variant.price }}"
+              >
+              <button type="button" class="qty-btn" data-qty-change="1" aria-label="Increase quantity">+</button>
+            </div>
+            <div class="pdp-qty-subtotal" id="pdp-qty-subtotal" style="display: none; font-size: 14.5px; font-weight: 700; color: var(--ink);">
+              Subtotal: <span id="pdp-qty-subtotal-val"></span>
+            </div>
+          </div>
         </div>
       </div>
 

@@ -3037,20 +3037,179 @@ a:focus-visible, button:focus-visible {
 }
 .pdp-delivery svg { color: var(--green); flex-shrink: 0; margin-top: 2px; }
 
-/* Variant group */
-.variant-group { display: flex; flex-direction: column; gap: 10px; }
-.variant-group__label { font-size: 14px; font-weight: 600; color: var(--ink); margin: 0; }
-.variant-group__label span { font-weight: 400; color: var(--ink-3); }
-.variant-pills { display: flex; flex-wrap: wrap; gap: 8px; }
-.variant-pill {
-  height: 40px; padding: 0 16px; border-radius: 100px;
-  border: 1.5px solid var(--border); background: var(--bg);
-  font-size: 14px; font-weight: 500; color: var(--ink); cursor: pointer;
-  transition: border-color var(--t-fast), background var(--t-fast), color var(--t-fast);
+/* Option Cards (Color, Size, Qty) */
+.pdp-option-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
 }
-.variant-pill:hover { border-color: var(--ink); }
-.variant-pill.is-selected { border-color: var(--primary); background: var(--primary); color: #fff; font-weight: 700; }
-.variant-pill.is-unavailable { opacity: 0.4; cursor: not-allowed; text-decoration: line-through; }
+
+.pdp-option-card__header {
+  background: #FFF8F6; /* Light peach tint */
+  border-bottom: 1px solid rgba(255, 107, 53, 0.08);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pdp-option-card__icon-wrapper {
+  background: var(--primary);
+  color: #ffffff;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pdp-option-card__icon-wrapper svg {
+  width: 14px;
+  height: 14px;
+  color: #fff;
+  fill: currentColor;
+}
+
+.pdp-option-card__title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.05em;
+}
+
+.pdp-option-card__body {
+  padding: 16px;
+}
+
+.pdp-qty-body {
+  padding: 12px 16px;
+}
+
+.variant-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.variant-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: #ffffff;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color var(--t-fast), background var(--t-fast), color var(--t-fast);
+  outline: none;
+}
+
+.variant-pill:hover:not(.is-unavailable) {
+  border-color: var(--ink-3);
+}
+
+/* Color Variant Pill Specifics */
+.variant-pill--color {
+  background: #fafafa;
+  border: 1.5px solid var(--border);
+  color: var(--ink);
+  gap: 8px;
+  border-radius: 20px; /* Fully rounded capsule */
+}
+
+.variant-pill--color .pill-paint-icon {
+  color: var(--ink-3);
+  display: inline-block;
+  stroke: currentColor;
+}
+
+.variant-pill--color .pill-check {
+  display: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--primary);
+  align-items: center;
+  justify-content: center;
+}
+
+.variant-pill--color .pill-check svg {
+  stroke: currentColor;
+}
+
+/* Selected Color Pill */
+.variant-pill--color.is-selected {
+  background: var(--primary) !important;
+  color: #ffffff !important;
+  border-color: var(--primary) !important;
+}
+
+.variant-pill--color.is-selected .pill-paint-icon {
+  color: #ffffff !important;
+}
+
+.variant-pill--color.is-selected .pill-check {
+  display: inline-flex;
+}
+
+/* Size Variant Pill Specifics */
+.variant-pill--size {
+  min-width: 70px;
+  border-radius: 8px;
+}
+
+/* Selected Size Pill */
+.variant-pill--size.is-selected {
+  border-color: var(--primary) !important;
+  color: var(--primary) !important;
+  background: #ffffff !important;
+}
+
+/* Size Badge */
+.variant-pill--size .size-pill-badge {
+  display: none;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #ffffff;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  z-index: 1;
+}
+
+.variant-pill--size .size-pill-badge svg {
+  stroke: currentColor;
+}
+
+.variant-pill--size.is-selected .size-pill-badge {
+  display: inline-flex;
+}
+
+/* Unavailable Option */
+.variant-pill.is-unavailable {
+  opacity: 0.45;
+  text-decoration: line-through;
+  cursor: not-allowed;
+  background: #fafafa !important;
+  border-color: var(--border) !important;
+  color: var(--ink-4) !important;
+}
 
 /* Quantity control */
 .pdp-qty-row { display: flex; align-items: center; gap: 12px; }

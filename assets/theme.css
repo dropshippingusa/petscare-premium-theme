@@ -265,12 +265,12 @@ a:focus-visible, button:focus-visible {
   border-bottom: 1px solid var(--border);
 }
 
-/* Logo — always visible on every page */
+/* Logo — text logo always visible on every page */
 .header-logo--default {
-  display: block;
+  display: none !important;   /* badge logo hidden */
 }
 .header-logo--sticky {
-  display: none !important;   /* sticky logo disabled — use one logo always */
+  display: block !important;  /* text logo shown always */
 }
 
 #MainContent {

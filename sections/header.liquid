@@ -60,11 +60,37 @@
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       </button>
 
-      <!-- Location -->
-      <a href="#" class="header-action-link header-location-icon-btn" id="header-loc-btn" title="Select delivery location" aria-label="Select delivery location">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        <span class="loc-zip-inline">90210</span>
-      </a>
+      <!-- Location: auto-detect + manual popup -->
+      <div class="loc-wrap" id="loc-wrap">
+        <button type="button" class="header-action-link header-location-icon-btn" id="header-loc-btn"
+          title="Change delivery location" aria-label="Change delivery location" aria-expanded="false" aria-haspopup="dialog">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span class="loc-zip-display" id="loc-zip-display">...</span>
+        </button>
+
+        <!-- Location Popup -->
+        <div class="loc-popup" id="loc-popup" hidden role="dialog" aria-modal="true" aria-label="Delivery location">
+          <div class="loc-popup__header">
+            <div class="loc-popup__title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Delivery Location
+            </div>
+            <button type="button" class="loc-popup__close" id="loc-popup-close" aria-label="Close">&#10005;</button>
+          </div>
+          <p class="loc-popup__subtitle">Enter your ZIP to see delivery dates &amp; shipping options</p>
+          <div class="loc-popup__input-row">
+            <input type="text" id="loc-zip-input" class="loc-popup__input"
+              maxlength="5" placeholder="Enter ZIP code" pattern="[0-9]{5}"
+              inputmode="numeric" autocomplete="postal-code" aria-label="ZIP code">
+            <button type="button" class="loc-popup__confirm" id="loc-zip-confirm">Update</button>
+          </div>
+          <button type="button" class="loc-popup__gps-btn" id="loc-gps-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z" stroke-dasharray="2 4"/></svg>
+            Use My Current Location
+          </button>
+          <div class="loc-popup__status" id="loc-popup-status"></div>
+        </div>
+      </div>
 
       <!-- Login / Account -->
       {%- if customer -%}
@@ -331,13 +357,189 @@
       var input = searchWrap.querySelector('input');
       if (input) {
         input.focus();
-        // Trigger autocomplete check if text is already present
         if (input.value.trim().length >= 3) {
           input.dispatchEvent(new Event('input'));
         }
       }
     }
   });
+})();
+</script>
+
+<script>
+/* ── Location: Auto-detect + Manual Popup (Option C) ─ */
+(function() {
+  var STORAGE_KEY = 'petscare_zip';
+  var DEFAULT_ZIP = '—';
+
+  var btn        = document.getElementById('header-loc-btn');
+  var popup      = document.getElementById('loc-popup');
+  var closeBtn   = document.getElementById('loc-popup-close');
+  var zipDisplay = document.getElementById('loc-zip-display');
+  var zipInput   = document.getElementById('loc-zip-input');
+  var confirmBtn = document.getElementById('loc-zip-confirm');
+  var gpsBtn     = document.getElementById('loc-gps-btn');
+  var statusEl   = document.getElementById('loc-popup-status');
+  if (!btn || !popup) return;
+
+  /* ─── Helpers ─── */
+  function setZip(zip, save) {
+    if (!zip) return;
+    zip = zip.toString().trim().substring(0, 5);
+    if (zipDisplay) zipDisplay.textContent = zip;
+    // Update any other zip spans on the page (e.g. PDP delivery estimates)
+    document.querySelectorAll('.loc-zip-inline, .loc-zip-display').forEach(function(el) {
+      el.textContent = zip;
+    });
+    if (save) {
+      try { localStorage.setItem(STORAGE_KEY, zip); } catch(e) {}
+    }
+  }
+
+  function setStatus(msg, type) {
+    if (!statusEl) return;
+    statusEl.textContent = msg;
+    statusEl.className = 'loc-popup__status' + (type ? ' loc-status--' + type : '');
+  }
+
+  function openPopup() {
+    popup.hidden = false;
+    btn.setAttribute('aria-expanded', 'true');
+    setStatus('');
+    var saved = '';
+    try { saved = localStorage.getItem(STORAGE_KEY) || ''; } catch(e) {}
+    if (zipInput) {
+      zipInput.value = saved;
+      setTimeout(function() { zipInput.focus(); zipInput.select(); }, 80);
+    }
+  }
+
+  function closePopup() {
+    popup.hidden = true;
+    btn.setAttribute('aria-expanded', 'false');
+    setStatus('');
+  }
+
+  /* ─── Auto-detect by IP on first visit (silent, no permission) ─── */
+  function autoDetectByIP() {
+    try {
+      var saved = localStorage.getItem(STORAGE_KEY);
+      if (saved && saved.length === 5) {
+        setZip(saved, false);
+        return; // already have a zip, done
+      }
+    } catch(e) {}
+    // Silently fetch ZIP from IP
+    fetch('https://ipapi.co/json/', { mode: 'cors' })
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        var zip = d.postal || d.zip || '';
+        if (zip && /^[0-9]{5}$/.test(zip)) {
+          setZip(zip, true);
+        } else {
+          setZip(DEFAULT_ZIP, false);
+        }
+      })
+      .catch(function() {
+        setZip(DEFAULT_ZIP, false);
+      });
+  }
+
+  /* ─── GPS detect ─── */
+  function detectByGPS() {
+    if (!navigator.geolocation) {
+      setStatus('GPS not supported. Enter ZIP manually.', 'error');
+      return;
+    }
+    if (gpsBtn) gpsBtn.disabled = true;
+    setStatus('Detecting your location...', 'loading');
+    navigator.geolocation.getCurrentPosition(
+      function(pos) {
+        var lat = pos.coords.latitude;
+        var lon = pos.coords.longitude;
+        fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lon, {
+          headers: { 'Accept-Language': 'en', 'User-Agent': 'PetsCareUSA/1.0' }
+        })
+          .then(function(r) { return r.json(); })
+          .then(function(d) {
+            var zip = (d.address && (d.address.postcode || d.address.postal_code)) || '';
+            zip = zip.replace(/[^0-9]/g, '').substring(0, 5);
+            if (zip.length === 5) {
+              setZip(zip, true);
+              if (zipInput) zipInput.value = zip;
+              setStatus('\u2713 Location detected: ' + zip, 'success');
+              setTimeout(closePopup, 1400);
+            } else {
+              setStatus('Could not get ZIP. Enter manually below.', 'error');
+            }
+            if (gpsBtn) gpsBtn.disabled = false;
+          })
+          .catch(function() {
+            setStatus('Detection failed. Enter ZIP manually.', 'error');
+            if (gpsBtn) gpsBtn.disabled = false;
+          });
+      },
+      function(err) {
+        var msg = err.code === 1
+          ? 'Location access denied. Enter ZIP manually.'
+          : 'Could not get location. Enter ZIP manually.';
+        setStatus(msg, 'error');
+        if (gpsBtn) gpsBtn.disabled = false;
+      },
+      { timeout: 8000 }
+    );
+  }
+
+  /* ─── Confirm manual ZIP ─── */
+  function confirmZip() {
+    var val = (zipInput ? zipInput.value : '').replace(/[^0-9]/g, '').substring(0, 5);
+    if (val.length !== 5) {
+      setStatus('Please enter a valid 5-digit US ZIP code.', 'error');
+      if (zipInput) zipInput.focus();
+      return;
+    }
+    setZip(val, true);
+    setStatus('\u2713 Saved! Delivering to ' + val, 'success');
+    setTimeout(closePopup, 1200);
+  }
+
+  /* ─── Event listeners ─── */
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (popup.hidden) { openPopup(); } else { closePopup(); }
+  });
+
+  if (closeBtn) closeBtn.addEventListener('click', closePopup);
+  if (confirmBtn) confirmBtn.addEventListener('click', confirmZip);
+  if (gpsBtn) gpsBtn.addEventListener('click', detectByGPS);
+
+  if (zipInput) {
+    zipInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') confirmZip();
+      if (e.key === 'Escape') closePopup();
+    });
+    // Only allow digits
+    zipInput.addEventListener('input', function() {
+      this.value = this.value.replace(/[^0-9]/g, '').substring(0, 5);
+    });
+  }
+
+  // Close on outside click
+  document.addEventListener('click', function(e) {
+    var wrap = document.getElementById('loc-wrap');
+    if (wrap && !wrap.contains(e.target) && !popup.hidden) {
+      closePopup();
+    }
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && !popup.hidden) closePopup();
+  });
+
+  /* ─── Init ─── */
+  autoDetectByIP();
 })();
 </script>
 {

@@ -2613,7 +2613,7 @@ a:focus-visible, button:focus-visible {
 /* Collection Banner */
 .collection-banner {
   position: relative;
-  height: 280px;
+  height: 220px;
   overflow: hidden;
   background: var(--bg-subtle);
 }
@@ -3326,7 +3326,7 @@ a.fbt-item__title:hover { color: var(--primary); }
     display: block !important;
   }
 
-  .collection-banner { height: 200px; }
+  .collection-banner { height: 160px; }
   .collection-banner__title { font-size: 28px; }
 }
 @media (max-width: 480px) {

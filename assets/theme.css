@@ -341,7 +341,7 @@ a:focus-visible, button:focus-visible {
   width: 100%;
   max-width: var(--max-w);
   margin: 0 auto;
-  padding: 0 var(--gutter);
+  padding: 12px var(--gutter);
   gap: 16px;
   box-sizing: border-box;
 }
@@ -406,9 +406,9 @@ a:focus-visible, button:focus-visible {
 }
 .header-search-form {
   position: relative;
-  flex: 1 1 auto;
-  min-width: 0;
-  max-width: 480px;
+  flex: 1 1 auto;        /* Grows to fill available space */
+  min-width: 0;          /* Allows shrinking without overflow */
+  max-width: 520px;
   display: flex;
   align-items: center;
 }
@@ -439,9 +439,10 @@ a:focus-visible, button:focus-visible {
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex-shrink: 0;       /* NEVER shrink — always fully visible */
+  gap: 4px;
+  flex-shrink: 0;        /* ★ NEVER shrink — always fully visible ★ */
   white-space: nowrap;
+  margin-left: auto;     /* Push to far right */
 }
 .header-action-link {
   display: inline-flex;
@@ -658,6 +659,25 @@ a:focus-visible, button:focus-visible {
   background: #fff9ee;
   color: #d97706;
 }
+
+/* See More button */
+.header-nav__see-more-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 13px;
+  padding: 10px 14px;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  transition: color 0.15s ease;
+}
+.header-nav__see-more-btn:hover {
+  color: var(--primary-dark);
+}
+
+
 
 @media (max-width: 1023px) {
   .header-nav-row { display: none; }

@@ -88,6 +88,22 @@
   assign banner_img_url = ''
   if collection.handle == 'all'
     assign banner_img_url = 'banner-all.png' | asset_url
+  elsif collection.handle == 'top-picks'
+    assign banner_img_url = 'banner-top-picks.png' | asset_url
+  elsif collection.handle == 'beds-house' or collection.handle == 'beds-home'
+    assign banner_img_url = 'banner-beds.png' | asset_url
+  elsif collection.handle == 'cloths' or collection.handle == 'clothing'
+    assign banner_img_url = 'banner-clothing.png' | asset_url
+  elsif collection.handle == 'grooming'
+    assign banner_img_url = 'banner-grooming.png' | asset_url
+  elsif collection.handle == 'health-nutrition' or collection.handle == 'health-wellness'
+    assign banner_img_url = 'banner-health.png' | asset_url
+  elsif collection.handle == 'pet-toys' or collection.handle == 'toys'
+    assign banner_img_url = 'banner-toys.png' | asset_url
+  elsif collection.handle == 'smart-pet-gadgets' or collection.handle == 'smart-gadgets'
+    assign banner_img_url = 'banner-smart.png' | asset_url
+  elsif collection.handle == 'training'
+    assign banner_img_url = 'banner-training.png' | asset_url
   elsif filter_pet == 'dogs' or collection.handle == 'dogs'
     assign banner_img_url = 'banner-dogs.webp' | asset_url
   elsif filter_pet == 'cats' or collection.handle == 'cats'

@@ -942,7 +942,7 @@ const PetsCare = {
                   if (barFill) barFill.style.width = '100%';
                 } else {
                   const remaining = threshold - price;
-                  if (barText) barText.innerHTML = `Add <strong>${PetsCare.utils.formatMoney(remaining)}</strong> more to unlock FREE shipping`;
+                  if (barText) barText.innerHTML = `Add&nbsp;<strong style="color:#DC2626;">${PetsCare.utils.formatMoney(remaining)}</strong>&nbsp;more to unlock FREE shipping`;
                   const pct = Math.min((price / threshold) * 100, 100);
                   if (barFill) barFill.style.width = pct + '%';
                 }

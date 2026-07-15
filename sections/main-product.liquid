@@ -179,7 +179,7 @@
             </p>
           {%- else -%}
             {%- assign remaining = threshold | minus: price -%}
-            <p class="pdp-shipping-bar__text">Add <strong>{{ remaining | money }}</strong> more to unlock FREE shipping</p>
+            <p class="pdp-shipping-bar__text">Add&nbsp;<strong style="color:#DC2626;">{{ remaining | money }}</strong>&nbsp;more to unlock FREE shipping</p>
             <div class="pdp-shipping-bar__track">
               {%- assign pct = price | times: 100 | divided_by: threshold -%}
               <div class="pdp-shipping-bar__fill" id="pdp-shipping-bar-fill" style="width: {{ pct }}%"></div>

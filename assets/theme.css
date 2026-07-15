@@ -1571,32 +1571,7 @@ a:focus-visible, button:focus-visible {
     justify-content: center;
   }
 }
-/* Phone (480px and below): stack hero to full 1-col for better impact */
-@media (max-width: 480px) {
-  .hero {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "content"
-      "leftimg";
-    gap: var(--sp-3);
-    padding: var(--sp-2) var(--gutter);
-  }
-  .hero__visual--left {
-    grid-area: leftimg;
-    max-height: 220px;
-    overflow: hidden;
-  }
-  .hero__visual--right {
-    display: none !important; /* Only show one image on very small phones */
-  }
-  .hero__headline {
-    font-size: clamp(22px, 7vw, 30px);
-  }
-  .hero__actions .btn {
-    width: 100%;
-    justify-content: center;
-  }
-}
+/* Hero 2-photo layout kept as-is on all mobile sizes — user preference */
 
 /* =============================================================================
    TRUST BAR

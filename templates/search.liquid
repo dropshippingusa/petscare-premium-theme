@@ -1,18 +1,32 @@
 <div class="search-page section container">
-  <div class="section-header">
+
+  <div class="section-header" style="padding: 32px 0 16px;">
     <h1 class="section-title">Search Results</h1>
-    <p>Found {{ search.results_count }} results for "{{ search.terms }}"</p>
+    {%- if search.performed -%}
+      {%- if search.results_count > 0 -%}
+        <p style="color:#555; font-size:14px;">Found <strong>{{ search.results_count }}</strong> result{{ search.results_count | plural: '', 's' }} for <strong>"{{ search.terms | escape }}"</strong></p>
+      {%- else -%}
+        <p style="color:#555; font-size:14px;">No results for <strong>"{{ search.terms | escape }}"</strong>. Try a different search term.</p>
+      {%- endif -%}
+    {%- endif -%}
   </div>
 
-  <div class="products-grid">
-    {% if search.performed %}
-      {% for item in search.results %}
-        {% if item.object_type == 'product' %}
-          {% render 'product-card', product: item %}
-        {% endif %}
-      {% else %}
-        <p style="text-align:center; grid-column:span 3;">No matching products found.</p>
-      {% endfor %}
-    {% endif %}
-  </div>
+  {%- if search.performed and search.results_count > 0 -%}
+    <div class="product-grid" id="search-results-grid">
+      {%- for item in search.results -%}
+        {%- if item.object_type == 'product' -%}
+          {%- render 'product-card', product: item -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  {%- elsif search.performed -%}
+    <div style="text-align:center; padding: 60px 0;">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <h2 style="margin-top:16px; color:#374151;">No products found</h2>
+      <p style="color:#6B7280;">Try searching for something else, or <a href="/collections/all" style="color:#f59e0b; font-weight:600;">browse all products</a>.</p>
+    </div>
+  {%- endif -%}
+
 </div>

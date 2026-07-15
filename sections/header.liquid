@@ -28,19 +28,29 @@
       <img src="{{ 'logo-sticky.png' | asset_url }}" alt="{{ shop.name | escape }}" class="header-logo__img header-logo--sticky" style="display: none;">
     </a>
 
-    <!-- Search Bar (grows to fill space) -->
-    <form action="/search" method="get" class="header-search-form" role="search">
-      <span class="header-search-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      </span>
-      <input
-        type="text"
-        name="q"
-        placeholder="Search for Products, Brands and More"
-        class="header-search-input"
-        aria-label="Search store"
-      >
-    </form>
+    <!-- Search Bar with Live Autocomplete -->
+    <div class="header-search-wrap" id="header-search-wrap">
+      <form action="/search" method="get" class="header-search-form" role="search" autocomplete="off">
+        <span class="header-search-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input
+          type="text"
+          name="q"
+          id="header-search-input"
+          placeholder="Search for Products, Brands and More"
+          class="header-search-input"
+          aria-label="Search store"
+          aria-autocomplete="list"
+          aria-controls="search-autocomplete"
+          aria-expanded="false"
+        >
+      </form>
+      <!-- Live search dropdown -->
+      <div class="search-autocomplete" id="search-autocomplete" role="listbox" hidden>
+        <div class="search-autocomplete__inner" id="search-autocomplete-inner"></div>
+      </div>
+    </div>
 
     <!-- ★ LOCKED ACTIONS — Never move, never hide ★ -->
     <div class="header-actions">
@@ -175,6 +185,86 @@
   } else {
     initNavOverflow();
   }
+})();
+</script>
+
+<script>
+/* ── Live Search Autocomplete ─────────────────────── */
+(function() {
+  var input     = document.getElementById('header-search-input');
+  var dropdown  = document.getElementById('search-autocomplete');
+  var inner     = document.getElementById('search-autocomplete-inner');
+  if (!input || !dropdown || !inner) return;
+
+  var debounceTimer;
+  var lastQuery = '';
+
+  function formatMoney(cents) {
+    return '$' + (cents / 100).toFixed(2);
+  }
+
+  function showDropdown(products) {
+    if (!products || products.length === 0) {
+      inner.innerHTML = '<p class="search-autocomplete__empty">No products found</p>';
+    } else {
+      inner.innerHTML = products.map(function(p) {
+        var img = p.featured_image
+          ? '<img src="' + p.featured_image.url + '" alt="' + p.featured_image.alt + '" class="search-autocomplete__img" loading="lazy">'
+          : '<div class="search-autocomplete__img search-autocomplete__img--placeholder"></div>';
+        var price = p.price ? formatMoney(p.price) : '';
+        var comparePrice = (p.compare_at_price && p.compare_at_price > p.price)
+          ? '<s class="search-autocomplete__compare">' + formatMoney(p.compare_at_price) + '</s>' : '';
+        return '<a href="' + p.url + '" class="search-autocomplete__item" role="option">'
+          + img
+          + '<span class="search-autocomplete__info">'
+          +   '<span class="search-autocomplete__title">' + p.title + '</span>'
+          +   '<span class="search-autocomplete__price">' + price + ' ' + comparePrice + '</span>'
+          + '</span>'
+          + '</a>';
+      }).join('');
+    }
+    dropdown.hidden = false;
+    input.setAttribute('aria-expanded', 'true');
+  }
+
+  function hideDropdown() {
+    dropdown.hidden = true;
+    input.setAttribute('aria-expanded', 'false');
+    inner.innerHTML = '';
+    lastQuery = '';
+  }
+
+  function fetchSuggestions(q) {
+    if (q === lastQuery) return;
+    lastQuery = q;
+    fetch('/search/suggest.json?q=' + encodeURIComponent(q)
+      + '&resources[type]=product&resources[limit]=6&resources[options][unavailable_products]=last')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var products = data.resources && data.resources.results && data.resources.results.products;
+        showDropdown(products || []);
+      })
+      .catch(function() { hideDropdown(); });
+  }
+
+  input.addEventListener('input', function() {
+    var q = this.value.trim();
+    clearTimeout(debounceTimer);
+    if (q.length < 3) { hideDropdown(); return; }
+    debounceTimer = setTimeout(function() { fetchSuggestions(q); }, 250);
+  });
+
+  // Close on Escape
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { hideDropdown(); this.blur(); }
+  });
+
+  // Close when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!document.getElementById('header-search-wrap').contains(e.target)) {
+      hideDropdown();
+    }
+  });
 })();
 </script>
 

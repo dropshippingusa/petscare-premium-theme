@@ -278,16 +278,15 @@ a:focus-visible, button:focus-visible {
 }
 
 .announcement-bar {
-
   background: var(--ink);
   color: #fff;
-  font-size: 13px;
+  font-size: 10.5px;
   font-weight: 600;
-  padding: 8px var(--gutter);
+  padding: 3px var(--gutter);
   letter-spacing: 0.02em;
   position: relative;
   overflow: hidden;
-  height: 36px;
+  height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -296,7 +295,7 @@ a:focus-visible, button:focus-visible {
   position: relative;
   width: 100%;
   max-width: 600px;
-  height: 20px;
+  height: 16px;
   display: flex;
   align-items: center;
   justify-content: center;

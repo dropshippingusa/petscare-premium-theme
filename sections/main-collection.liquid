@@ -88,21 +88,21 @@
   assign banner_img_url = ''
   if collection.handle == 'all'
     assign banner_img_url = 'banner-all.png' | asset_url
-  elsif collection.handle == 'top-picks'
+  elsif collection.handle contains 'top-picks' or collection.handle contains 'picks'
     assign banner_img_url = 'banner-top-picks.png' | asset_url
-  elsif collection.handle == 'beds-house' or collection.handle == 'beds-home'
+  elsif collection.handle contains 'bed' or collection.handle contains 'house' or collection.handle contains 'home'
     assign banner_img_url = 'banner-beds.png' | asset_url
-  elsif collection.handle == 'cloths' or collection.handle == 'clothing'
+  elsif collection.handle contains 'cloth' or collection.handle contains 'wear' or collection.handle contains 'clothing'
     assign banner_img_url = 'banner-clothing.png' | asset_url
-  elsif collection.handle == 'grooming'
+  elsif collection.handle contains 'grooming'
     assign banner_img_url = 'banner-grooming.png' | asset_url
-  elsif collection.handle == 'health-nutrition' or collection.handle == 'health-wellness'
+  elsif collection.handle contains 'health' or collection.handle contains 'nutrition' or collection.handle contains 'wellness'
     assign banner_img_url = 'banner-health.png' | asset_url
-  elsif collection.handle == 'pet-toys' or collection.handle == 'toys'
+  elsif collection.handle contains 'toy'
     assign banner_img_url = 'banner-toys.png' | asset_url
-  elsif collection.handle == 'smart-pet-gadgets' or collection.handle == 'smart-gadgets'
+  elsif collection.handle contains 'smart' or collection.handle contains 'gadget' or collection.handle contains 'tech'
     assign banner_img_url = 'banner-smart.png' | asset_url
-  elsif collection.handle == 'training'
+  elsif collection.handle contains 'training'
     assign banner_img_url = 'banner-training.png' | asset_url
   elsif filter_pet == 'dogs' or collection.handle == 'dogs'
     assign banner_img_url = 'banner-dogs.webp' | asset_url

@@ -95,15 +95,15 @@
     <nav class="header-nav" aria-label="Main navigation">
 
       <!-- Home -->
-      <a href="/" class="header-nav__link">Home</a>
+      <a href="/" class="header-nav__link{% if request.path == '/' %} is-active{% endif %}">Home</a>
 
       <!-- Top Picks — highlighted, pinned right after Home -->
-      <a href="/collections/top-picks" class="header-nav__link header-nav__link--hot header-nav__coll-link">
+      <a href="/collections/top-picks" class="header-nav__link header-nav__link--hot header-nav__coll-link{% if request.path == '/collections/top-picks' %} is-active{% endif %}">
         Top Picks <span class="nav-hot-badge">🔥</span>
       </a>
 
       <!-- All Products -->
-      <a href="/collections/all" class="header-nav__link">All Products</a>
+      <a href="/collections/all" class="header-nav__link{% if request.path == '/collections/all' %} is-active{% endif %}">All Products</a>
 
       <!-- ALL collections rendered (limit:50 to show more than default 20) -->
       <!-- JS hides overflow ones into See More dropdown -->
@@ -112,8 +112,9 @@
           or collection.handle == 'all'
           or collection.handle == 'dogs'
           or collection.handle == 'cats'
-          or collection.handle == 'top-picks' -%}
-          <a href="{{ collection.url }}" class="header-nav__link header-nav__coll-link">{{ collection.title }}</a>
+          or collection.handle == 'top-picks'
+          or collection.title == 'Top Picks' -%}
+          <a href="{{ collection.url }}" class="header-nav__link header-nav__coll-link{% if request.path == collection.url %} is-active{% endif %}">{{ collection.title }}</a>
         {%- endunless -%}
       {%- endfor -%}
 

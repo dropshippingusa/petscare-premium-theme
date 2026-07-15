@@ -713,16 +713,37 @@ a:focus-visible, button:focus-visible {
   color: var(--primary-dark) !important;
   background: rgba(253, 133, 66, 0.10);
 }
-.header-nav__link--hot::after {
-  background: var(--primary);
-  opacity: 1;             /* always show the underline bar for hot link */
-  transform: scaleX(1);
-}
 .nav-hot-badge {
   font-size: 13px;
   line-height: 1;
   display: inline-block;
 }
+
+/* ── Active State styles for navigation links ── */
+.header-nav__link.is-active {
+  color: var(--ink) !important;
+  font-weight: 700 !important;
+}
+.header-nav__link.is-active::after {
+  opacity: 1 !important;
+  transform: scaleX(1) !important;
+  background: var(--primary) !important; /* Orange underline for current page */
+}
+/* Active hot link overrides */
+.header-nav__link--hot.is-active {
+  color: var(--primary) !important;
+}
+.header-nav__link--hot.is-active::after {
+  background: var(--primary) !important;
+}
+/* Active deals link overrides */
+.header-nav__link--deals.is-active {
+  color: #c2410c !important;
+}
+.header-nav__link--deals.is-active::after {
+  background: #c2410c !important;
+}
+
 
 /* ─── DROPDOWN ──────────────────────────────────────────────────── */
 .header-nav__dropdown {

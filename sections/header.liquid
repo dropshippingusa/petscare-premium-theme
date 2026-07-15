@@ -120,9 +120,9 @@
                 {%- assign coll_types = '' | split: '|' -%}
                 {%- for product in collection.products limit: 100 -%}
                   {%- assign ptype = product.type | strip -%}
-                  {%- if ptype != blank and coll_types contains ptype == false -%}
+                  {%- unless ptype == blank or coll_types contains ptype -%}
                     {%- assign coll_types = coll_types | push: ptype -%}
-                  {%- endif -%}
+                  {%- endunless -%}
                 {%- endfor -%}
                 {%- assign coll_types = coll_types | uniq | sort -%}
                 {%- for ptype in coll_types -%}

@@ -97,7 +97,7 @@
 
           <!-- DYNAMIC COLLECTIONS: Auto-renders all collections from Shopify -->
           {%- for collection in collections -%}
-            {%- unless collection.handle == 'frontpage' or collection.handle == 'all' -%}
+            {%- unless collection.handle == 'frontpage' or collection.handle == 'all' or collection.handle == 'dogs' or collection.handle == 'cats' -%}
             <div class="header-nav__dropdown">
               <a href="{{ collection.url }}" class="header-nav__link header-nav__link--has-dropdown">
                 <span class="header-nav__icon">

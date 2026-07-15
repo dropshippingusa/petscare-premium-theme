@@ -3099,7 +3099,8 @@ a:focus-visible, button:focus-visible {
 }
 
 .pdp-option-card__body {
-  padding: 8px 12px;
+  padding: 0;          /* Remove padding — let variant-pills handle its own */
+  overflow: hidden;    /* Clip any overflow from pills */
 }
 
 .pdp-qty-body {
@@ -3111,9 +3112,9 @@ a:focus-visible, button:focus-visible {
   flex-wrap: nowrap;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  gap: 10px;
-  padding: 6px 12px;
-  margin: -6px -12px;
+  gap: 8px;
+  padding: 8px 12px;  /* Padding inside the scroll area */
+  margin: 0;           /* No negative margin — was causing off-screen overflow */
   scrollbar-width: none; /* Hide scrollbar on Firefox */
 }
 

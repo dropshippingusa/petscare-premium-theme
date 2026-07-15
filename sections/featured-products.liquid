@@ -3,7 +3,7 @@
 {%- assign title = section.settings.title | default: 'Featured Products' -%}
 {%- assign label = section.settings.label | default: 'Our Selection' -%}
 
-<section class="section" aria-labelledby="featured-products-title">
+<section class="section featured-products-section" aria-labelledby="featured-products-title">
   <div class="container">
     <div class="section-head">
       <div>
@@ -51,6 +51,13 @@
     {%- endif -%}
   </div>
 </section>
+
+<style>
+.featured-products-section {
+  padding-top: 24px !important;    /* 60% spacing reduction from 64px */
+  padding-bottom: 24px !important; /* 60% spacing reduction from 64px */
+}
+</style>
 
 {% schema %}
 {

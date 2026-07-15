@@ -87,33 +87,54 @@
   # Define dynamic collection banner using downloaded local assets
   assign banner_img_url = ''
   assign banner_bg = '#f9fafb'
+  assign banner_text_color = '#ffffff'
+  assign show_overlay = true
+
   if collection.handle == 'all'
     assign banner_img_url = 'banner-all.png' | asset_url
     assign banner_bg = '#f3f4f6'
+    assign banner_text_color = 'var(--ink)'
+    assign show_overlay = false
   elsif collection.handle contains 'top-picks' or collection.handle contains 'picks'
     assign banner_img_url = 'banner-top-picks.png' | asset_url
     assign banner_bg = '#fff4f0'
+    assign banner_text_color = 'var(--ink)'
+    assign show_overlay = false
   elsif collection.handle contains 'bed' or collection.handle contains 'house' or collection.handle contains 'home'
     assign banner_img_url = 'banner-beds.png' | asset_url
     assign banner_bg = '#fcfbf9'
+    assign banner_text_color = 'var(--ink)'
+    assign show_overlay = false
   elsif collection.handle contains 'cloth' or collection.handle contains 'wear' or collection.handle contains 'clothing'
     assign banner_img_url = 'banner-clothing.png' | asset_url
     assign banner_bg = '#fbfaf7'
+    assign banner_text_color = 'var(--ink)'
+    assign show_overlay = false
   elsif collection.handle contains 'grooming'
     assign banner_img_url = 'banner-grooming.png' | asset_url
     assign banner_bg = '#f0f6f6'
+    assign banner_text_color = 'var(--ink)'
+    assign show_overlay = false
   elsif collection.handle contains 'health' or collection.handle contains 'nutrition' or collection.handle contains 'wellness'
     assign banner_img_url = 'banner-health.png' | asset_url
     assign banner_bg = '#f2f7f4'
+    assign banner_text_color = 'var(--ink)'
+    assign show_overlay = false
   elsif collection.handle contains 'toy'
     assign banner_img_url = 'banner-toys.png' | asset_url
     assign banner_bg = '#f5eedb'
+    assign banner_text_color = 'var(--ink)'
+    assign show_overlay = false
   elsif collection.handle contains 'smart' or collection.handle contains 'gadget' or collection.handle contains 'tech'
     assign banner_img_url = 'banner-smart.png' | asset_url
     assign banner_bg = '#f5f3f7'
+    assign banner_text_color = 'var(--ink)'
+    assign show_overlay = false
   elsif collection.handle contains 'training'
     assign banner_img_url = 'banner-training.png' | asset_url
     assign banner_bg = '#f5eedb'
+    assign banner_text_color = 'var(--ink)'
+    assign show_overlay = false
   elsif filter_pet == 'dogs' or collection.handle == 'dogs'
     assign banner_img_url = 'banner-dogs.webp' | asset_url
     assign banner_bg = '#f8f7f5'
@@ -155,7 +176,7 @@
 {%- comment -%} Collection Hero Banner {%- endcomment -%}
 <!-- DEBUG: handle='{{ collection.handle }}' banner_url='{{ banner_img_url }}' -->
 {%- if banner_img_url != blank or section.settings.show_banner -%}
-<div class="collection-banner">
+<div class="collection-banner" style="background-color: {{ banner_bg | default: '#f9fafb' }};">
   {%- if banner_img_url != blank -%}
     <img
       src="{{ banner_img_url }}"
@@ -165,19 +186,21 @@
       fetchpriority="high"
       style="{% if filter_pet == 'cats' or collection.handle == 'cats' %}object-position: center 65%;{% else %}object-position: center;{% endif %}"
     >
-    <div class="collection-banner__overlay"></div>
+    {%- if show_overlay -%}
+      <div class="collection-banner__overlay"></div>
+    {%- endif -%}
   {%- endif -%}
   <div class="collection-banner__content container">
-    <h1 class="collection-banner__title">
+    <h1 class="collection-banner__title" style="color: {{ banner_text_color }};">
       {%- if filter_pet == 'dogs' -%}Dogs
       {%- elsif filter_pet == 'cats' -%}Cats
       {%- else -%}{{ collection.title }}
       {%- endif -%}
     </h1>
     {%- if collection.description != blank and filter_pet == blank -%}
-      <p class="collection-banner__desc">{{ collection.description | strip_html | truncate: 150 }}</p>
+      <p class="collection-banner__desc" style="color: {{ banner_text_color }};">{{ collection.description | strip_html | truncate: 150 }}</p>
     {%- endif -%}
-    <p class="collection-banner__count">{{ current_products }} products</p>
+    <p class="collection-banner__count" style="color: {{ banner_text_color }}; opacity: 0.8;">{{ current_products }} products</p>
   </div>
 </div>
 {%- else -%}

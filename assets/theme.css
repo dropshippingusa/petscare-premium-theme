@@ -555,6 +555,9 @@ a:focus-visible, button:focus-visible {
   justify-content: center;
   line-height: 1;
 }
+.cart-count-badge[hidden] {
+  display: none !important;
+}
 
 /* Location icon inline in actions */
 .header-location-icon-btn {
@@ -860,7 +863,29 @@ a:focus-visible, button:focus-visible {
     display: inline-flex !important;
   }
   .header-location-icon-btn { display: none !important; }
+  .header-action-link { position: relative; }
   .header-action-link span { display: none; }
+  .header-action-link span.cart-count-badge {
+    display: flex !important;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: var(--primary);
+    color: #ffffff;
+    font-size: 9px;
+    font-weight: 800;
+    min-width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    padding: 0 3px;
+    line-height: 1;
+    margin-left: 0;
+  }
+  .header-action-link span.cart-count-badge[hidden] {
+    display: none !important;
+  }
   .header-action-link .chevron-down { display: none; }
   .header-logo__img { max-height: 15px; }
 

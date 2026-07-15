@@ -770,7 +770,7 @@ a:focus-visible, button:focus-visible {
 @media (max-width: 768px) {
   .loc-popup {
     position: fixed;
-    top: auto;
+    top: unset !important;
     bottom: calc(72px + env(safe-area-inset-bottom, 0px));
     left: 50%;
     transform: translateX(-50%);

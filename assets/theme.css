@@ -3257,12 +3257,15 @@ a:focus-visible, button:focus-visible {
 .pdp-sticky-atc__price { font-size: 15px; font-weight: 800; color: var(--primary); margin: 0; }
 
 @media (max-width: 1023px) {
+  body.template-product {
+    padding-bottom: 140px !important;
+  }
   .pdp-sticky-atc {
     bottom: -150px;
     z-index: 999;
   }
   .pdp-sticky-atc.is-visible {
-    bottom: 0;
+    bottom: 64px;
   }
 }
 @media (max-width: 480px) {

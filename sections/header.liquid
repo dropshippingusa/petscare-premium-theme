@@ -55,6 +55,11 @@
     <!-- ★ LOCKED ACTIONS — Never move, never hide ★ -->
     <div class="header-actions">
 
+      <!-- Search Button (Mobile Only) -->
+      <button type="button" class="header-action-link header-search-toggle-btn" id="mobile-search-toggle" aria-label="Toggle search bar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+
       <!-- Location -->
       <a href="#" class="header-action-link header-location-icon-btn" id="header-loc-btn" title="Select delivery location" aria-label="Select delivery location">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -298,7 +303,29 @@
 })();
 </script>
 
-{% schema %}
+<script>
+/* ── Mobile Search Toggle ─────────────────────────── */
+(function() {
+  var toggleBtn = document.getElementById('mobile-search-toggle');
+  var searchWrap = document.getElementById('header-search-wrap');
+  if (!toggleBtn || !searchWrap) return;
+
+  toggleBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var isOpen = searchWrap.classList.toggle('is-open');
+    if (isOpen) {
+      var input = searchWrap.querySelector('input');
+      if (input) {
+        input.focus();
+        // Trigger autocomplete check if text is already present
+        if (input.value.trim().length >= 3) {
+          input.dispatchEvent(new Event('input'));
+        }
+      }
+    }
+  });
+})();
+</script>
 {
   "name": "Header",
   "settings": [

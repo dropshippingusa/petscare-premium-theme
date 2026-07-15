@@ -831,10 +831,14 @@ a:focus-visible, button:focus-visible {
 
 
 
+.header-search-toggle-btn {
+  display: none !important;
+}
+
 @media (max-width: 1023px) {
   .header-container {
     flex-direction: row;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     padding: 6px var(--gutter);
@@ -848,19 +852,27 @@ a:focus-visible, button:focus-visible {
   .header-actions {
     order: 2;
     margin-left: auto;
-    gap: 10px;
+    gap: 12px;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+  .header-search-toggle-btn {
+    display: inline-flex !important;
   }
   .header-location-icon-btn { display: none !important; }
   .header-action-link span { display: none; }
   .header-action-link .chevron-down { display: none; }
-  .header-logo__img { max-height: 24px; }
+  .header-logo__img { max-height: 15px; }
 
-  /* Search wrap occupies full-width on its own line below logo/actions */
+  /* Search wrap is hidden by default on mobile, toggled via JS */
   .header-search-wrap {
     order: 3;
     width: 100%;
     margin-top: 4px;
+    display: none !important;
+  }
+  .header-search-wrap.is-open {
     display: block !important;
   }
   .header-search-form {

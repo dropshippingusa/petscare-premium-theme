@@ -488,27 +488,24 @@ a:focus-visible, button:focus-visible {
   width: 100%;
   border-top: 1px solid #b3e0f7;
   border-bottom: 1px solid #b3e0f7;
-  overflow-x: auto;
-  overflow-y: visible;
-  /* Hide scrollbar — clean look */
-  scrollbar-width: none;       /* Firefox */
-  -ms-overflow-style: none;    /* IE/Edge */
-}
-.header-nav-row::-webkit-scrollbar {
-  display: none;               /* Chrome/Safari */
+  /* No horizontal scroll — JS hides overflow items instead */
+  overflow: hidden;
 }
 .header-nav {
   display: flex;
   align-items: center;
   gap: 0;
-  min-width: max-content;      /* Never wrap — scroll instead */
-  width: max-content;
+  flex-wrap: nowrap;
+  overflow: hidden;            /* items that overflow are hidden, JS handles them */
+  width: 100%;
   margin: 0 auto;
   padding: 0 24px;
   background: transparent;
   border-radius: 0;
   border: none;
+  box-sizing: border-box;
 }
+
 
 /* Base nav link */
 .header-nav__link {

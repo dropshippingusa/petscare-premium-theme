@@ -126,31 +126,32 @@
 
     // Only collection links are candidates for hiding
     var collLinks = Array.from(nav.querySelectorAll('.header-nav__coll-link'));
-    var overflowLinks = []; // links currently hidden due to overflow
+    var overflowLinks = [];
 
     function compute() {
-      // 1. Restore all hidden links, hide button
+      // 1. Reset: show all links, hide button
       collLinks.forEach(function(el) { el.hidden = false; });
       btn.hidden = true;
       btn.setAttribute('aria-expanded', 'false');
       btn.textContent = 'See More \u25BE';
       overflowLinks = [];
 
-      // 2. If no overflow — done
-      if (nav.scrollWidth <= nav.offsetWidth) return;
+      // 2. Check if nav content overflows its container
+      //    With overflow:hidden, scrollWidth > clientWidth means overflow
+      if (nav.scrollWidth <= nav.clientWidth) return;
 
-      // 3. Overflow exists — show button (it needs space too)
+      // 3. Overflow detected — show "See More" button
       btn.hidden = false;
 
-      // 4. Hide links from the right until nav fits
+      // 4. Hide links from right until nav fits within its width
       for (var i = collLinks.length - 1; i >= 0; i--) {
-        if (nav.scrollWidth <= nav.offsetWidth) break;
+        if (nav.scrollWidth <= nav.clientWidth) break;
         collLinks[i].hidden = true;
         overflowLinks.unshift(collLinks[i]);
       }
     }
 
-    // Toggle overflow items on See More click
+    // Toggle hidden overflow items on "See More" click
     btn.addEventListener('click', function() {
       var expanded = this.getAttribute('aria-expanded') === 'true';
       overflowLinks.forEach(function(el) { el.hidden = expanded; });
@@ -158,14 +159,15 @@
       this.textContent = expanded ? 'See More \u25BE' : 'See Less \u25B4';
     });
 
-    // Debounced resize handler
+    // Debounced resize — recompute on window resize
     var resizeTimer;
     window.addEventListener('resize', function() {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(compute, 120);
     });
 
-    compute();
+    // Small delay so fonts/images finish loading before measuring
+    setTimeout(compute, 80);
   }
 
   if (document.readyState === 'loading') {

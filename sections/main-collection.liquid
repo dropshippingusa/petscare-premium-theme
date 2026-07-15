@@ -20,6 +20,11 @@
     endif
   endif
 
+  # /collections/all must ALWAYS show all products — never filter by pet
+  if collection.handle == 'all'
+    assign filter_pet = ''
+  endif
+
   # Dogs and Cats are now real Smart Collections — use native Shopify rendering
   # Only fall back to keyword loop if collection is empty or uses the ?pet= param
   assign is_fallback = false

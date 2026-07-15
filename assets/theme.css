@@ -3050,32 +3050,13 @@ a:focus-visible, button:focus-visible {
 .pdp-option-card__header {
   background: #FFF8F6; /* Light peach tint */
   border-bottom: 1px solid rgba(255, 107, 53, 0.08);
-  padding: 10px 16px;
+  padding: 12px 16px;
   display: flex;
   align-items: center;
-  gap: 10px;
-}
-
-.pdp-option-card__icon-wrapper {
-  background: var(--primary);
-  color: #ffffff;
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.pdp-option-card__icon-wrapper svg {
-  width: 14px;
-  height: 14px;
-  color: #fff;
-  fill: currentColor;
 }
 
 .pdp-option-card__title {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--ink);
   letter-spacing: 0.05em;
@@ -3118,66 +3099,15 @@ a:focus-visible, button:focus-visible {
   border-color: var(--ink-3);
 }
 
-/* Color Variant Pill Specifics */
-.variant-pill--color {
-  background: #fafafa;
-  border: 1.5px solid var(--border);
-  color: var(--ink);
-  gap: 8px;
-  border-radius: 20px; /* Fully rounded capsule */
-}
-
-.variant-pill--color .pill-paint-icon {
-  color: var(--ink-3);
-  display: inline-block;
-  stroke: currentColor;
-}
-
-.variant-pill--color .pill-check {
-  display: none;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #ffffff;
-  color: var(--primary);
-  align-items: center;
-  justify-content: center;
-}
-
-.variant-pill--color .pill-check svg {
-  stroke: currentColor;
-}
-
-/* Selected Color Pill */
-.variant-pill--color.is-selected {
-  background: var(--primary) !important;
-  color: #ffffff !important;
-  border-color: var(--primary) !important;
-}
-
-.variant-pill--color.is-selected .pill-paint-icon {
-  color: #ffffff !important;
-}
-
-.variant-pill--color.is-selected .pill-check {
-  display: inline-flex;
-}
-
-/* Size Variant Pill Specifics */
-.variant-pill--size {
-  min-width: 70px;
-  border-radius: 8px;
-}
-
-/* Selected Size Pill */
-.variant-pill--size.is-selected {
+/* Selected Pill Style */
+.variant-pill.is-selected {
   border-color: var(--primary) !important;
   color: var(--primary) !important;
   background: #ffffff !important;
 }
 
-/* Size Badge */
-.variant-pill--size .size-pill-badge {
+/* Pill Checkmark Badge on Top-Right Corner */
+.variant-pill .pill-check {
   display: none;
   position: absolute;
   top: -8px;
@@ -3193,11 +3123,11 @@ a:focus-visible, button:focus-visible {
   z-index: 1;
 }
 
-.variant-pill--size .size-pill-badge svg {
+.variant-pill .pill-check svg {
   stroke: currentColor;
 }
 
-.variant-pill--size.is-selected .size-pill-badge {
+.variant-pill.is-selected .pill-check {
   display: inline-flex;
 }
 

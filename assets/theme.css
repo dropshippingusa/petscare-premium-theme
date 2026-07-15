@@ -3047,7 +3047,7 @@ a:focus-visible, button:focus-visible {
   height: 54px;
   gap: 8px;
   font-size: 16px;
-  background-color: #ff9f00 !important;
+  background-color: var(--ink) !important;
   color: #fff !important;
   border: none !important;
   border-radius: var(--r-md);
@@ -3059,14 +3059,14 @@ a:focus-visible, button:focus-visible {
   transition: background-color var(--t-fast);
 }
 .pdp-atc-row .btn--add-to-cart:hover {
-  background-color: #f39700 !important;
+  background-color: var(--ink-2) !important;
 }
 .pdp-atc-row .btn--buy-now {
   flex: 1.2;
   height: 54px;
   gap: 8px;
   font-size: 16px;
-  background-color: #fb641b !important;
+  background-color: var(--primary) !important;
   color: #fff !important;
   border: none !important;
   border-radius: var(--r-md);
@@ -3078,7 +3078,7 @@ a:focus-visible, button:focus-visible {
   transition: background-color var(--t-fast);
 }
 .pdp-atc-row .btn--buy-now:hover {
-  background-color: #e25816 !important;
+  background-color: var(--primary-dark) !important;
 }
 .pdp-atc-row .btn--wishlist {
   height: 54px;
@@ -3202,6 +3202,17 @@ a:focus-visible, button:focus-visible {
   z-index: 90; transition: bottom 0.32s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .pdp-sticky-atc.is-visible { bottom: 0; }
+.pdp-sticky-atc .btn {
+  background-color: var(--ink) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: var(--r-md);
+  font-weight: 600;
+  transition: background-color var(--t-fast);
+}
+.pdp-sticky-atc .btn:hover {
+  background-color: var(--ink-2) !important;
+}
 .pdp-sticky-atc__inner {
   display: flex; align-items: center; justify-content: space-between;
   gap: var(--sp-3); padding-top: 12px; padding-bottom: 12px;
@@ -3214,10 +3225,10 @@ a:focus-visible, button:focus-visible {
 @media (max-width: 1023px) {
   .pdp-sticky-atc {
     bottom: -150px;
-    z-index: 799; /* Just under the mobile bottom nav bar (z-index 800) */
+    z-index: 999;
   }
   .pdp-sticky-atc.is-visible {
-    bottom: 64px; /* Position right above the mobile bottom nav bar */
+    bottom: 0;
   }
 }
 @media (max-width: 480px) {

@@ -1762,6 +1762,8 @@ a:focus-visible, button:focus-visible {
     flex-wrap: nowrap !important;
     gap: 8px !important;
     padding-top: 12px !important;
+    padding-bottom: 12px !important;
+    margin-bottom: 8px !important;
   }
   .hero__trust-item {
     font-size: 10.5px !important;
@@ -1771,6 +1773,7 @@ a:focus-visible, button:focus-visible {
   .hero__trust-item svg {
     width: 12px !important;
     height: 12px !important;
+    transform: translateY(1.5px) !important;
   }
 }
 /* Hero 2-photo layout kept as-is on all mobile sizes — user preference */

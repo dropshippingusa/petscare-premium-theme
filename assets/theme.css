@@ -2664,8 +2664,8 @@ a:focus-visible, button:focus-visible {
 /* Collection layout — sidebar + main */
 .collection-layout {
   display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: var(--sp-5);
+  grid-template-columns: 210px 1fr;
+  gap: var(--sp-4);
   padding-top: var(--sp-4);
   padding-bottom: var(--sp-7);
   align-items: start;

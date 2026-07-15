@@ -322,11 +322,13 @@
             onchange="PetsCare.filters.sort(this.value)"
             aria-label="Sort products by"
           >
-            {%- for option in collection.sort_options -%}
-              <option value="{{ option.value }}" {% if option.value == sort_by %}selected{% endif %}>
-                {{ option.name }}
-              </option>
-            {%- endfor -%}
+            <option value="manual" {% if sort_by == 'manual' %}selected{% endif %}>Featured</option>
+            <option value="best-selling" {% if sort_by == 'best-selling' %}selected{% endif %}>Best Selling</option>
+            <option value="price-ascending" {% if sort_by == 'price-ascending' %}selected{% endif %}>Price: Low to High</option>
+            <option value="price-descending" {% if sort_by == 'price-descending' %}selected{% endif %}>Price: High to Low</option>
+            <option value="title-ascending" {% if sort_by == 'title-ascending' %}selected{% endif %}>Alphabetically, A-Z</option>
+            <option value="title-descending" {% if sort_by == 'title-descending' %}selected{% endif %}>Alphabetically, Z-A</option>
+            <option value="created-descending" {% if sort_by == 'created-descending' %}selected{% endif %}>Date: New to Old</option>
           </select>
         </div>
       </div>

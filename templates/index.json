@@ -17,6 +17,13 @@
       "type": "shop-by-category",
       "settings": {}
     },
+    "new-arrivals": {
+      "type": "new-arrivals",
+      "settings": {
+        "label": "New Arrivals",
+        "title": "Freshly Added"
+      }
+    },
     "featured-products": {
       "type": "featured-products",
       "settings": {}
@@ -31,6 +38,7 @@
     "why-us",
     "shop-by-pet",
     "shop-by-category",
+    "new-arrivals",
     "featured-products",
     "recently-viewed"
   ]

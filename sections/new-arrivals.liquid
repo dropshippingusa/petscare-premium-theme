@@ -1,0 +1,164 @@
+{%- assign collection = section.settings.collection -%}
+{%- assign products_list = collection.products -%}
+{%- if products_list.size == 0 or collection == blank -%}
+  {%- assign products_list = collections.all.products -%}
+{%- endif -%}
+
+{%- assign sorted_products = products_list | sort: 'published_at' | reverse -%}
+
+{%- assign current_time = 'now' | date: '%s' | plus: 0 -%}
+{%- assign seven_days_ago = 7 | times: 86400 -%}
+{%- assign cutoff_time = current_time | minus: seven_days_ago -%}
+
+{%- assign new_arrivals_count = 0 -%}
+{%- capture new_arrivals_html -%}
+  {%- for product in sorted_products -%}
+    {%- assign product_time = product.published_at | date: '%s' | plus: 0 -%}
+    {%- if product_time >= cutoff_time -%}
+      {%- render 'product-card', product: product -%}
+      {%- assign new_arrivals_count = new_arrivals_count | plus: 1 -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+<section class="section new-arrivals-section" aria-labelledby="new-arrivals-title">
+  <div class="container">
+    <div class="section-head" style="margin-bottom: 24px;">
+      <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;">
+        <div>
+          <span class="section-label" style="color: var(--primary); font-weight: 700; text-transform: uppercase; font-size: 13px; letter-spacing: 0.05em;">{{ section.settings.label | default: 'New Arrivals' }}</span>
+          <h2 class="section-title" id="new-arrivals-title" style="margin: 4px 0 0 0; font-size: 28px; font-weight: 800; color: var(--ink);">{{ section.settings.title | default: 'Freshly Added' }}</h2>
+        </div>
+        {%- if new_arrivals_count > 0 -%}
+          <span class="new-arrivals-badge" style="background: var(--primary-light); color: var(--primary); font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 99px;">
+            {{ new_arrivals_count }} new this week
+          </span>
+        {%- else -%}
+          <span class="new-arrivals-badge" style="background: var(--bg-subtle); color: var(--ink-3); font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 99px;">
+            Latest Arrivals
+          </span>
+        {%- endif -%}
+      </div>
+      {%- if collection != blank -%}
+        <a href="{{ collection.url }}" class="view-all-link" style="display: inline-flex; align-items: center; gap: 4px; font-weight: 700; color: var(--primary); text-decoration: none; font-size: 14px;">
+          View all
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="new-arrivals__scroll-container">
+      <div class="new-arrivals__scroll">
+        {%- if new_arrivals_count > 0 -%}
+          {{ new_arrivals_html }}
+        {%- else -%}
+          {%- for product in sorted_products limit: 5 -%}
+            {%- render 'product-card', product: product -%}
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.new-arrivals-section {
+  padding-top: 24px !important;    /* matching standard section padding */
+  padding-bottom: 24px !important;
+  border-bottom: 1px solid var(--border);
+}
+.new-arrivals__scroll-container {
+  position: relative;
+  width: 100%;
+}
+.new-arrivals__scroll {
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  gap: 20px;
+  padding: 10px 4px 24px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) transparent;
+}
+.new-arrivals__scroll::-webkit-scrollbar {
+  height: 6px;
+}
+.new-arrivals__scroll::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 9999px;
+}
+.new-arrivals__scroll::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 9999px;
+  opacity: 0.7;
+}
+.new-arrivals__scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}
+.new-arrivals__scroll .product-card {
+  flex: 0 0 280px;
+  min-width: 280px;
+  scroll-snap-align: start;
+  background: #ffffff;
+  border-radius: var(--r-xl);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease);
+}
+.new-arrivals__scroll .product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+@media (max-width: 1023px) {
+  .new-arrivals__scroll {
+    gap: 12px;
+    padding-bottom: 16px;
+  }
+  .new-arrivals__scroll .product-card {
+    flex: 0 0 210px;
+    min-width: 210px;
+  }
+}
+@media (max-width: 480px) {
+  .new-arrivals__scroll {
+    gap: 8px;
+    padding-bottom: 12px;
+  }
+  .new-arrivals__scroll .product-card {
+    flex: 0 0 155px;
+    min-width: 155px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "New Arrivals",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Section label",
+      "default": "New Arrivals"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Freshly Added"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection to display"
+    }
+  ],
+  "presets": [
+    {
+      "name": "New Arrivals"
+    }
+  ]
+}
+{% endschema %}

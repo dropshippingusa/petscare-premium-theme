@@ -42,12 +42,7 @@
       },
       "shop-by-pet": {
         "type": "shop-by-pet",
-        "settings": {
-          "dogs_image": "shopify://shop_images/file_000000008c3071fb9cf873e237504f6b.png",
-          "dogs_collection": "",
-          "cats_image": "shopify://shop_images/file_000000009eb871fba7b396cbd0cb8451.png",
-          "cats_collection": ""
-        }
+        "settings": {}
       },
       "shop-by-category": {
         "type": "shop-by-category",
@@ -135,6 +130,13 @@
         }
       }
     },
-    "content_for_index": []
+    "content_for_index": [],
+    "blocks": {
+      "9139608461449719892": {
+        "type": "shopify://apps/chatwill-ai-chatbot/blocks/aichatbot/e7b73941-aea6-4bde-bb29-6e9e414581d0",
+        "disabled": false,
+        "settings": {}
+      }
+    }
   }
 }

@@ -136,6 +136,11 @@
         "type": "shopify://apps/chatwill-ai-chatbot/blocks/aichatbot/e7b73941-aea6-4bde-bb29-6e9e414581d0",
         "disabled": true,
         "settings": {}
+      },
+      "7924418359578431505": {
+        "type": "shopify://apps/seoant-ai-seo/blocks/seoant-core/8e57283b-dcb0-4f7b-a947-fb5c57a0d59d",
+        "disabled": false,
+        "settings": {}
       }
     }
   }

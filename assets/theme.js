@@ -1005,6 +1005,20 @@ const PetsCare = {
                   currency: 'USD'
                 }
               }));
+
+              // Mobile only: Scroll up to gallery view on variant change
+              if (window.innerWidth <= 1023) {
+                const gallery = document.querySelector('.pdp-gallery') || document.querySelector('.pdp-gallery__images');
+                if (gallery) {
+                  const headerOffset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 68;
+                  const elementPosition = gallery.getBoundingClientRect().top;
+                  const offsetPosition = elementPosition + (window.scrollY || window.pageYOffset) - headerOffset - 15;
+                  window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                  });
+                }
+              }
             }
           });
         });

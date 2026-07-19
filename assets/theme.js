@@ -1570,11 +1570,14 @@ const PetsCare = {
     },
 
     initProductCards() {
+      const productRatings = {};
+
       document.querySelectorAll('.card-custom-rating-badge').forEach(badge => {
         const productId = badge.dataset.productId;
         if (!productId) return;
 
         const data = this.getReviewsData(productId, badge.dataset.productTitle);
+        productRatings[productId] = data.averageRating;
 
         // Inject trust badge
         const trustEl = badge.querySelector('.card-trust-badge');
@@ -1602,6 +1605,32 @@ const PetsCare = {
         badge.style.gap = '6px';
         badge.style.flexWrap = 'wrap';
       });
+
+      // Implement Sorting by Rating Descending in frontend
+      const urlParams = new URLSearchParams(window.location.search);
+      const sortBy = urlParams.get('sort_by');
+
+      if (sortBy === 'rating-descending') {
+        const grid = document.getElementById('collection-grid');
+        if (grid) {
+          const cards = Array.from(grid.querySelectorAll('.product-card'));
+          cards.sort((a, b) => {
+            const idA = a.dataset.productId;
+            const idB = b.dataset.productId;
+            const ratingA = productRatings[idA] || 0;
+            const ratingB = productRatings[idB] || 0;
+            return ratingB - ratingA; // High to Low
+          });
+          // Re-append to grid in sorted order
+          cards.forEach(card => grid.appendChild(card));
+        }
+      }
+
+      // Keep the sort select showing the active choice
+      const sortSelect = document.getElementById('sort-select');
+      if (sortSelect && sortBy) {
+        sortSelect.value = sortBy;
+      }
     },
 
     initPDPWidget(widget) {

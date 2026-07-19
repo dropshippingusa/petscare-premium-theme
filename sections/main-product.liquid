@@ -116,10 +116,7 @@
   {%- comment -%} ── RIGHT COLUMN: Product Info ───────────────────────────── {%- endcomment -%}
   <div class="pdp-info" id="pdp-info">
 
-    {%- comment -%} Brand / Vendor {%- endcomment -%}
-    {%- if product.vendor != blank -%}
-      <a href="/collections/vendors?q={{ product.vendor | url_encode }}" class="pdp-brand">{{ product.vendor }}</a>
-    {%- endif -%}
+
 
     {%- comment -%} Title {%- endcomment -%}
     <h1 class="pdp-title">{{ product.title }}</h1>

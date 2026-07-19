@@ -28,23 +28,24 @@
     
     <div class="pdp-gallery__images">
       {%- comment -%} Main image {%- endcomment -%}
-      <div class="pdp-gallery__main" id="pdp-main-media" role="img" aria-label="{{ product.featured_media.alt | default: product.title | escape }}">
-        {%- if product.featured_media != blank -%}
-          {%- if product.featured_media.media_type == 'video' -%}
-            {{- product.featured_media | video_tag: autoplay: false, loop: false, controls: true, class: 'pdp-gallery__main-img', preload: 'none' -}}
-          {%- elsif product.featured_media.media_type == 'external_video' -%}
-            {{- product.featured_media | external_video_tag: class: 'pdp-gallery__main-img' -}}
-          {%- elsif product.featured_media.media_type == 'model' -%}
+      {%- assign featured_media = current_variant.featured_media | default: product.featured_media -%}
+      <div class="pdp-gallery__main" id="pdp-main-media" role="img" aria-label="{{ featured_media.alt | default: product.title | escape }}">
+        {%- if featured_media != blank -%}
+          {%- if featured_media.media_type == 'video' -%}
+            {{- featured_media | video_tag: autoplay: false, loop: false, controls: true, class: 'pdp-gallery__main-img', preload: 'none' -}}
+          {%- elsif featured_media.media_type == 'external_video' -%}
+            {{- featured_media | external_video_tag: class: 'pdp-gallery__main-img' -}}
+          {%- elsif featured_media.media_type == 'model' -%}
             <div class="pdp-gallery__main-img" style="display:flex;align-items:center;justify-content:center;background:var(--bg-subtle);">
-              {{- product.featured_media | model_viewer_tag -}}
+              {{- featured_media | model_viewer_tag -}}
             </div>
           {%- else -%}
             <img
               id="pdp-main-img"
-              src="{{ product.featured_media | image_url: width: 1000 }}"
-              srcset="{{ product.featured_media | image_url: width: 600 }} 600w, {{ product.featured_media | image_url: width: 1000 }} 1000w"
+              src="{{ featured_media | image_url: width: 1000 }}"
+              srcset="{{ featured_media | image_url: width: 600 }} 600w, {{ featured_media | image_url: width: 1000 }} 1000w"
               sizes="(max-width: 768px) 100vw, 50vw"
-              alt="{{ product.featured_media.alt | default: product.title | escape }}"
+              alt="{{ featured_media.alt | default: product.title | escape }}"
               class="pdp-gallery__main-img"
               loading="eager"
               fetchpriority="high"
@@ -73,9 +74,16 @@
               {%- endif -%}
             {%- endif -%}
 
+            {%- assign is_active = false -%}
+            {%- if media.id == featured_media.id -%}
+              {%- assign is_active = true -%}
+            {%- elsif featured_media == blank and forloop.first -%}
+              {%- assign is_active = true -%}
+            {%- endif -%}
+
             <button
               type="button"
-              class="pdp-thumb {% if forloop.first %}is-active{% endif %} {% if is_hidden %}pdp-thumb--hidden{% endif %} {% if show_overlay %}pdp-thumb--more{% endif %}"
+              class="pdp-thumb {% if is_active %}is-active{% endif %} {% if is_hidden %}pdp-thumb--hidden{% endif %} {% if show_overlay %}pdp-thumb--more{% endif %}"
               data-src="{{ media | image_url: width: 1000 }}"
               data-media-id="{{ media.id }}"
               aria-label="{{ media.alt | default: product.title | escape }}, image {{ forloop.index }}"

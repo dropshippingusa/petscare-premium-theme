@@ -927,6 +927,43 @@ const PetsCare = {
                 if (barFill) barFill.style.display = 'none';
               }
 
+              // Update variant image in gallery
+              const mediaId = (matchedVariant.featured_media && matchedVariant.featured_media.id) || 
+                              (matchedVariant.featured_image && matchedVariant.featured_image.id);
+              let foundThumb = null;
+              if (mediaId) {
+                const targetMediaId = String(mediaId);
+                foundThumb = Array.from(document.querySelectorAll('.pdp-thumb')).find(thumb => {
+                  return thumb.dataset.mediaId === targetMediaId;
+                });
+              }
+
+              // Fallback: Match by option value (e.g., option value matches alt text or filename)
+              if (!foundThumb && matchedVariant.options) {
+                const thumbs = Array.from(document.querySelectorAll('.pdp-thumb'));
+                const sortedOptions = [...matchedVariant.options].sort((a, b) => b.length - a.length);
+                
+                for (const val of sortedOptions) {
+                  if (!val || val.toLowerCase() === 'default title') continue;
+                  const normalizedVal = val.trim().toLowerCase();
+                  
+                  foundThumb = thumbs.find(thumb => {
+                    const img = thumb.querySelector('img');
+                    const alt = (img?.getAttribute('alt') || '').toLowerCase();
+                    const src = (thumb.dataset.src || '').toLowerCase();
+                    
+                    const altWords = alt.split(/[^a-z0-9]+/);
+                    const srcWords = src.split(/[^a-z0-9]+/);
+                    return altWords.includes(normalizedVal) || srcWords.includes(normalizedVal) || alt.includes(normalizedVal);
+                  });
+                  if (foundThumb) break;
+                }
+              }
+
+              if (foundThumb) {
+                foundThumb.click();
+              }
+
               // Update ATC state
               if (atcBtn) {
                 atcBtn.disabled = !matchedVariant.available;

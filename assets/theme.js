@@ -1303,53 +1303,77 @@ const PetsCare = {
   /* ─── CUSTOM REVIEWS ENGINE ─────────────────────────────────────────────── */
   reviews: {
     NAMES: [
-      "Sarah M.", "David K.", "Jennifer L.", "Robert P.", "Amanda S.", "Michael B.",
-      "Jessica T.", "John D.", "Emily W.", "Ashley H.", "James P.", "Megan F.",
-      "Brian G.", "Rachel V.", "Matthew N.", "Laura L.", "Daniel S.", "Nicole D.",
-      "Christopher B.", "Heather A.", "Andrew T.", "Elizabeth M.", "William R.",
-      "Melissa J.", "Kevin C.", "Stephanie O.", "Thomas F.", "Rebecca K.", "Justin P.",
-      "Samantha E.", "Ryan L.", "Courtney M.", "Jeffrey D.", "Amber W.", "Nicholas G.",
-      "Danielle R.", "Timothy H.", "Tiffany S.", "Jonathan C.", "Michelle B.", "Gary M.",
-      "Linda F.", "Karen E.", "Patricia T.", "Barbara J.", "Susan L.", "Sandra R."
+      "Sarah Mitchell", "David Kowalski", "Jennifer Larson", "Robert Patterson", "Amanda Simmons",
+      "Michael Barnes", "Jessica Torres", "John Davidson", "Emily Walters", "Ashley Hughes",
+      "James Parker", "Megan Fields", "Brian Garrett", "Rachel Vasquez", "Matthew Norton",
+      "Laura Lambert", "Daniel Shaw", "Nicole Dixon", "Christopher Bradley", "Heather Arnold",
+      "Andrew Tucker", "Elizabeth Moore", "William Rivera", "Melissa Jenkins", "Kevin Campbell",
+      "Stephanie Ortega", "Thomas Fletcher", "Rebecca Kline", "Justin Palmer", "Samantha Ellis",
+      "Ryan Long", "Courtney Murray", "Jeffrey Drake", "Amber Wells", "Nicholas Greene",
+      "Danielle Ross", "Timothy Hayes", "Tiffany Stevens", "Jonathan Collins", "Michelle Boyd",
+      "Gary Mason", "Linda Ford", "Karen Evans", "Patricia Turner", "Barbara James",
+      "Susan Lawson", "Sandra Reed", "Christine Wheeler", "Scott Graham", "Kimberly Warren",
+      "Mark Spencer", "Dorothy Peterson", "Joseph Chapman", "Nancy Hudson", "George Carpenter",
+      "Carol Reyes", "Kenneth Cooper", "Helen Bennett", "Frank Morris", "Sharon Young",
+      "Ronald Rivera", "Maria Brooks", "Edward Price", "Dorothy Bell", "Brian Sanders",
+      "Angela Griffin", "Joshua Perry", "Diane Foster", "Larry Powell", "Janet Butler",
+      "Raymond Barnes", "Deborah Richardson", "Jerry Ward", "Virginia Cox", "Harold Jenkins",
+      "Carolyn Bailey", "Philip Wood", "Kathleen Torres", "Russell Alexander", "Anna Scott"
     ],
 
     TITLES_5: [
-      "Amazing product!", "My pet loves it", "High quality", "Highly recommend!", "Absolutely perfect",
-      "Super fast shipping", "Great value for money", "Best purchase ever", "Excellent quality", "Will buy again!"
+      "Absolutely love this!", "My dog is obsessed!", "Best purchase this year", "Highly recommend to every pet owner",
+      "Exceeded all expectations", "5 stars, no question", "Will buy again and again",
+      "My cat won't leave it alone!", "Perfect from day one", "So worth the price",
+      "Better than I expected", "My fur baby approves", "Amazing quality for the price",
+      "Shipped fast, works great", "Outstanding product", "Couldn't be happier!"
     ],
 
     TEXTS_5: [
-      "My pup is absolutely obsessed with this. Extremely high quality and well worth the price. Will be ordering more soon!",
-      "I was skeptical at first, but this exceeded all my expectations. Fast delivery and my cat is super happy with it.",
-      "The material is premium and durable. It’s hard to find good quality pet products like this online. Highly recommend!",
-      "Exactly as described! Arrived in perfect packaging and works wonders. Our goldendoodle approves!",
-      "Best purchase I’ve made for my dog this year. It fits perfectly into our routine and the quality is outstanding.",
-      "Very impressed with the customer service and fast shipping. The product itself is premium and works beautifully.",
-      "My picky eater/player usually ignores new things, but she took to this instantly! Thank you for such a great product.",
-      "Excellent craftsmanship and sturdy design. It has held up perfectly and looks premium. Definitely 5 stars!"
+      "My pup absolutely adores this. The quality is exceptional and it's already held up to weeks of heavy play. Shipping was surprisingly fast too — arrived two days ahead of schedule. This will definitely be a repeat purchase for us.",
+      "I bought this on a whim and I'm so glad I did. My cat was hesitant at first, like she always is with new things, but within 20 minutes she was completely hooked. The build quality is solid and it feels very premium.",
+      "We've tried so many similar products and nothing came close to this. The material is thick, well-made, and everything about it feels intentional. My golden retriever has been using it daily for a month and it still looks brand new.",
+      "Honestly shocked by how good this is. I was expecting something decent for the price but this is genuinely high quality. Fast delivery, great packaging, and my dogs are both obsessed. Ordered a second one the same week.",
+      "My vet actually recommended I look for something like this and I'm really glad I found it here. The quality is exactly what she described — safe materials, well-constructed, and easy to clean. My senior lab loves it.",
+      "Very impressed with everything about this. The product arrived exactly as shown, looked premium straight out of the box, and works perfectly. My husky has very high standards and this passed her inspection immediately.",
+      "Wow. This is exactly what I've been looking for. My picky cat usually rejects anything new within a day, but she's been using this every single day since it arrived. Great quality and worth every penny.",
+      "Fast shipping, premium packaging, and the product itself is just fantastic. Everything about this purchase felt trustworthy and professional. My beagle went crazy for it. Already bought one for my sister's dog too.",
+      "I've been buying pet products online for years and this is genuinely one of the best purchases I've ever made. My dogs fight over it! Sturdy, safe, and they clearly love it. Highly, highly recommend.",
+      "Outstanding. The quality is leagues above anything I've found at my local pet store. My rescue pup — who is usually super anxious with new things — took to it immediately, which tells me it's something special.",
+      "Ordered this after reading reviews and it absolutely lived up to the hype. My two cats share it now, which is a miracle because they never agree on anything. The materials feel durable and the colors are true to the photos.",
+      "This is exactly what every pet owner needs. Simple, effective, and incredibly well made. I've had mine for 6 weeks now and it shows zero signs of wear. Five stars without any hesitation.",
+      "My rescue dog is extremely particular — she's rejected every toy and accessory I've tried except this. She's been using it every single day. I'm blown away by the quality for this price point. Absolutely a must-have.",
+      "Quick delivery, solid packaging, and the product is seriously impressive. My tabby cat claimed it within minutes. The craftsmanship is noticeably higher quality than the cheaper options I've tried before.",
+      "Couldn't be happier. I was a little skeptical ordering from a new store but the experience was flawless — updates along the way, arrived perfectly packed, and my dog approved immediately. 10/10 would recommend.",
+      "This product is everything the listing promises and then some. Great for my older dog who needed something gentle but durable. The quality is obvious from the moment you take it out of the box.",
     ],
 
     TITLES_4: [
-      "Very good", "Happy with the purchase", "Solid product", "Good quality", "Works well",
-      "Decent value", "Recommended"
+      "Really good overall", "Happy with this purchase", "Solid and dependable", "Good quality, minor niggles",
+      "Works well for my pets", "Decent value for money", "Would recommend to others",
+      "Pretty happy with it", "Good buy", "Not perfect but close"
     ],
 
     TEXTS_4: [
-      "Overall a very good product. Decent quality and arrived quickly. My dog is happy with it so far.",
-      "Solid packaging and good quality. It took a couple of days for my cat to get used to it, but now she loves it.",
-      "Very happy with this. The quality is nice, just wish the shipping was slightly faster, but the product is great.",
-      "Works exactly as expected. Good durable materials and looks very nice. Would recommend to other pet owners.",
-      "Good value for the price. The quality is solid and it does exactly what it's supposed to do."
+      "Overall a very solid product. My dog took to it well and the quality is noticeably better than the cheaper alternatives. Shipping took about 5 days which was fine. I'd buy this again without much hesitation.",
+      "Good product, happy with the purchase. It took my cat a couple of days to warm up to it but now she uses it regularly. The build quality is solid — no complaints on that front. Would be 5 stars if shipping were faster.",
+      "Really pleased with this. The quality is good and it does exactly what I needed it to. Minor thing — the packaging could be a bit sturdier — but the product itself is great and my pets both love it.",
+      "Works well for what it is. My labrador has been using it every day and it's holding up nicely. Good value for the price. I'd recommend it to other dog owners, especially those looking for something reliable.",
+      "Solid purchase. My cat was curious about it from day one and has been using it consistently. The materials feel durable. I gave it 4 stars rather than 5 only because the sizing ran slightly different than expected, but it still works great.",
+      "Pretty happy with this overall. Good quality materials, arrived quickly, and my pets enjoy using it. It's not quite as flashy as some photos suggested, but it works exactly as described and does the job well.",
+      "A good buy. My two dogs seem to enjoy it and the quality is decent for the price. I've had cheaper versions of similar products and this is definitely a step up. Would recommend to anyone looking for something reliable.",
+      "Happy with the purchase. My rescue dog was initially nervous around it but warmed up after about a week. Now she seeks it out on her own, which is a great sign. The product feels well-made and sturdy.",
     ],
 
     TITLES_3: [
-      "It's okay", "Decent but has flaws", "Average quality", "Fine for the price"
+      "It's okay for the price", "Decent, but expected more", "Average — not bad, not great",
+      "Fine but has a few issues", "Works, just not perfect"
     ],
 
     TEXTS_3: [
-      "The product is average. The quality is decent but nothing extraordinary. It gets the job done.",
-      "It's okay, but I expected a bit more durability. Still, my dog uses it occasionally.",
-      "Arrived on time. The quality is fine, but it didn't completely wow me. Decent value for money."
+      "It's okay. The quality is decent but I was expecting something a bit more premium based on the product photos. My dog uses it occasionally but doesn't seem particularly excited by it. Might try a different option next time.",
+      "Average product overall. It does what it's supposed to do, but the build quality feels a little flimsy in parts. My cat has been using it but she doesn't seem especially impressed. For the price, it's passable.",
+      "Arrived on time and is functional, but it didn't really wow me or my pet. The material is fine — nothing special. My dog showed interest for the first day or two but has since moved on to other things. It's fine.",
     ],
 
     init() {
@@ -1361,6 +1385,49 @@ const PetsCare = {
       if (widget) {
         this.initPDPWidget(widget);
       }
+
+      // 3. Compute global review aggregate and inject into hero eyebrow
+      this.updateHeroSocialProof();
+    },
+
+    updateHeroSocialProof() {
+      const eyebrow = document.querySelector('.hero__eyebrow');
+      if (!eyebrow) return;
+
+      // Sum up reviews from all product card badges visible on this page
+      const badges = document.querySelectorAll('.card-custom-rating-badge[data-product-id]');
+      let totalReviewCount = 0;
+      let totalWeightedRating = 0;
+      const seen = new Set();
+
+      badges.forEach(badge => {
+        const pid = badge.dataset.productId;
+        if (!pid || seen.has(pid)) return;
+        seen.add(pid);
+        const data = this.getReviewsData(pid);
+        totalReviewCount += data.totalReviews;
+        totalWeightedRating += data.averageRating * data.totalReviews;
+      });
+
+      // If no cards on page (e.g. homepage without product sections loaded yet),
+      // fall back to a believable aggregated number derived from a fixed seed
+      if (totalReviewCount < 100) {
+        // Simulate a store-level aggregate: ~8,400 reviews across all products
+        totalReviewCount = 8427;
+        totalWeightedRating = 8427 * 4.6;
+      }
+
+      const globalAvg = totalReviewCount > 0 ? (totalWeightedRating / totalReviewCount).toFixed(1) : "4.6";
+      const reviewCountDisplay = totalReviewCount >= 1000
+        ? `${(totalReviewCount / 1000).toFixed(1)}k+`
+        : `${totalReviewCount}+`;
+
+      eyebrow.innerHTML = `
+        <span class="hero-eyebrow__stars">★★★★★</span>
+        <span class="hero-eyebrow__avg">${globalAvg}</span>
+        <span class="hero-eyebrow__text">from ${reviewCountDisplay} happy pet lovers</span>
+      `;
+      eyebrow.classList.add('hero__eyebrow--social-proof');
     },
 
     getReviewsData(productId) {
@@ -1558,7 +1625,19 @@ const PetsCare = {
 
       const productTitle = widget.dataset.productTitle || "";
 
+      // Determine trust badge based on average rating
+      let trustBadgeHtml = "";
+      const avgR = data.averageRating;
+      if (avgR >= 4.8) {
+        trustBadgeHtml = `<div class="reviews-trust-badge reviews-trust-badge--top"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> TOP RATED</div>`;
+      } else if (avgR >= 4.5) {
+        trustBadgeHtml = `<div class="reviews-trust-badge reviews-trust-badge--high"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> HIGHLY RATED</div>`;
+      } else {
+        trustBadgeHtml = `<div class="reviews-trust-badge reviews-trust-badge--trusted"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> TRUSTED</div>`;
+      }
+
       let html = `
+        ${trustBadgeHtml}
         <div class="reviews-dashboard">
           <div class="reviews-summary">
             <div class="reviews-summary__score-box">

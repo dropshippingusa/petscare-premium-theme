@@ -5558,3 +5558,73 @@ a.fbt-item__title:hover { color: var(--primary); }
   }
 }
 
+/* =============================================================================
+   REVIEWS TRUST BADGE
+   ============================================================================= */
+.reviews-trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.reviews-trust-badge svg {
+  flex-shrink: 0;
+}
+.reviews-trust-badge--trusted {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+}
+.reviews-trust-badge--high {
+  background: #a7f3d0;
+  color: #064e3b;
+  border: 1px solid #34d399;
+}
+.reviews-trust-badge--top {
+  background: #059669;
+  color: #ffffff;
+  border: 1px solid #047857;
+}
+
+/* =============================================================================
+   HERO EYEBROW SOCIAL PROOF
+   ============================================================================= */
+.hero__eyebrow--social-proof {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.hero-eyebrow__stars {
+  color: #FBBF24;
+  letter-spacing: 1px;
+  font-size: 12px;
+}
+.hero-eyebrow__avg {
+  font-weight: 800;
+  color: #ffffff;
+}
+.hero-eyebrow__text {
+  color: rgba(255, 255, 255, 0.9);
+}
+@media (max-width: 768px) {
+  .hero__eyebrow--social-proof {
+    font-size: 11px;
+    padding: 4px 10px;
+    gap: 4px;
+  }
+}
+

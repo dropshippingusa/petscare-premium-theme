@@ -560,8 +560,32 @@ const PetsCare = {
     init() {
       const form = document.getElementById('CollectionFiltersForm');
       if (!form) return;
-      // Auto-submit checkboxes
-      form.querySelectorAll('input[type="checkbox"]').forEach(el => {
+
+      // Handle Rating Filter Checkbox Interaction (Mutual Exclusion)
+      const ratingCbs = form.querySelectorAll('input[name="filter_rating"]');
+      
+      // Select correct checked state on page load based on URL query param
+      const urlParams = new URLSearchParams(window.location.search);
+      const ratingParam = urlParams.get('rating');
+      if (ratingParam) {
+        ratingCbs.forEach(cb => {
+          if (cb.value === ratingParam) cb.checked = true;
+        });
+      }
+
+      ratingCbs.forEach(cb => {
+        cb.addEventListener('change', (e) => {
+          if (e.target.checked) {
+            ratingCbs.forEach(other => {
+              if (other !== e.target) other.checked = false;
+            });
+          }
+          this._applyFilters(form);
+        });
+      });
+
+      // Auto-submit other checkboxes
+      form.querySelectorAll('input[type="checkbox"]:not([name="filter_rating"])').forEach(el => {
         el.addEventListener('change', () => {
           this._applyFilters(form);
         });
@@ -573,16 +597,19 @@ const PetsCare = {
       // Collect checked tags
       const tags = [...form.querySelectorAll('input[name="filter_tag"]:checked')].map(el => el.value);
       const availability = form.querySelector('input[name="available"]:checked');
+      const ratingVal = form.querySelector('input[name="filter_rating"]:checked')?.value;
       const priceMin = form.querySelector('#price-min')?.value;
       const priceMax = form.querySelector('#price-max')?.value;
       // Build tag URL path: /collections/handle/tag1+tag2
       const basePath = window.location.pathname.split('/').filter(p => !p.startsWith('tag')).join('/');
       let newPath = basePath;
       if (tags.length) newPath = newPath.replace(/\/$/, '') + '/' + tags.join('+');
-      // Query params for price, availability
+      // Query params for price, availability, rating
       url.pathname = newPath;
       if (availability) url.searchParams.set('available', 'true');
       else url.searchParams.delete('available');
+      if (ratingVal) url.searchParams.set('rating', ratingVal);
+      else url.searchParams.delete('rating');
       if (priceMin) url.searchParams.set('price_min', priceMin);
       else url.searchParams.delete('price_min');
       if (priceMax) url.searchParams.set('price_max', priceMax);
@@ -1623,6 +1650,55 @@ const PetsCare = {
           });
           // Re-append to grid in sorted order
           cards.forEach(card => grid.appendChild(card));
+        }
+      }
+
+      // Implement Filtering by Rating in frontend
+      const ratingFilter = parseFloat(urlParams.get('rating'));
+      if (!isNaN(ratingFilter)) {
+        const grid = document.getElementById('collection-grid');
+        if (grid) {
+          const cards = Array.from(grid.querySelectorAll('.product-card'));
+          let visibleCount = 0;
+          cards.forEach(card => {
+            const pid = card.dataset.productId;
+            const rating = productRatings[pid] || 0;
+            if (rating >= ratingFilter) {
+              card.style.display = '';
+              visibleCount++;
+            } else {
+              card.style.display = 'none';
+            }
+          });
+
+          // Update count text
+          const countEl = document.querySelector('.collection-count');
+          if (countEl) {
+            countEl.textContent = `${visibleCount} of ${cards.length} products`;
+          }
+
+          // Show empty message if nothing matches
+          let emptyEl = document.getElementById('collection-rating-empty');
+          if (visibleCount === 0) {
+            if (!emptyEl) {
+              emptyEl = document.createElement('div');
+              emptyEl.id = 'collection-rating-empty';
+              emptyEl.className = 'collection-empty';
+              emptyEl.innerHTML = `
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <h2>No products found matching this rating</h2>
+                <p>Try clearing your rating filter to see more products.</p>
+              `;
+              grid.parentNode.insertBefore(emptyEl, grid.nextSibling);
+            }
+            grid.style.display = 'none';
+            emptyEl.style.display = 'block';
+          } else {
+            grid.style.display = 'grid'; // Restore grid display mode
+            if (emptyEl) emptyEl.style.display = 'none';
+          }
         }
       }
 

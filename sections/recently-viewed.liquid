@@ -23,6 +23,30 @@
   padding-top: 24px !important;    /* 60% spacing reduction from 64px */
   padding-bottom: 24px !important; /* 60% spacing reduction from 64px */
 }
+
+@media (max-width: 768px) {
+  #recently-viewed-grid {
+    display: flex !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-snap-type: x mandatory !important;
+    scroll-behavior: smooth !important;
+    scrollbar-width: none !important;
+    margin-left: calc(-1 * var(--gutter));
+    margin-right: calc(-1 * var(--gutter));
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+    padding-bottom: var(--sp-1);
+    gap: 16px !important;
+  }
+  #recently-viewed-grid::-webkit-scrollbar {
+    display: none !important;
+  }
+  #recently-viewed-grid .product-card {
+    flex: 0 0 200px !important;
+    scroll-snap-align: start !important;
+  }
+}
 </style>
 
 {% schema %}

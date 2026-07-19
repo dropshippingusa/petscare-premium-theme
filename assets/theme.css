@@ -4891,6 +4891,12 @@ a.fbt-item__title:hover { color: var(--primary); }
   .header-container {
     gap: 12px;
   }
+
+  /* Increase product card image and PDP gallery main image heights by 15% on mobile */
+  .product-card__media,
+  .pdp-gallery__main {
+    aspect-ratio: 1 / 1.15 !important;
+  }
 }
 
 /* =============================================================================

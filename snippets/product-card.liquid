@@ -133,7 +133,7 @@
     <a href="{{ product_url }}" class="product-card__title">{{ product_title }}</a>
 
     {%- comment -%} Custom Star Rating Badge for Product Cards {%- endcomment -%}
-    <div class="product-card__rating card-custom-rating-badge" data-product-id="{{ product.id }}" style="display:none;">
+    <div class="product-card__rating card-custom-rating-badge" data-product-id="{{ product.id }}" data-product-title="{{ product.title | escape }}" style="display:none;">
       <span class="card-trust-badge" id="card-trust-{{ product.id }}"></span>
       <span class="product-card__stars" id="card-stars-{{ product.id }}">★★★★★</span>
       <span id="card-score-{{ product.id }}">0.0 (0)</span>

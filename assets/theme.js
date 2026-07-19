@@ -1404,7 +1404,7 @@ const PetsCare = {
         const pid = badge.dataset.productId;
         if (!pid || seen.has(pid)) return;
         seen.add(pid);
-        const data = this.getReviewsData(pid);
+        const data = this.getReviewsData(pid, badge.dataset.productTitle);
         totalReviewCount += data.totalReviews;
         totalWeightedRating += data.averageRating * data.totalReviews;
       });
@@ -1431,7 +1431,7 @@ const PetsCare = {
       eyebrow.classList.add('hero__eyebrow--social-proof');
     },
 
-    getReviewsData(productId) {
+    getReviewsData(productId, productTitle = "") {
       const idStr = String(productId);
       let hash = 0;
       for (let i = 0; i < idStr.length; i++) {
@@ -1456,6 +1456,21 @@ const PetsCare = {
         targetRating = 4.0;
       }
 
+      // Force 4.8 to 4.9 for specific high-priority products
+      const lowerTitle = (productTitle || "").toLowerCase();
+      const isTargetProduct = lowerTitle.includes("grooming hair dryer") ||
+                              lowerTitle.includes("plush duck") ||
+                              lowerTitle.includes("donut pet bed") ||
+                              lowerTitle.includes("shell pet bed") ||
+                              lowerTitle.includes("rolling cat ball") ||
+                              lowerTitle.includes("rolling cat toy") ||
+                              lowerTitle.includes("cat ball with moving tail");
+
+      if (isTargetProduct) {
+        // Distribute 4.8 and 4.9 based on product ID seed
+        targetRating = (seed % 2 === 0) ? 4.9 : 4.8;
+      }
+
       // Determine review count: between 10 and 500 reviews
       const countRand = seedRandom(seed);
       const totalReviews = Math.floor(10 + Math.pow(countRand, 2) * 490);
@@ -1469,7 +1484,13 @@ const PetsCare = {
         const rand = seedRandom(itemSeed);
         
         let rating = 5;
-        if (targetRating === 4.7) {
+        if (targetRating === 4.9) {
+          if (rand < 0.90) rating = 5;
+          else rating = 4;
+        } else if (targetRating === 4.8) {
+          if (rand < 0.80) rating = 5;
+          else rating = 4;
+        } else if (targetRating === 4.7) {
           if (rand < 0.76) rating = 5;
           else if (rand < 0.94) rating = 4;
           else if (rand < 0.98) rating = 3;
@@ -1553,7 +1574,7 @@ const PetsCare = {
         const productId = badge.dataset.productId;
         if (!productId) return;
 
-        const data = this.getReviewsData(productId);
+        const data = this.getReviewsData(productId, badge.dataset.productTitle);
 
         // Inject trust badge
         const trustEl = badge.querySelector('.card-trust-badge');
@@ -1587,7 +1608,7 @@ const PetsCare = {
       const productId = widget.dataset.productId;
       if (!productId) return;
 
-      const data = this.getReviewsData(productId);
+      const data = this.getReviewsData(productId, widget.dataset.productTitle);
 
       // Build trust badge label
       const avgR = data.averageRating;

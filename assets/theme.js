@@ -1419,13 +1419,13 @@ const PetsCare = {
 
       const globalAvg = totalReviewCount > 0 ? (totalWeightedRating / totalReviewCount).toFixed(1) : "4.6";
       const reviewCountDisplay = totalReviewCount >= 1000
-        ? `${(totalReviewCount / 1000).toFixed(1)}k+`
-        : `${totalReviewCount}+`;
+        ? `${(totalReviewCount / 1000).toFixed(1)}k`
+        : `${totalReviewCount}`;
 
       eyebrow.innerHTML = `
         <span class="hero-eyebrow__stars">★★★★★</span>
         <span class="hero-eyebrow__avg">${globalAvg}</span>
-        <span class="hero-eyebrow__text">from ${reviewCountDisplay} happy pet lovers</span>
+        <span class="hero-eyebrow__text">· Loved by ${reviewCountDisplay}+ pet parents</span>
       `;
       eyebrow.classList.add('hero__eyebrow--social-proof');
     },

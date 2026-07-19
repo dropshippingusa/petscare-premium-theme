@@ -1702,19 +1702,11 @@ const PetsCare = {
         }
       }
 
-      // Keep the sort tabs showing the active choice and bind click events
-      const activeSort = sortBy || 'manual';
-      document.querySelectorAll('.sort-tab').forEach(tab => {
-        if (tab.dataset.value === activeSort) {
-          tab.classList.add('is-active');
-        } else {
-          tab.classList.remove('is-active');
-        }
-
-        tab.addEventListener('click', () => {
-          this.sort(tab.dataset.value);
-        });
-      });
+      // Keep the sort select showing the active choice
+      const sortSelect = document.getElementById('sort-select');
+      if (sortSelect && sortBy) {
+        sortSelect.value = sortBy;
+      }
     },
 
     initPDPWidget(widget) {

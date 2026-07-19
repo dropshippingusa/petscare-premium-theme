@@ -370,7 +370,7 @@
 
     {%- comment -%} Toolbar: results count + sort + mobile filter button {%- endcomment -%}
     <div class="collection-toolbar">
-      <div class="collection-toolbar__left-side">
+      <div class="collection-toolbar__left">
         <button type="button" class="btn btn--secondary btn--sm filter-toggle-btn" id="filter-toggle" onclick="PetsCare.filters.openMobile()" aria-label="Open filters" aria-controls="collection-sidebar">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
           Filters
@@ -385,18 +385,26 @@
             {{ current_products }} products
           {%- endif -%}
         </p>
-
-        <!-- Flipkart-style Sort Tabs -->
-        <div class="sort-tabs-wrapper">
-          <span class="sort-tabs-label">Sort By</span>
-          <div class="sort-tabs">
-            <button type="button" class="sort-tab" data-value="manual">Featured</button>
-            <button type="button" class="sort-tab" data-value="best-selling">Best Selling</button>
-            <button type="button" class="sort-tab" data-value="rating-descending">Top Rated</button>
-            <button type="button" class="sort-tab" data-value="price-ascending">Price -- Low to High</button>
-            <button type="button" class="sort-tab" data-value="price-descending">Price -- High to Low</button>
-            <button type="button" class="sort-tab" data-value="created-descending">Newest First</button>
-          </div>
+      </div>
+      <div class="collection-toolbar__right">
+        <div class="sort-wrapper">
+          <label for="sort-select" class="sr-only">Sort products</label>
+          <select
+            id="sort-select"
+            name="sort_by"
+            class="sort-select"
+            onchange="PetsCare.filters.sort(this.value)"
+            aria-label="Sort products by"
+          >
+            <option value="manual" {% if sort_by == 'manual' %}selected{% endif %}>Featured</option>
+            <option value="best-selling" {% if sort_by == 'best-selling' %}selected{% endif %}>Best Selling</option>
+            <option value="rating-descending" {% if sort_by == 'rating-descending' %}selected{% endif %}>Rating: High to Low</option>
+            <option value="price-ascending" {% if sort_by == 'price-ascending' %}selected{% endif %}>Price: Low to High</option>
+            <option value="price-descending" {% if sort_by == 'price-descending' %}selected{% endif %}>Price: High to Low</option>
+            <option value="title-ascending" {% if sort_by == 'title-ascending' %}selected{% endif %}>Alphabetically, A-Z</option>
+            <option value="title-descending" {% if sort_by == 'title-descending' %}selected{% endif %}>Alphabetically, Z-A</option>
+            <option value="created-descending" {% if sort_by == 'created-descending' %}selected{% endif %}>Date: New to Old</option>
+          </select>
         </div>
       </div>
     </div>

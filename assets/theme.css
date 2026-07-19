@@ -3520,9 +3520,9 @@ a:focus-visible, button:focus-visible {
   display: block;
 }
 .shopify-payment-button {
-  animation: pdp-paypal-glow-pulse 2.5s infinite ease-in-out !important;
   border-radius: var(--r-md);
 }
+.shopify-payment-button > *:first-child,
 .shopify-payment-button__button {
   height: 48px !important; /* Reduced height by ~10% from 54px */
   border-radius: var(--r-md) !important;
@@ -3532,7 +3532,9 @@ a:focus-visible, button:focus-visible {
   text-transform: uppercase !important;
   letter-spacing: 0.02em !important;
   transition: all var(--t-fast) var(--ease) !important;
+  animation: pdp-paypal-glow-pulse 2.5s infinite ease-in-out !important;
 }
+.shopify-payment-button > *:first-child:hover,
 .shopify-payment-button__button:hover {
   opacity: 0.95 !important;
   transform: scale(1.02) !important;

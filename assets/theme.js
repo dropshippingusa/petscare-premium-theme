@@ -1187,7 +1187,99 @@ const PetsCare = {
       toast.style.background = isError ? '#DC2626' : '';
       toast.classList.add('is-visible');
       setTimeout(() => toast.classList.remove('is-visible'), 3000);
+    },
+
+    centerActiveScrollItem(container, activeItem, behavior = 'auto') {
+      if (!container || !activeItem) return;
+      const containerWidth = container.clientWidth;
+      const activeWidth = activeItem.offsetWidth;
+      const activeLeft = activeItem.offsetLeft;
+      
+      // Calculate scroll target to center activeItem in viewport
+      const scrollTarget = activeLeft - (containerWidth / 2) + (activeWidth / 2);
+      
+      if (behavior === 'smooth') {
+        container.scrollTo({ left: scrollTarget, behavior: 'smooth' });
+      } else {
+        container.scrollLeft = scrollTarget;
+      }
     }
+  },
+
+  /* ─── SCROLL MENU CENTERING ─────────────────────────────────────────────── */
+  initScrollMenuCentering() {
+    const runCentering = () => {
+      // 1. Header main navigation
+      const headerNav = document.querySelector('.header-nav');
+      if (headerNav) {
+        const activeLink = headerNav.querySelector('.header-nav__link.is-active');
+        if (activeLink) {
+          this.utils.centerActiveScrollItem(headerNav, activeLink, 'auto');
+        }
+      }
+      
+      // 2. Tabbed product carousel (homepage)
+      document.querySelectorAll('.tab-buttons').forEach(container => {
+        const activeTab = container.querySelector('.tab-btn.active');
+        if (activeTab) {
+          this.utils.centerActiveScrollItem(container, activeTab, 'auto');
+        }
+      });
+
+      // 3. PDP tabs nav
+      document.querySelectorAll('.pdp-tabs__nav').forEach(container => {
+        const activeTab = container.querySelector('.pdp-tab-btn.is-active');
+        if (activeTab) {
+          this.utils.centerActiveScrollItem(container, activeTab, 'auto');
+        }
+      });
+
+      // 4. PDP variant pills
+      document.querySelectorAll('.variant-pills').forEach(container => {
+        const activePill = container.querySelector('.variant-pill.is-selected');
+        if (activePill) {
+          this.utils.centerActiveScrollItem(container, activePill, 'auto');
+        }
+      });
+    };
+
+    // Run centering immediately and on window loads/resizes
+    runCentering();
+    window.addEventListener('load', runCentering);
+    window.addEventListener('resize', runCentering);
+    setTimeout(runCentering, 100);
+    setTimeout(runCentering, 300);
+    setTimeout(runCentering, 600);
+
+    // Dynamic centering on click/interaction (smooth scroll)
+    document.addEventListener('click', e => {
+      // Tabbed carousel tabs
+      const tabBtn = e.target.closest('.tab-btn');
+      if (tabBtn) {
+        const container = tabBtn.closest('.tab-buttons');
+        if (container) {
+          setTimeout(() => this.utils.centerActiveScrollItem(container, tabBtn, 'smooth'), 50);
+        }
+      }
+      
+      // PDP tabs
+      const pdpTabBtn = e.target.closest('.pdp-tab-btn');
+      if (pdpTabBtn) {
+        const container = pdpTabBtn.closest('.pdp-tabs__nav');
+        if (container) {
+          setTimeout(() => this.utils.centerActiveScrollItem(container, pdpTabBtn, 'smooth'), 50);
+        }
+      }
+
+      // PDP variant pills
+      const pill = e.target.closest('.variant-pill');
+      if (pill) {
+        const container = pill.closest('.variant-pills');
+        if (container) {
+          setTimeout(() => this.utils.centerActiveScrollItem(container, pill, 'smooth'), 50);
+        }
+      }
+    });
   },
 
   /* ─── BOOTSTRAP ─────────────────────────────────────────────────────────── */
@@ -1207,6 +1299,9 @@ const PetsCare = {
 
     // PDP only
     if (document.querySelector('.pdp-layout')) this.pdp.init();
+
+    // Initialize scroll menu centering
+    this.initScrollMenuCentering();
   }
 };
 

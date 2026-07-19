@@ -1422,8 +1422,9 @@ const PetsCare = {
         ? `${(totalReviewCount / 1000).toFixed(1)}k`
         : `${totalReviewCount}`;
 
+      const starsHtml = this.renderStarsHtml(parseFloat(globalAvg));
       eyebrow.innerHTML = `
-        <span class="hero-eyebrow__stars">★★★★★</span>
+        <span class="hero-eyebrow__stars">${starsHtml}</span>
         <span class="hero-eyebrow__avg">${globalAvg}</span>
         <span class="hero-eyebrow__text">· Loved by ${reviewCountDisplay}+ pet parents</span>
       `;
@@ -1627,11 +1628,11 @@ const PetsCare = {
       const fullStars = Math.floor(rating);
       const halfStar = rating % 1 >= 0.4 && rating % 1 <= 0.8 ? 1 : 0;
       const emptyStars = 5 - fullStars - halfStar;
-      
-      let html = "";
-      for (let i = 0; i < fullStars; i++) html += "★";
-      if (halfStar) html += "☆";
-      for (let i = 0; i < emptyStars; i++) html += "☆";
+
+      let html = '';
+      for (let i = 0; i < fullStars; i++)  html += '<span class="star star--full">★</span>';
+      if (halfStar)                          html += '<span class="star star--half">★</span>';
+      for (let i = 0; i < emptyStars; i++)  html += '<span class="star star--empty">★</span>';
       return html;
     },
 

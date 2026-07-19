@@ -5623,9 +5623,9 @@ a.fbt-item__title:hover { color: var(--primary); }
   display: none !important;          /* Remove the orange dash from base style */
 }
 .hero-eyebrow__stars {
-  color: #F59E0B;
   letter-spacing: 1px;
-  font-size: 13px;
+  font-size: 16px;   /* was 13px — +20% → 15.6 rounded to 16px */
+  line-height: 1;
 }
 .hero-eyebrow__avg {
   font-weight: 800;
@@ -5642,6 +5642,15 @@ a.fbt-item__title:hover { color: var(--primary); }
     padding: 5px 12px 5px 10px;
     gap: 6px;
   }
+  .hero-eyebrow__stars { font-size: 14px; }
   .hero-eyebrow__avg { font-size: 13px; }
 }
+
+/* =============================================================================
+   STAR COLOUR CLASSES (used by renderStarsHtml across all widgets)
+   ============================================================================= */
+.star { display: inline-block; line-height: 1; }
+.star--full  { color: #F59E0B; }
+.star--half  { color: #F59E0B; opacity: 0.52; }
+.star--empty { color: #D1D5DB; }
 

@@ -169,24 +169,12 @@ const PetsCare = {
     _updateShippingBar(totalPrice) {
       const bar = document.getElementById('shipping-bar');
       if (!bar) return;
-      const threshold = 9900; // $99.00 in cents
-      const remaining = threshold - totalPrice;
       const deliveryEst = PetsCare.utils.getDeliveryEstimateString();
-      if (remaining <= 0) {
-        bar.innerHTML = `<p class="shipping-bar__text shipping-bar__text--done">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          You've unlocked <strong>FREE shipping!</strong>
-        </p>
-        <p class="shipping-bar__text" style="color:var(--green);font-weight:700;margin-top:6px;margin-bottom:0">${deliveryEst}</p>`;
-      } else {
-        const pct = Math.min((totalPrice / threshold) * 100, 100);
-        bar.innerHTML = `
-          <p class="shipping-bar__text">Add <strong>${PetsCare.utils.formatMoney(remaining)}</strong> more for FREE shipping</p>
-          <div class="shipping-bar__track">
-            <div class="shipping-bar__fill" style="width:${pct}%"></div>
-          </div>
-          <p class="shipping-bar__text" style="color:var(--green);font-weight:700;margin-top:8px;margin-bottom:0">${deliveryEst}</p>`;
-      }
+      bar.innerHTML = `<p class="shipping-bar__text shipping-bar__text--done">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        You've unlocked <strong>FREE shipping!</strong>
+      </p>
+      <p class="shipping-bar__text" style="color:var(--green);font-weight:700;margin-top:6px;margin-bottom:0">${deliveryEst}</p>`;
     },
 
     /** Add one or more items to cart */
@@ -933,19 +921,10 @@ const PetsCare = {
               // Update shipping progress bar dynamically
               const shippingBar = document.getElementById('pdp-shipping-bar');
               if (shippingBar) {
-                const threshold = 9900;
-                const price = matchedVariant.price;
-                const barFill = document.getElementById('pdp-shipping-bar-fill');
                 const barText = shippingBar.querySelector('.pdp-shipping-bar__text');
-                if (price >= threshold) {
-                  if (barText) barText.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;color:var(--green)"><polyline points="20 6 9 17 4 12"/></svg>This item qualifies for <strong>FREE shipping!</strong>`;
-                  if (barFill) barFill.style.width = '100%';
-                } else {
-                  const remaining = threshold - price;
-                  if (barText) barText.innerHTML = `Add&nbsp;<strong style="color:#DC2626;">${PetsCare.utils.formatMoney(remaining)}</strong>&nbsp;more to unlock FREE shipping`;
-                  const pct = Math.min((price / threshold) * 100, 100);
-                  if (barFill) barFill.style.width = pct + '%';
-                }
+                if (barText) barText.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;color:var(--green)"><polyline points="20 6 9 17 4 12"/></svg>This item qualifies for <strong>FREE shipping!</strong>`;
+                const barFill = document.getElementById('pdp-shipping-bar-fill');
+                if (barFill) barFill.style.display = 'none';
               }
 
               // Update ATC state

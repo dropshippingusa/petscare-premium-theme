@@ -108,20 +108,10 @@
 
             {%- comment -%} Free shipping calculator {%- endcomment -%}
             <div class="shipping-bar" id="cart-page-shipping-bar" style="margin-bottom: var(--sp-3);">
-              {%- assign threshold = 9900 -%}
-              {%- if cart.total_price >= threshold -%}
-                <p class="shipping-bar__text shipping-bar__text--done">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                  You've unlocked <strong>FREE shipping!</strong>
-                </p>
-              {%- else -%}
-                {%- assign remaining_cents = threshold | minus: cart.total_price -%}
-                <p class="shipping-bar__text">Add <strong>{{ remaining_cents | money }}</strong> more for FREE shipping</p>
-                <div class="shipping-bar__track">
-                  {%- assign pct = cart.total_price | times: 100 | divided_by: threshold -%}
-                  <div class="shipping-bar__fill" style="width: {{ pct }}%"></div>
-                </div>
-              {%- endif -%}
+              <p class="shipping-bar__text shipping-bar__text--done">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                You've unlocked <strong>FREE shipping!</strong>
+              </p>
             </div>
 
             {%- assign total_savings = 0 -%}

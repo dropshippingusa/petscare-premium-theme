@@ -1,6 +1,6 @@
 {%- liquid
   assign msg_1 = section.settings.announcement_1 | default: '🐾 New Customers: Enjoy 10% OFF Your First Order • Use Code: WELCOME10 at Checkout'
-  assign msg_2 = section.settings.announcement_2 | default: 'Free shipping on orders $99+'
+  assign msg_2 = section.settings.announcement_2 | default: 'Free shipping on all orders'
   assign msg_3 = section.settings.announcement_3 | default: 'Secure Checkout: Shop with confidence'
   assign msg_4 = section.settings.announcement_4 | default: 'Fast US Shipping: Formulated & Packaged in the USA'
   assign msg_5 = section.settings.announcement_5 | default: 'Hassle-Free Returns: Shop Risk-Free'
@@ -566,7 +566,7 @@
       "type": "text",
       "id": "announcement_2",
       "label": "Message 2",
-      "default": "Free shipping on orders $99+"
+      "default": "Free shipping on all orders"
     },
     {
       "type": "text",

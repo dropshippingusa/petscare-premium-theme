@@ -124,14 +124,15 @@
     {%- comment -%} Title {%- endcomment -%}
     <h1 class="pdp-title">{{ product.title }}</h1>
 
-    {%- comment -%} Trust Badge — populated by JS based on average rating {%- endcomment -%}
-    <div id="pdp-trust-badge" style="display:none; margin-bottom: 6px;"></div>
 
-    {%- comment -%} Custom Star Rating Badge {%- endcomment -%}
-    <div class="pdp-rating pdp-custom-rating-badge" id="pdp-custom-rating-badge" style="display:none;" data-product-id="{{ product.id }}">
-      <span class="pdp-stars pdp-stars--interactive" id="pdp-stars-badge" aria-label="Loading rating..."></span>
-      <span class="pdp-rating__score" id="pdp-rating-score-badge">0.0</span>
-      <a href="#tab-btn-reviews" class="pdp-review-count" id="pdp-review-count-badge">(0 reviews)</a>
+    {%- comment -%} Trust Badge + Star Rating in one horizontal row {%- endcomment -%}
+    <div class="pdp-rating-row" id="pdp-rating-row" style="display:none;">
+      <span id="pdp-trust-badge-inline"></span>
+      <div class="pdp-rating pdp-custom-rating-badge" id="pdp-custom-rating-badge" data-product-id="{{ product.id }}">
+        <span class="pdp-stars pdp-stars--interactive" id="pdp-stars-badge" aria-label="Loading rating..."></span>
+        <span class="pdp-rating__score" id="pdp-rating-score-badge">0.0</span>
+        <a href="#tab-btn-reviews" class="pdp-review-count" id="pdp-review-count-badge">(0 reviews)</a>
+      </div>
     </div>
 
     {%- comment -%} Price {%- endcomment -%}

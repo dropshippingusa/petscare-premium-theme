@@ -1554,18 +1554,32 @@ const PetsCare = {
         if (!productId) return;
 
         const data = this.getReviewsData(productId);
-        
+
+        // Inject trust badge
+        const trustEl = badge.querySelector('.card-trust-badge');
+        if (trustEl) {
+          const avgR = data.averageRating;
+          let badgeClass, badgeLabel;
+          if (avgR >= 4.8)       { badgeClass = 'reviews-trust-badge--top';     badgeLabel = 'Top Rated'; }
+          else if (avgR >= 4.5) { badgeClass = 'reviews-trust-badge--high';    badgeLabel = 'Highly Rated'; }
+          else                   { badgeClass = 'reviews-trust-badge--trusted'; badgeLabel = 'Trusted'; }
+          trustEl.innerHTML = `<span class="reviews-trust-badge reviews-trust-badge--card ${badgeClass}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>${badgeLabel}</span>`;
+        }
+
         const starsEl = badge.querySelector('.product-card__stars');
         if (starsEl) {
           starsEl.innerHTML = this.renderStarsHtml(data.averageRating);
         }
-        
-        const scoreEl = badge.querySelector('span:not(.product-card__stars)');
+
+        const scoreEl = badge.querySelector(`#card-score-${productId}`);
         if (scoreEl) {
           scoreEl.textContent = `${data.averageRating} (${data.totalReviews})`;
         }
-        
-        badge.style.display = 'flex'; // show badge
+
+        badge.style.display = 'flex';
+        badge.style.alignItems = 'center';
+        badge.style.gap = '6px';
+        badge.style.flexWrap = 'wrap';
       });
     },
 
@@ -1575,17 +1589,27 @@ const PetsCare = {
 
       const data = this.getReviewsData(productId);
 
+      // Build trust badge label
+      const avgR = data.averageRating;
+      let badgeClass, badgeLabel;
+      if (avgR >= 4.8)       { badgeClass = 'reviews-trust-badge--top';     badgeLabel = 'TOP RATED'; }
+      else if (avgR >= 4.5) { badgeClass = 'reviews-trust-badge--high';    badgeLabel = 'HIGHLY RATED'; }
+      else                   { badgeClass = 'reviews-trust-badge--trusted'; badgeLabel = 'TRUSTED'; }
+      const badgeHtml = `<span class="reviews-trust-badge reviews-trust-badge--header ${badgeClass}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>${badgeLabel}</span>`;
+
+      // Inject into the inline badge span (same row as stars)
+      const inlineBadge = document.getElementById('pdp-trust-badge-inline');
+      if (inlineBadge) inlineBadge.innerHTML = badgeHtml;
+
       const pdpBadge = document.getElementById('pdp-custom-rating-badge');
       if (pdpBadge) {
         const starsEl = document.getElementById('pdp-stars-badge');
         const scoreEl = document.getElementById('pdp-rating-score-badge');
         const countEl = document.getElementById('pdp-review-count-badge');
-        
+
         if (starsEl) starsEl.innerHTML = this.renderStarsHtml(data.averageRating);
         if (scoreEl) scoreEl.textContent = data.averageRating;
         if (countEl) countEl.textContent = `(${data.totalReviews} reviews)`;
-
-        pdpBadge.style.display = 'flex';
 
         // Add smooth scroll click to reviews tab
         pdpBadge.addEventListener('click', e => {
@@ -1598,28 +1622,9 @@ const PetsCare = {
         });
       }
 
-      // Populate the trust badge in the PDP header (above star rating)
-      const headerTrustBadge = document.getElementById('pdp-trust-badge');
-      if (headerTrustBadge) {
-        const avgR = data.averageRating;
-        let badgeClass, badgeLabel;
-        if (avgR >= 4.8) {
-          badgeClass = 'reviews-trust-badge--top';
-          badgeLabel = 'TOP RATED';
-        } else if (avgR >= 4.5) {
-          badgeClass = 'reviews-trust-badge--high';
-          badgeLabel = 'HIGHLY RATED';
-        } else {
-          badgeClass = 'reviews-trust-badge--trusted';
-          badgeLabel = 'TRUSTED';
-        }
-        headerTrustBadge.innerHTML = `
-          <span class="reviews-trust-badge reviews-trust-badge--header ${badgeClass}">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            ${badgeLabel}
-          </span>`;
-        headerTrustBadge.style.display = 'block';
-      }
+      // Show the whole row
+      const ratingRow = document.getElementById('pdp-rating-row');
+      if (ratingRow) ratingRow.style.display = 'flex';
 
       this.renderWidgetHtml(widget, data, productId);
     },

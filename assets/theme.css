@@ -5592,12 +5592,34 @@ a.fbt-item__title:hover { color: var(--primary); }
   border: 1px solid #047857;
 }
 /* Compact version for PDP header (above star rating) */
+/* PDP: compact trust badge when shown inline with stars */
 .reviews-trust-badge--header {
   padding: 4px 11px;
   font-size: 11px;
   gap: 5px;
   margin-bottom: 0;
   letter-spacing: 0.09em;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* PDP: one-line row containing trust badge + star rating */
+.pdp-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 2px;
+}
+
+/* Product Card: micro trust badge in-line with stars */
+.reviews-trust-badge--card {
+  padding: 2px 8px;
+  font-size: 10px;
+  gap: 4px;
+  margin-bottom: 0;
+  letter-spacing: 0.07em;
+  white-space: nowrap;
 }
 
 /* =============================================================================

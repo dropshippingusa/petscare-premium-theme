@@ -132,17 +132,11 @@
 
     <a href="{{ product_url }}" class="product-card__title">{{ product_title }}</a>
 
-    {%- comment -%} Rating — shows if metafield is populated via reviews app injection {%- endcomment -%}
-    {%- if product.metafields.reviews.rating.value != blank -%}
-      {%- assign rating = product.metafields.reviews.rating.value -%}
-      {%- assign rating_count = product.metafields.reviews.rating_count.value -%}
-      <div class="product-card__rating">
-        <span class="product-card__stars" aria-hidden="true">
-          {%- for i in (1..5) -%}★{%- endfor -%}
-        </span>
-        <span>{{ rating | round: 1 }} ({{ rating_count }})</span>
-      </div>
-    {%- endif -%}
+    {%- comment -%} Custom Star Rating Badge for Product Cards {%- endcomment -%}
+    <div class="product-card__rating card-custom-rating-badge" data-product-id="{{ product.id }}" style="display:none;">
+      <span class="product-card__stars" id="card-stars-{{ product.id }}">★★★★★</span>
+      <span id="card-score-{{ product.id }}">0.0 (0)</span>
+    </div>
 
     {%- comment -%} Pricing {%- endcomment -%}
     <div class="product-card__price-row">

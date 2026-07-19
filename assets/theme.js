@@ -1296,6 +1296,490 @@ const PetsCare = {
     });
   },
 
+  /* ─── CUSTOM REVIEWS ENGINE ─────────────────────────────────────────────── */
+  reviews: {
+    NAMES: [
+      "Sarah M.", "David K.", "Jennifer L.", "Robert P.", "Amanda S.", "Michael B.",
+      "Jessica T.", "John D.", "Emily W.", "Ashley H.", "James P.", "Megan F.",
+      "Brian G.", "Rachel V.", "Matthew N.", "Laura L.", "Daniel S.", "Nicole D.",
+      "Christopher B.", "Heather A.", "Andrew T.", "Elizabeth M.", "William R.",
+      "Melissa J.", "Kevin C.", "Stephanie O.", "Thomas F.", "Rebecca K.", "Justin P.",
+      "Samantha E.", "Ryan L.", "Courtney M.", "Jeffrey D.", "Amber W.", "Nicholas G.",
+      "Danielle R.", "Timothy H.", "Tiffany S.", "Jonathan C.", "Michelle B.", "Gary M.",
+      "Linda F.", "Karen E.", "Patricia T.", "Barbara J.", "Susan L.", "Sandra R."
+    ],
+
+    TITLES_5: [
+      "Amazing product!", "My pet loves it", "High quality", "Highly recommend!", "Absolutely perfect",
+      "Super fast shipping", "Great value for money", "Best purchase ever", "Excellent quality", "Will buy again!"
+    ],
+
+    TEXTS_5: [
+      "My pup is absolutely obsessed with this. Extremely high quality and well worth the price. Will be ordering more soon!",
+      "I was skeptical at first, but this exceeded all my expectations. Fast delivery and my cat is super happy with it.",
+      "The material is premium and durable. It’s hard to find good quality pet products like this online. Highly recommend!",
+      "Exactly as described! Arrived in perfect packaging and works wonders. Our goldendoodle approves!",
+      "Best purchase I’ve made for my dog this year. It fits perfectly into our routine and the quality is outstanding.",
+      "Very impressed with the customer service and fast shipping. The product itself is premium and works beautifully.",
+      "My picky eater/player usually ignores new things, but she took to this instantly! Thank you for such a great product.",
+      "Excellent craftsmanship and sturdy design. It has held up perfectly and looks premium. Definitely 5 stars!"
+    ],
+
+    TITLES_4: [
+      "Very good", "Happy with the purchase", "Solid product", "Good quality", "Works well",
+      "Decent value", "Recommended"
+    ],
+
+    TEXTS_4: [
+      "Overall a very good product. Decent quality and arrived quickly. My dog is happy with it so far.",
+      "Solid packaging and good quality. It took a couple of days for my cat to get used to it, but now she loves it.",
+      "Very happy with this. The quality is nice, just wish the shipping was slightly faster, but the product is great.",
+      "Works exactly as expected. Good durable materials and looks very nice. Would recommend to other pet owners.",
+      "Good value for the price. The quality is solid and it does exactly what it's supposed to do."
+    ],
+
+    TITLES_3: [
+      "It's okay", "Decent but has flaws", "Average quality", "Fine for the price"
+    ],
+
+    TEXTS_3: [
+      "The product is average. The quality is decent but nothing extraordinary. It gets the job done.",
+      "It's okay, but I expected a bit more durability. Still, my dog uses it occasionally.",
+      "Arrived on time. The quality is fine, but it didn't completely wow me. Decent value for money."
+    ],
+
+    init() {
+      // 1. Initialize ratings on any product cards in collection page
+      this.initProductCards();
+
+      // 2. Initialize product page widgets
+      const widget = document.getElementById('pdp-custom-reviews');
+      if (widget) {
+        this.initPDPWidget(widget);
+      }
+    },
+
+    getReviewsData(productId) {
+      const idStr = String(productId);
+      let hash = 0;
+      for (let i = 0; i < idStr.length; i++) {
+        hash = idStr.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      const seed = Math.abs(hash);
+      
+      const seedRandom = (s) => {
+        const x = Math.sin(s) * 10000;
+        return x - Math.floor(x);
+      };
+
+      // Determine star rating target
+      // 70% of products: 4.7 stars
+      // 15% of products: 4.5 stars
+      // 15% of products: 4.0 stars
+      const targetPercent = seed % 100;
+      let targetRating = 4.7;
+      if (targetPercent >= 70 && targetPercent < 85) {
+        targetRating = 4.5;
+      } else if (targetPercent >= 85) {
+        targetRating = 4.0;
+      }
+
+      // Determine review count: between 10 and 500 reviews
+      const countRand = seedRandom(seed);
+      const totalReviews = Math.floor(10 + Math.pow(countRand, 2) * 490);
+
+      // Generate seed reviews
+      const reviews = [];
+      let totalStars = 0;
+
+      for (let i = 0; i < totalReviews; i++) {
+        const itemSeed = seed + i * 17;
+        const rand = seedRandom(itemSeed);
+        
+        let rating = 5;
+        if (targetRating === 4.7) {
+          if (rand < 0.76) rating = 5;
+          else if (rand < 0.94) rating = 4;
+          else if (rand < 0.98) rating = 3;
+          else if (rand < 0.99) rating = 2;
+          else rating = 1;
+        } else if (targetRating === 4.5) {
+          if (rand < 0.62) rating = 5;
+          else if (rand < 0.88) rating = 4;
+          else if (rand < 0.96) rating = 3;
+          else if (rand < 0.99) rating = 2;
+          else rating = 1;
+        } else { // 4.0 target
+          if (rand < 0.40) rating = 5;
+          else if (rand < 0.75) rating = 4;
+          else if (rand < 0.90) rating = 3;
+          else if (rand < 0.97) rating = 2;
+          else rating = 1;
+        }
+
+        totalStars += rating;
+
+        // Date between 3 months ago (90 days) and today
+        const daysAgo = Math.floor(seedRandom(itemSeed + 5) * 90);
+        const date = new Date();
+        date.setDate(date.getDate() - daysAgo);
+
+        // Reviewer Name
+        const nameIdx = Math.floor(seedRandom(itemSeed + 3) * this.NAMES.length);
+        const name = this.NAMES[nameIdx];
+
+        // Title and Text based on Rating
+        let title = "";
+        let text = "";
+        if (rating === 5) {
+          title = this.TITLES_5[Math.floor(seedRandom(itemSeed + 7) * this.TITLES_5.length)];
+          text = this.TEXTS_5[Math.floor(seedRandom(itemSeed + 9) * this.TEXTS_5.length)];
+        } else if (rating === 4) {
+          title = this.TITLES_4[Math.floor(seedRandom(itemSeed + 7) * this.TITLES_4.length)];
+          text = this.TEXTS_4[Math.floor(seedRandom(itemSeed + 9) * this.TEXTS_4.length)];
+        } else {
+          title = this.TITLES_3[Math.floor(seedRandom(itemSeed + 7) * this.TITLES_3.length)];
+          text = this.TEXTS_3[Math.floor(seedRandom(itemSeed + 9) * this.TEXTS_3.length)];
+        }
+
+        reviews.push({
+          name: name,
+          rating: rating,
+          title: title,
+          text: text,
+          date: date.getTime()
+        });
+      }
+
+      // Merge user reviews from localStorage
+      const storageKey = `pdp-user-reviews-${productId}`;
+      const localReviewsStr = localStorage.getItem(storageKey);
+      if (localReviewsStr) {
+        try {
+          const localReviews = JSON.parse(localReviewsStr);
+          localReviews.forEach(r => {
+            reviews.unshift(r); // Add user reviews to the start of the list
+            totalStars += r.rating;
+          });
+        } catch(e) { console.error("Failed to parse local reviews", e); }
+      }
+
+      // Sort reviews by date descending
+      reviews.sort((a, b) => b.date - a.date);
+
+      const averageRating = reviews.length > 0 ? (totalStars / reviews.length).toFixed(1) : "0.0";
+
+      return {
+        reviews: reviews,
+        averageRating: parseFloat(averageRating),
+        totalReviews: reviews.length
+      };
+    },
+
+    initProductCards() {
+      document.querySelectorAll('.card-custom-rating-badge').forEach(badge => {
+        const productId = badge.dataset.productId;
+        if (!productId) return;
+
+        const data = this.getReviewsData(productId);
+        
+        const starsEl = badge.querySelector('.product-card__stars');
+        if (starsEl) {
+          starsEl.innerHTML = this.renderStarsHtml(data.averageRating);
+        }
+        
+        const scoreEl = badge.querySelector('span:not(.product-card__stars)');
+        if (scoreEl) {
+          scoreEl.textContent = `${data.averageRating} (${data.totalReviews})`;
+        }
+        
+        badge.style.display = 'flex'; // show badge
+      });
+    },
+
+    initPDPWidget(widget) {
+      const productId = widget.dataset.productId;
+      if (!productId) return;
+
+      const data = this.getReviewsData(productId);
+
+      const pdpBadge = document.getElementById('pdp-custom-rating-badge');
+      if (pdpBadge) {
+        const starsEl = document.getElementById('pdp-stars-badge');
+        const scoreEl = document.getElementById('pdp-rating-score-badge');
+        const countEl = document.getElementById('pdp-review-count-badge');
+        
+        if (starsEl) starsEl.innerHTML = this.renderStarsHtml(data.averageRating);
+        if (scoreEl) scoreEl.textContent = data.averageRating;
+        if (countEl) countEl.textContent = `(${data.totalReviews} reviews)`;
+
+        pdpBadge.style.display = 'flex';
+
+        // Add smooth scroll click to reviews tab
+        pdpBadge.addEventListener('click', e => {
+          e.preventDefault();
+          const tabBtn = document.getElementById('tab-btn-reviews');
+          if (tabBtn) {
+            tabBtn.click();
+            tabBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        });
+      }
+
+      this.renderWidgetHtml(widget, data, productId);
+    },
+
+    renderStarsHtml(rating) {
+      const fullStars = Math.floor(rating);
+      const halfStar = rating % 1 >= 0.4 && rating % 1 <= 0.8 ? 1 : 0;
+      const emptyStars = 5 - fullStars - halfStar;
+      
+      let html = "";
+      for (let i = 0; i < fullStars; i++) html += "★";
+      if (halfStar) html += "☆";
+      for (let i = 0; i < emptyStars; i++) html += "☆";
+      return html;
+    },
+
+    renderWidgetHtml(widget, data, productId) {
+      const counts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+      data.reviews.forEach(r => {
+        if (counts[r.rating] !== undefined) counts[r.rating]++;
+      });
+
+      const pct = (stars) => {
+        if (data.totalReviews === 0) return 0;
+        return Math.round((counts[stars] / data.totalReviews) * 100);
+      };
+
+      const productTitle = widget.dataset.productTitle || "";
+
+      let html = `
+        <div class="reviews-dashboard">
+          <div class="reviews-summary">
+            <div class="reviews-summary__score-box">
+              <div class="reviews-summary__score">${data.averageRating}</div>
+              <div class="reviews-summary__stars">${this.renderStarsHtml(data.averageRating)}</div>
+              <div class="reviews-summary__count">Based on ${data.totalReviews} reviews</div>
+            </div>
+            
+            <div class="reviews-summary__distribution">
+              ${[5, 4, 3, 2, 1].map(stars => `
+                <div class="distribution-row">
+                  <span class="distribution-row__label">${stars} ★</span>
+                  <div class="distribution-row__bar-bg">
+                    <div class="distribution-row__bar-fill" style="width: ${pct(stars)}%"></div>
+                  </div>
+                  <span class="distribution-row__pct">${pct(stars)}%</span>
+                </div>
+              `).join('')}
+            </div>
+            
+            <div class="reviews-summary__action">
+              <button type="button" class="btn btn--primary" id="btn-write-review">Write a Review</button>
+            </div>
+          </div>
+
+          <!-- Write Review Form Container -->
+          <div class="review-form-container" id="review-form-container" style="display:none;">
+            <form id="custom-review-form" class="review-form">
+              <h3 class="review-form__title">Write a review for ${productTitle}</h3>
+              
+              <div class="review-form__row">
+                <label for="review-author" class="review-form__label">Your Name <span class="required">*</span></label>
+                <input type="text" id="review-author" class="review-form__input" placeholder="Enter your name" required>
+              </div>
+
+              <div class="review-form__row">
+                <label class="review-form__label">Rating <span class="required">*</span></label>
+                <div class="star-rating-select" id="star-rating-select" role="radiogroup" aria-label="Rating selection">
+                  <button type="button" class="star-select-btn" data-rating="1" aria-label="1 star">★</button>
+                  <button type="button" class="star-select-btn" data-rating="2" aria-label="2 stars">★</button>
+                  <button type="button" class="star-select-btn" data-rating="3" aria-label="3 stars">★</button>
+                  <button type="button" class="star-select-btn" data-rating="4" aria-label="4 stars">★</button>
+                  <button type="button" class="star-select-btn" data-rating="5" aria-label="5 stars">★</button>
+                </div>
+                <input type="hidden" id="review-rating-value" value="5" required>
+              </div>
+
+              <div class="review-form__row">
+                <label for="review-title" class="review-form__label">Review Title <span class="required">*</span></label>
+                <input type="text" id="review-title" class="review-form__input" placeholder="e.g. Highly recommend!" required>
+              </div>
+
+              <div class="review-form__row">
+                <label for="review-body" class="review-form__label">Review Description <span class="required">*</span></label>
+                <textarea id="review-body" class="review-form__textarea" rows="4" placeholder="Share your experience with this product..." required></textarea>
+              </div>
+
+              <div class="review-form__buttons">
+                <button type="button" class="btn btn--secondary" id="btn-cancel-review">Cancel</button>
+                <button type="submit" class="btn btn--primary">Submit Review</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Reviews List -->
+          <div class="reviews-list" id="reviews-list-container"></div>
+        </div>
+      `;
+
+      widget.innerHTML = html;
+
+      const writeBtn = widget.querySelector('#btn-write-review');
+      const cancelBtn = widget.querySelector('#btn-cancel-review');
+      const formContainer = widget.querySelector('#review-form-container');
+      const form = widget.querySelector('#custom-review-form');
+      const starSelectBtns = widget.querySelectorAll('.star-select-btn');
+      const ratingValueInput = widget.querySelector('#review-rating-value');
+
+      if (writeBtn && formContainer) {
+        writeBtn.addEventListener('click', () => {
+          formContainer.style.display = formContainer.style.display === 'none' ? 'block' : 'none';
+          if (formContainer.style.display === 'block') {
+            formContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        });
+      }
+
+      if (cancelBtn && formContainer) {
+        cancelBtn.addEventListener('click', () => {
+          formContainer.style.display = 'none';
+          form.reset();
+          this.updateStarRatingSelect(starSelectBtns, 5);
+        });
+      }
+
+      starSelectBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const rating = parseInt(btn.dataset.rating, 10);
+          ratingValueInput.value = rating;
+          this.updateStarRatingSelect(starSelectBtns, rating);
+        });
+      });
+
+      this.updateStarRatingSelect(starSelectBtns, 5);
+
+      if (form) {
+        form.addEventListener('submit', e => {
+          e.preventDefault();
+          
+          const name = form.querySelector('#review-author').value.trim();
+          const rating = parseInt(ratingValueInput.value, 10);
+          const title = form.querySelector('#review-title').value.trim();
+          const text = form.querySelector('#review-body').value.trim();
+          
+          if (!name || !rating || !title || !text) {
+            alert("All fields marked with * are compulsory.");
+            return;
+          }
+
+          const newReview = {
+            name: name,
+            rating: rating,
+            title: title,
+            text: text,
+            date: Date.now()
+          };
+
+          const storageKey = `pdp-user-reviews-${productId}`;
+          const existing = localStorage.getItem(storageKey);
+          let userReviews = [];
+          if (existing) {
+            try { userReviews = JSON.parse(existing); } catch(err) {}
+          }
+          userReviews.unshift(newReview);
+          localStorage.setItem(storageKey, JSON.stringify(userReviews));
+
+          PetsCare.utils.showToast("Review submitted successfully!");
+
+          formContainer.style.display = 'none';
+          form.reset();
+          this.updateStarRatingSelect(starSelectBtns, 5);
+
+          this.initPDPWidget(widget);
+        });
+      }
+
+      this.renderReviewsPage(widget, data.reviews, 1);
+    },
+
+    updateStarRatingSelect(btns, rating) {
+      btns.forEach(btn => {
+        const btnRating = parseInt(btn.dataset.rating, 10);
+        if (btnRating <= rating) {
+          btn.classList.add('selected');
+        } else {
+          btn.classList.remove('selected');
+        }
+      });
+    },
+
+    renderReviewsPage(widget, reviews, pageNumber) {
+      const listContainer = widget.querySelector('#reviews-list-container');
+      if (!listContainer) return;
+
+      const pageSize = 8;
+      const totalPages = Math.ceil(reviews.length / pageSize);
+      const startIndex = (pageNumber - 1) * pageSize;
+      const endIndex = Math.min(startIndex + pageSize, reviews.length);
+      const pageReviews = reviews.slice(startIndex, endIndex);
+
+      const formatDate = (timestamp) => {
+        const date = new Date(timestamp);
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
+      };
+
+      let html = "";
+      if (reviews.length === 0) {
+        html = `<p class="reviews-empty">No reviews yet. Be the first to write a review!</p>`;
+      } else {
+        html = `
+          <div class="reviews-list__items">
+            ${pageReviews.map(r => `
+              <div class="review-item">
+                <div class="review-item__head">
+                  <div class="review-item__meta">
+                    <span class="review-item__stars">${this.renderStarsHtml(r.rating)}</span>
+                    <span class="review-item__author">${r.name}</span>
+                    <span class="review-item__verified"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="margin-right:2px;color:var(--green)"><polyline points="20 6 9 17 4 12"/></svg>Verified Buyer</span>
+                  </div>
+                  <span class="review-item__date">${formatDate(r.date)}</span>
+                </div>
+                <h4 class="review-item__title">${r.title}</h4>
+                <p class="review-item__text">${r.text}</p>
+              </div>
+            `).join('')}
+          </div>
+
+          ${totalPages > 1 ? `
+            <div class="reviews-pagination">
+              ${Array.from({ length: totalPages }).map((_, i) => {
+                const p = i + 1;
+                return `
+                  <button type="button" class="reviews-pagination__page-btn ${p === pageNumber ? 'active' : ''}" data-page="${p}">
+                    ${p}
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          ` : ''}
+        `;
+      }
+
+      listContainer.innerHTML = html;
+
+      listContainer.querySelectorAll('.reviews-pagination__page-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const p = parseInt(btn.dataset.page, 10);
+          this.renderReviewsPage(widget, reviews, p);
+          widget.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+      });
+    }
+  },
+
   /* ─── BOOTSTRAP ─────────────────────────────────────────────────────────── */
   init() {
     this.header.init();
@@ -1316,6 +1800,9 @@ const PetsCare = {
 
     // Initialize scroll menu centering
     this.initScrollMenuCentering();
+
+    // Initialize custom reviews engine
+    this.reviews.init();
   }
 };
 

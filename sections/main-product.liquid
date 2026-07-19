@@ -124,18 +124,12 @@
     {%- comment -%} Title {%- endcomment -%}
     <h1 class="pdp-title">{{ product.title }}</h1>
 
-    {%- comment -%} Ratings — shows only if Judge.me / Okendo inject metafields {%- endcomment -%}
-    {%- if product.metafields.reviews.rating.value != blank -%}
-      {%- assign rating_val = product.metafields.reviews.rating.value -%}
-      {%- assign rating_count = product.metafields.reviews.rating_count.value | default: 0 -%}
-      <div class="pdp-rating">
-        <span class="pdp-stars" aria-label="{{ rating_val | round: 1 }} out of 5 stars">
-          {%- for i in (1..5) -%}★{%- endfor -%}
-        </span>
-        <span class="pdp-rating__score">{{ rating_val | round: 1 }}</span>
-        <a href="#reviews" class="pdp-review-count">({{ rating_count }} reviews)</a>
-      </div>
-    {%- endif -%}
+    {%- comment -%} Custom Star Rating Badge {%- endcomment -%}
+    <div class="pdp-rating pdp-custom-rating-badge" id="pdp-custom-rating-badge" style="display:none;" data-product-id="{{ product.id }}">
+      <span class="pdp-stars pdp-stars--interactive" id="pdp-stars-badge" aria-label="Loading rating..."></span>
+      <span class="pdp-rating__score" id="pdp-rating-score-badge">0.0</span>
+      <a href="#tab-btn-reviews" class="pdp-review-count" id="pdp-review-count-badge">(0 reviews)</a>
+    </div>
 
     {%- comment -%} Price {%- endcomment -%}
     <div class="pdp-price-row" id="pdp-price-row">
@@ -339,9 +333,7 @@
           {%- if product.metafields.custom.faqs != blank -%}
             <button type="button" class="pdp-tab-btn" role="tab" aria-selected="false" data-tab="tab-faqs" id="tab-btn-faqs">FAQs</button>
           {%- endif -%}
-          {%- if product.metafields.reviews.rating.value != blank -%}
-            <button type="button" class="pdp-tab-btn" role="tab" aria-selected="false" data-tab="tab-reviews" id="tab-btn-reviews">Reviews</button>
-          {%- endif -%}
+          <button type="button" class="pdp-tab-btn" role="tab" aria-selected="false" data-tab="tab-reviews" id="tab-btn-reviews">Reviews</button>
         </div>
 
         {%- comment -%} Description tab {%- endcomment -%}
@@ -388,22 +380,10 @@
           </div>
         {%- endif -%}
 
-        {%- comment -%} Reviews tab {%- endcomment -%}
-        {%- if product.metafields.reviews.rating.value != blank -%}
-          <div id="tab-reviews" class="pdp-tab-panel" role="tabpanel" aria-labelledby="tab-btn-reviews" hidden>
-            <div id="reviews">
-              {% render 'judge-me-review-widget', context: product %}
-            </div>
-          </div>
-        {%- endif -%}
-      </div>
-
-      {%- comment -%} Reviews App Embed Hooks {%- endcomment -%}
-      <div class="pdp-universal-reviews" style="margin-top:var(--sp-4);">
-        <div id="judgeme_product_reviews" class="jdgm-widget jdgm-review-widget" data-id="{{ product.id }}"></div>
-        <div id="shopify-product-reviews" data-id="{{ product.id }}">{{ product.metafields.spr.reviews }}</div>
-        <div class="stamped-main-widget" id="stamped-main-widget" data-product-id="{{ product.id }}" data-name="{{ product.title | escape }}" data-url="{{ shop.url }}{{ product.url }}" data-image-url="{{ product.featured_image | image_url: width: 120 }}" data-description="{{ product.description | escape }}"></div>
-        <div class="yotpo yotpo-main-widget" data-product-id="{{ product.id }}" data-name="{{ product.title | escape }}" data-url="{{ shop.url }}{{ product.url }}" data-image-url="{{ product.featured_image | image_url: width: 120 }}" data-description="{{ product.description | escape }}"></div>
+        {%- comment -%} Custom Reviews tab {%- endcomment -%}
+        <div id="tab-reviews" class="pdp-tab-panel" role="tabpanel" aria-labelledby="tab-btn-reviews" hidden>
+          <div class="pdp-custom-reviews" id="pdp-custom-reviews" data-product-id="{{ product.id }}" data-product-title="{{ product.title | escape }}" data-product-type="{{ product.type | escape }}"></div>
+        </div>
       </div>
 
     </div>

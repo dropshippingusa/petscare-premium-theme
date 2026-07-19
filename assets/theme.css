@@ -3514,6 +3514,15 @@ a:focus-visible, button:focus-visible {
 /* Dynamic checkout buttons styling */
 .pdp-payment-buttons {
   width: 100%;
+  animation: pdp-paypal-glow-pulse 2.5s infinite ease-in-out !important;
+  border-radius: var(--r-md);
+  transition: all var(--t-fast) var(--ease);
+  position: relative;
+  display: block;
+}
+.shopify-payment-button {
+  animation: pdp-paypal-glow-pulse 2.5s infinite ease-in-out !important;
+  border-radius: var(--r-md);
 }
 .shopify-payment-button__button {
   height: 54px !important;
@@ -3530,44 +3539,18 @@ a:focus-visible, button:focus-visible {
   transform: scale(1.03) !important;
 }
 
-/* ── Custom Dynamic Checkout Pulse & Glow animations ── */
-.shopify-payment-button__button--paypal,
-.shopify-payment-button [data-testid="Paypal-button"],
-.shopify-payment-button [data-button-name="paypal"] {
-  animation: paypal-pulse-glow 2s infinite ease-in-out !important;
-}
-
-.shopify-payment-button__button:not(.shopify-payment-button__button--paypal) {
-  animation: dynamic-btn-pulse 2s infinite ease-in-out !important;
-}
-
-@keyframes paypal-pulse-glow {
+@keyframes pdp-paypal-glow-pulse {
   0% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(255, 196, 57, 0.4);
+    box-shadow: 0 0 0 0 rgba(255, 196, 57, 0.45);
   }
   50% {
     transform: scale(1.025);
-    box-shadow: 0 0 14px 4px rgba(255, 196, 57, 0.75);
+    box-shadow: 0 0 16px 6px rgba(255, 196, 57, 0.75);
   }
   100% {
     transform: scale(1);
     box-shadow: 0 0 0 0 rgba(255, 196, 57, 0);
-  }
-}
-
-@keyframes dynamic-btn-pulse {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(253, 133, 66, 0.4);
-  }
-  50% {
-    transform: scale(1.02);
-    box-shadow: 0 0 12px 3px rgba(253, 133, 66, 0.65);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(253, 133, 66, 0);
   }
 }
 

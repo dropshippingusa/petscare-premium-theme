@@ -4892,10 +4892,25 @@ a.fbt-item__title:hover { color: var(--primary); }
     gap: 12px;
   }
 
-  /* Increase product card image and PDP gallery main image heights by 15% on mobile */
+  /* Reduce gutters and grid gaps on mobile to maximize card layout widths */
+  .container {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  /* Align all card titles to an exact 2-line height to keep stars & prices perfectly aligned */
+  .product-card__title {
+    min-height: 38px !important;
+  }
+
+  /* Increase product card image and PDP gallery main image heights by 20% on mobile */
   .product-card__media,
   .pdp-gallery__main {
-    aspect-ratio: 1 / 1.15 !important;
+    aspect-ratio: 1 / 1.2 !important;
   }
 }
 

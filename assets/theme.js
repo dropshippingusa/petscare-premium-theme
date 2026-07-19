@@ -830,6 +830,10 @@ const PetsCare = {
           if (PetsCare.wishlist && typeof PetsCare.wishlist.init === 'function') {
             PetsCare.wishlist.init();
           }
+          // Re-trigger custom reviews rating badges
+          if (PetsCare.reviews && typeof PetsCare.reviews.initProductCards === 'function') {
+            PetsCare.reviews.initProductCards();
+          }
         }
       } catch(e) { console.error('[PetsCare] renderRecentlyViewed failed', e); }
     },

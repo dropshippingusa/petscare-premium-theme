@@ -1757,18 +1757,48 @@ const PetsCare = {
             `).join('')}
           </div>
 
-          ${totalPages > 1 ? `
-            <div class="reviews-pagination">
-              ${Array.from({ length: totalPages }).map((_, i) => {
-                const p = i + 1;
-                return `
-                  <button type="button" class="reviews-pagination__page-btn ${p === pageNumber ? 'active' : ''}" data-page="${p}">
-                    ${p}
-                  </button>
-                `;
-              }).join('')}
-            </div>
-          ` : ''}
+          ${(() => {
+            if (totalPages <= 1) return '';
+            
+            let startPage = Math.max(1, pageNumber - 1);
+            let endPage = Math.min(totalPages, startPage + 2);
+            startPage = Math.max(1, endPage - 2);
+
+            const buttons = [];
+            
+            // Previous button
+            if (pageNumber > 1) {
+              buttons.push(`
+                <button type="button" class="reviews-pagination__page-btn reviews-pagination__page-btn--prev" data-page="${pageNumber - 1}">
+                  Previous
+                </button>
+              `);
+            }
+            
+            // Page buttons
+            for (let p = startPage; p <= endPage; p++) {
+              buttons.push(`
+                <button type="button" class="reviews-pagination__page-btn ${p === pageNumber ? 'active' : ''}" data-page="${p}">
+                  ${p}
+                </button>
+              `);
+            }
+            
+            // Next button
+            if (pageNumber < totalPages) {
+              buttons.push(`
+                <button type="button" class="reviews-pagination__page-btn reviews-pagination__page-btn--next" data-page="${pageNumber + 1}">
+                  Next
+                </button>
+              `);
+            }
+            
+            return `
+              <div class="reviews-pagination">
+                ${buttons.join('')}
+              </div>
+            `;
+          })()}
         `;
       }
 

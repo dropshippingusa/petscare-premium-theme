@@ -5526,6 +5526,10 @@ a.fbt-item__title:hover { color: var(--primary); }
   color: var(--ink-2);
   transition: all var(--t-fast);
 }
+.reviews-pagination__page-btn--prev,
+.reviews-pagination__page-btn--next {
+  padding: 0 12px;
+}
 .reviews-pagination__page-btn.active,
 .reviews-pagination__page-btn:hover {
   background: var(--primary);

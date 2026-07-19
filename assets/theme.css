@@ -5591,6 +5591,14 @@ a.fbt-item__title:hover { color: var(--primary); }
   color: #ffffff;
   border: 1px solid #047857;
 }
+/* Compact version for PDP header (above star rating) */
+.reviews-trust-badge--header {
+  padding: 4px 11px;
+  font-size: 11px;
+  gap: 5px;
+  margin-bottom: 0;
+  letter-spacing: 0.09em;
+}
 
 /* =============================================================================
    HERO EYEBROW SOCIAL PROOF

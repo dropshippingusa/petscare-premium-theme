@@ -1597,6 +1597,29 @@ const PetsCare = {
         });
       }
 
+      // Populate the trust badge in the PDP header (above star rating)
+      const headerTrustBadge = document.getElementById('pdp-trust-badge');
+      if (headerTrustBadge) {
+        const avgR = data.averageRating;
+        let badgeClass, badgeLabel;
+        if (avgR >= 4.8) {
+          badgeClass = 'reviews-trust-badge--top';
+          badgeLabel = 'TOP RATED';
+        } else if (avgR >= 4.5) {
+          badgeClass = 'reviews-trust-badge--high';
+          badgeLabel = 'HIGHLY RATED';
+        } else {
+          badgeClass = 'reviews-trust-badge--trusted';
+          badgeLabel = 'TRUSTED';
+        }
+        headerTrustBadge.innerHTML = `
+          <span class="reviews-trust-badge reviews-trust-badge--header ${badgeClass}">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            ${badgeLabel}
+          </span>`;
+        headerTrustBadge.style.display = 'block';
+      }
+
       this.renderWidgetHtml(widget, data, productId);
     },
 
@@ -1625,19 +1648,7 @@ const PetsCare = {
 
       const productTitle = widget.dataset.productTitle || "";
 
-      // Determine trust badge based on average rating
-      let trustBadgeHtml = "";
-      const avgR = data.averageRating;
-      if (avgR >= 4.8) {
-        trustBadgeHtml = `<div class="reviews-trust-badge reviews-trust-badge--top"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> TOP RATED</div>`;
-      } else if (avgR >= 4.5) {
-        trustBadgeHtml = `<div class="reviews-trust-badge reviews-trust-badge--high"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> HIGHLY RATED</div>`;
-      } else {
-        trustBadgeHtml = `<div class="reviews-trust-badge reviews-trust-badge--trusted"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> TRUSTED</div>`;
-      }
-
       let html = `
-        ${trustBadgeHtml}
         <div class="reviews-dashboard">
           <div class="reviews-summary">
             <div class="reviews-summary__score-box">

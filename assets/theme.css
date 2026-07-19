@@ -3532,7 +3532,8 @@ a:focus-visible, button:focus-visible {
   text-transform: uppercase !important;
   letter-spacing: 0.02em !important;
   transition: all var(--t-fast) var(--ease) !important;
-  animation: pdp-paypal-glow-pulse 2.5s infinite ease-in-out !important;
+  position: relative !important;
+  overflow: hidden !important;
 }
 .shopify-payment-button > *:first-child:hover,
 .shopify-payment-button__button:hover {
@@ -3540,18 +3541,35 @@ a:focus-visible, button:focus-visible {
   transform: scale(1.02) !important;
 }
 
-@keyframes pdp-paypal-glow-pulse {
+/* Pseudo-element for the left-to-right diagonal glossy shine sweep */
+.shopify-payment-button > *:first-child::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-20deg);
+  pointer-events: none;
+  animation: paypal-shine-sweep 3s infinite ease-in-out !important;
+  z-index: 2;
+}
+
+@keyframes paypal-shine-sweep {
   0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(255, 196, 57, 0.4);
+    left: -150%;
   }
-  50% {
-    transform: scale(1.015); /* Subtle scale pulse */
-    box-shadow: 0 0 8px 1.5px rgba(255, 196, 57, 0.6); /* Reduced glow spread length to prevent overlapping */
+  30% {
+    left: 150%;
   }
   100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(255, 196, 57, 0);
+    left: 150%;
   }
 }
 

@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PetsCareUSA — Link in Bio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
   :root{
     --pine:#1F3A2E;
@@ -33,6 +33,8 @@
     padding:0 20px 64px;
     position:relative;
   }
+
+  /* ---- Header / brand mark ---- */
   .hero{
     padding-top:32px;
     text-align:center;
@@ -43,7 +45,7 @@
       radial-gradient(circle at 15% 20%, rgba(212,162,76,0.16), transparent 45%),
       radial-gradient(circle at 85% 15%, rgba(190,78,44,0.14), transparent 40%),
       linear-gradient(180deg, rgba(31,58,46,0.05), rgba(31,58,46,0) 60%);
-    padding-left:16px; padding-right:16px; padding-bottom:6px;
+    padding-left:16px; padding-right:16px; padding-bottom:12px;
   }
   .hero::before{
     content:"🐾";
@@ -64,6 +66,35 @@
     pointer-events:none;
   }
   .hero > *{ position:relative; z-index:1; }
+
+  /* ---- Logo Stamp & Wiggle Animation ---- */
+  .brand-mark{
+    width:min(84%, 280px);
+    margin:0 auto 16px;
+    display:flex; align-items:center; justify-content:center;
+    animation: stamp-in 0.6s cubic-bezier(.2,1.4,.4,1) both;
+  }
+  @keyframes stamp-in{
+    from{ transform:scale(.6) rotate(-8deg); opacity:0; }
+    to{ transform:scale(1) rotate(0deg); opacity:1; }
+  }
+  .brand-mark img{
+    width:100%; height:auto; object-fit:contain; display:block;
+    animation: logo-shake 3s ease-in-out infinite;
+    transform-origin:center center;
+  }
+  @keyframes logo-shake{
+    0%   { transform:translateX(0); }
+    4%   { transform:translateX(-8px); }
+    8%   { transform:translateX(7px); }
+    12%  { transform:translateX(-6px); }
+    16%  { transform:translateX(5px); }
+    20%  { transform:translateX(-3px); }
+    24%  { transform:translateX(2px); }
+    28%  { transform:translateX(0); }
+    100% { transform:translateX(0); }
+  }
+
   .rating{
     display:flex;
     align-items:center;
@@ -71,7 +102,6 @@
     gap:7px;
     margin-bottom:14px;
   }
-  .rating .stars-bg{ color:rgba(38,38,31,0.22); }
   .rating .stars-fg{ color:var(--gold); }
   .rating .rating-text{
     font-family:'IBM Plex Mono', monospace;
@@ -84,14 +114,6 @@
     font-weight:500;
     margin-top:-8px;
   }
-  h1.brand{
-    font-family:'Fraunces', serif;
-    font-weight:700;
-    font-size:clamp(28px,7vw,36px);
-    letter-spacing:-0.01em;
-    margin:0 0 4px;
-  }
-  .brand .usa{ color:var(--rust); }
   .tagline{
     font-size:14.5px;
     color:rgba(38,38,31,0.72);
@@ -107,6 +129,7 @@
     text-align:center;
     margin: 18px 0 30px;
   }
+
   .section-tab{
     display:inline-flex;
     align-items:center;
@@ -132,6 +155,8 @@
     font-size:10px;
   }
   section.group{ margin-top:34px; }
+
+  /* ---- Link cards with Hover & Glow Animations ---- */
   .card{
     display:flex;
     align-items:center;
@@ -143,14 +168,50 @@
     margin-bottom:12px;
     text-decoration:none;
     color:var(--ink);
-    transition: border-color .15s ease, transform .15s ease;
+    transition: border-color .2s ease, transform .2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow .2s ease;
     position:relative;
     overflow:hidden;
   }
   .card:hover{
-    transform:translateY(-2px);
+    transform:scale(1.02) translateY(-2px);
     border-color:var(--rust);
+    box-shadow:0 8px 20px rgba(31,58,46,0.12);
   }
+  .card::before{
+    content:"";
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width:4px;
+    background:var(--rust);
+    opacity:0;
+    transition:opacity .15s ease;
+  }
+  .card:hover::before{ opacity:1; }
+
+  /* ---- Glowing Shimmer Animation ---- */
+  .card--top{
+    animation: card-glow 2.4s ease-in-out infinite;
+  }
+  @keyframes card-glow{
+    0%, 100% { box-shadow: 0 0 0 0 rgba(212,162,76,0); border-color: var(--line); }
+    50%      { box-shadow: 0 0 0 7px rgba(212,162,76,0.18); border-color: rgba(212,162,76,0.7); }
+  }
+  .card--top::after{
+    content:"";
+    position:absolute;
+    top:0; left:-60%;
+    width:35%; height:100%;
+    background:linear-gradient(120deg, transparent, rgba(255,255,255,0.65), transparent);
+    transform:skewX(-20deg);
+    animation: card-shine 3s ease-in-out infinite;
+    pointer-events:none;
+  }
+  @keyframes card-shine{
+    0%   { left:-60%; }
+    45%  { left:130%; }
+    100% { left:130%; }
+  }
+
   .card .paw{
     flex:0 0 auto;
     width:52px; height:52px;
@@ -167,7 +228,9 @@
     font-weight:500;
     line-height:1.35;
   }
-  .card .arrow{ flex:0 0 auto; color:rgba(38,38,31,0.35); }
+  .card .arrow{ flex:0 0 auto; color:rgba(38,38,31,0.35); transition: transform 0.2s ease; }
+  .card:hover .arrow{ transform: translateX(4px); color: var(--rust); }
+  
   footer{ text-align:center; margin-top:40px; }
   footer .foot-note{
     font-family:'IBM Plex Mono', monospace;
@@ -181,7 +244,7 @@
 <div class="page">
   <div class="hero">
     <div class="brand-mark">
-      <h1 class="brand">PetsCare<span class="usa">USA</span></h1>
+      <img src="{{ 'logo.png' | asset_url }}" alt="PetsCareUSA">
     </div>
     <div class="rating">
       <span class="stars-fg">★★★★★</span>
@@ -194,7 +257,7 @@
 
   <section class="group">
     <div class="section-tab"><span class="n">01</span> SHOP BY TOP RATED</div>
-    <a href="/collections/all" class="card">
+    <a href="/collections/all" class="card card--top">
       <div class="paw">⭐</div>
       <span class="label">Top Selling &amp; Top Rated</span>
       <span class="arrow">→</span>

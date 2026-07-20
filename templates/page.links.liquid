@@ -1,0 +1,254 @@
+{% layout none %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PetsCareUSA — Link in Bio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pine:#1F3A2E;
+    --pine-dark:#132821;
+    --bone:#F6F2E7;
+    --rust:#BE4E2C;
+    --gold:#D4A24C;
+    --ink:#26261F;
+    --line: rgba(38,38,31,0.14);
+    --card-bg: #ECE4D2;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bone);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .page{
+    max-width:520px;
+    margin:0 auto;
+    padding:0 20px 64px;
+    position:relative;
+  }
+  .hero{
+    padding-top:32px;
+    text-align:center;
+    position:relative;
+    border-radius:22px;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(212,162,76,0.16), transparent 45%),
+      radial-gradient(circle at 85% 15%, rgba(190,78,44,0.14), transparent 40%),
+      linear-gradient(180deg, rgba(31,58,46,0.05), rgba(31,58,46,0) 60%);
+    padding-left:16px; padding-right:16px; padding-bottom:6px;
+  }
+  .hero::before{
+    content:"🐾";
+    position:absolute;
+    top:-10px; left:-6px;
+    font-size:64px;
+    opacity:0.08;
+    transform:rotate(-18deg);
+    pointer-events:none;
+  }
+  .hero::after{
+    content:"🐾";
+    position:absolute;
+    bottom:-14px; right:-4px;
+    font-size:72px;
+    opacity:0.08;
+    transform:rotate(14deg);
+    pointer-events:none;
+  }
+  .hero > *{ position:relative; z-index:1; }
+  .rating{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    margin-bottom:14px;
+  }
+  .rating .stars-bg{ color:rgba(38,38,31,0.22); }
+  .rating .stars-fg{ color:var(--gold); }
+  .rating .rating-text{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:rgba(38,38,31,0.65);
+  }
+  .tagline.sub{
+    font-size:13px;
+    color:var(--rust);
+    font-weight:500;
+    margin-top:-8px;
+  }
+  h1.brand{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:clamp(28px,7vw,36px);
+    letter-spacing:-0.01em;
+    margin:0 0 4px;
+  }
+  .brand .usa{ color:var(--rust); }
+  .tagline{
+    font-size:14.5px;
+    color:rgba(38,38,31,0.72);
+    max-width:340px;
+    margin:0 auto 18px;
+    line-height:1.45;
+  }
+  .disclosure{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:.02em;
+    color:rgba(38,38,31,0.5);
+    text-align:center;
+    margin: 18px 0 30px;
+  }
+  .section-tab{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--pine);
+    color:var(--bone);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    padding:7px 14px 7px 12px;
+    border-radius:0 8px 8px 0;
+    margin-left:-20px;
+    margin-bottom:14px;
+  }
+  .section-tab .n{
+    background:var(--gold);
+    color:var(--pine-dark);
+    font-weight:700;
+    width:18px;height:18px;
+    border-radius:4px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:10px;
+  }
+  section.group{ margin-top:34px; }
+  .card{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    background:var(--card-bg);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:14px 16px;
+    margin-bottom:12px;
+    text-decoration:none;
+    color:var(--ink);
+    transition: border-color .15s ease, transform .15s ease;
+    position:relative;
+    overflow:hidden;
+  }
+  .card:hover{
+    transform:translateY(-2px);
+    border-color:var(--rust);
+  }
+  .card .paw{
+    flex:0 0 auto;
+    width:52px; height:52px;
+    border-radius:11px;
+    background:var(--bone);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--pine);
+    overflow:hidden;
+    font-size:22px;
+  }
+  .card .label{
+    flex:1 1 auto;
+    font-size:14.5px;
+    font-weight:500;
+    line-height:1.35;
+  }
+  .card .arrow{ flex:0 0 auto; color:rgba(38,38,31,0.35); }
+  footer{ text-align:center; margin-top:40px; }
+  footer .foot-note{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    color:rgba(38,38,31,0.45);
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="hero">
+    <div class="brand-mark">
+      <h1 class="brand">PetsCare<span class="usa">USA</span></h1>
+    </div>
+    <div class="rating">
+      <span class="stars-fg">★★★★★</span>
+      <span class="rating-text">4.5/5 · 12,400+ Reviews</span>
+    </div>
+    <p class="tagline">Real gear for real pets — vet-informed picks for feeding, training &amp; everyday care.</p>
+    <p class="tagline sub">Trusted by 50,000+ pet parents across the USA 🐾</p>
+    <div class="disclosure">TRUSTED PICKS · UPDATED MONTHLY</div>
+  </div>
+
+  <section class="group">
+    <div class="section-tab"><span class="n">01</span> SHOP BY TOP RATED</div>
+    <a href="/collections/all" class="card">
+      <div class="paw">⭐</div>
+      <span class="label">Top Selling &amp; Top Rated</span>
+      <span class="arrow">→</span>
+    </a>
+  </section>
+
+  <section class="group">
+    <div class="section-tab"><span class="n">02</span> SHOP BY COLLECTION</div>
+    <a href="/collections/smart-gadgets" class="card">
+      <div class="paw">📱</div>
+      <span class="label">Smart Gadgets</span>
+      <span class="arrow">→</span>
+    </a>
+    <a href="/collections/health-nutrition" class="card">
+      <div class="paw">💊</div>
+      <span class="label">Health &amp; Nutrition</span>
+      <span class="arrow">→</span>
+    </a>
+    <a href="/collections/toys" class="card">
+      <div class="paw">🧸</div>
+      <span class="label">Toys</span>
+      <span class="arrow">→</span>
+    </a>
+    <a href="/collections/grooming" class="card">
+      <div class="paw">✂️</div>
+      <span class="label">Grooming</span>
+      <span class="arrow">→</span>
+    </a>
+    <a href="/collections/clothes" class="card">
+      <div class="paw">👕</div>
+      <span class="label">Clothes</span>
+      <span class="arrow">→</span>
+    </a>
+    <a href="/collections/beds-houses" class="card">
+      <div class="paw">🛏️</div>
+      <span class="label">Beds &amp; Houses</span>
+      <span class="arrow">→</span>
+    </a>
+    <a href="/collections/training" class="card">
+      <div class="paw">🎾</div>
+      <span class="label">Training</span>
+      <span class="arrow">→</span>
+    </a>
+    <a href="/collections/poop-bags" class="card">
+      <div class="paw">🐾</div>
+      <span class="label">Poop Bags</span>
+      <span class="arrow">→</span>
+    </a>
+  </section>
+
+  <footer>
+    <div class="foot-note">© {{ 'now' | date: "%Y" }} PETSCAREUSA.COM — MADE FOR THE PACK</div>
+  </footer>
+</div>
+
+</body>
+</html>

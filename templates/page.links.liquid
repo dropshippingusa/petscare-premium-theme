@@ -67,9 +67,9 @@
   }
   .hero > *{ position:relative; z-index:1; }
 
-  /* ---- Horizontal Text Logo Stamp & Wiggle Animation ---- */
+  /* ---- Logo Stamp & Wiggle Animation ---- */
   .brand-mark{
-    width:min(94%, 360px);
+    width:min(94%, 340px);
     margin:0 auto 16px;
     display:flex; align-items:center; justify-content:center;
     animation: stamp-in 0.6s cubic-bezier(.2,1.4,.4,1) both;
@@ -244,7 +244,7 @@
 <div class="page">
   <div class="hero">
     <div class="brand-mark">
-      <img src="https://petscareusa.com/cdn/shop/files/PETSCAREUSA_LOGO-5.png?v=1720000000" onerror="this.onerror=null; this.src='https://cdn.shopify.com/s/files/1/0000/0000/files/PETSCAREUSA_LOGO-5.png';" alt="PETS CARE USA">
+      <img src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name | escape }}">
     </div>
     <div class="rating">
       <span class="stars-fg">★★★★★</span>

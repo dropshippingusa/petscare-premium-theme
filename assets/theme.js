@@ -659,6 +659,7 @@ const PetsCare = {
       this._trackRecentlyViewed();
       this._initDescriptionToggle();
       this._initLightbox();
+      this._initVariantScroll();
 
       // Dispatch ViewContent Event on initial load
       const data = window.PetsCareProductData;
@@ -863,6 +864,53 @@ const PetsCare = {
           }
         }
       } catch(e) { console.error('[PetsCare] renderRecentlyViewed failed', e); }
+    },
+
+    _initVariantScroll() {
+      document.querySelectorAll('.variant-pills-wrapper').forEach(wrapper => {
+        const container = wrapper.querySelector('.variant-pills');
+        const leftBtn = wrapper.querySelector('.variant-pills-btn--left');
+        const rightBtn = wrapper.querySelector('.variant-pills-btn--right');
+        if (!container || !leftBtn || !rightBtn) return;
+
+        function updateBtnVisibility() {
+          if (window.innerWidth < 768) {
+            leftBtn.style.display = 'none';
+            rightBtn.style.display = 'none';
+            return;
+          }
+
+          const scrollLeft = container.scrollLeft;
+          const scrollWidth = container.scrollWidth;
+          const clientWidth = container.clientWidth;
+          const hasOverflow = scrollWidth > clientWidth;
+
+          if (hasOverflow) {
+            leftBtn.style.display = scrollLeft > 2 ? 'flex' : 'none';
+            rightBtn.style.display = (scrollLeft + clientWidth < scrollWidth - 2) ? 'flex' : 'none';
+          } else {
+            leftBtn.style.display = 'none';
+            rightBtn.style.display = 'none';
+          }
+        }
+
+        // Scroll click events
+        leftBtn.addEventListener('click', () => {
+          container.scrollBy({ left: -160, behavior: 'smooth' });
+        });
+
+        rightBtn.addEventListener('click', () => {
+          container.scrollBy({ left: 160, behavior: 'smooth' });
+        });
+
+        // Listeners
+        container.addEventListener('scroll', updateBtnVisibility);
+        window.addEventListener('resize', updateBtnVisibility);
+        
+        // Initial check
+        setTimeout(updateBtnVisibility, 200);
+        setTimeout(updateBtnVisibility, 500);
+      });
     },
 
     /* Variant selection — pill click → find matching variant → update price, ATC */
@@ -1276,14 +1324,6 @@ const PetsCare = {
         const activeTab = container.querySelector('.pdp-tab-btn.is-active');
         if (activeTab) {
           this.utils.centerActiveScrollItem(container, activeTab, 'auto');
-        }
-      });
-
-      // 4. PDP variant pills
-      document.querySelectorAll('.variant-pills').forEach(container => {
-        const activePill = container.querySelector('.variant-pill.is-selected');
-        if (activePill) {
-          this.utils.centerActiveScrollItem(container, activePill, 'auto');
         }
       });
     };

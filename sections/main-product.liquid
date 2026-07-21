@@ -192,30 +192,38 @@
               <span class="pdp-option-card__title">{{ option.name | upcase }}</span>
             </div>
             <div class="pdp-option-card__body">
-              <div class="variant-pills" role="group" aria-label="{{ option.name }} options">
-                {%- for value in option.values -%}
-                  {%- assign variant_available = false -%}
-                  {%- for variant in product.variants -%}
-                    {%- assign opt_pos = option.position | minus: 1 -%}
-                    {%- if variant.options[opt_pos] == value and variant.available -%}
-                      {%- assign variant_available = true -%}
-                      {%- break -%}
-                    {%- endif -%}
+              <div class="variant-pills-wrapper">
+                <button type="button" class="variant-pills-btn variant-pills-btn--left" aria-label="Scroll left" style="display: none;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <div class="variant-pills" role="group" aria-label="{{ option.name }} options">
+                  {%- for value in option.values -%}
+                    {%- assign variant_available = false -%}
+                    {%- for variant in product.variants -%}
+                      {%- assign opt_pos = option.position | minus: 1 -%}
+                      {%- if variant.options[opt_pos] == value and variant.available -%}
+                        {%- assign variant_available = true -%}
+                        {%- break -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                    {%- assign is_selected = false -%}
+                    {%- if option.selected_value == value -%}{%- assign is_selected = true -%}{%- endif -%}
+                    <button
+                      type="button"
+                      class="variant-pill {% if is_selected %}is-selected{% endif %} {% unless variant_available %}is-unavailable{% endunless %}"
+                      data-option-position="{{ option.position }}"
+                      data-value="{{ value | escape }}"
+                      {% unless variant_available %}aria-disabled="true"{% endunless %}
+                      aria-label="{{ option.name }}: {{ value }}"
+                    >
+                      <span class="pill-text">{{ value }}</span>
+                      <span class="pill-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    </button>
                   {%- endfor -%}
-                  {%- assign is_selected = false -%}
-                  {%- if option.selected_value == value -%}{%- assign is_selected = true -%}{%- endif -%}
-                  <button
-                    type="button"
-                    class="variant-pill {% if is_selected %}is-selected{% endif %} {% unless variant_available %}is-unavailable{% endunless %}"
-                    data-option-position="{{ option.position }}"
-                    data-value="{{ value | escape }}"
-                    {% unless variant_available %}aria-disabled="true"{% endunless %}
-                    aria-label="{{ option.name }}: {{ value }}"
-                  >
-                    <span class="pill-text">{{ value }}</span>
-                    <span class="pill-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-                  </button>
-                {%- endfor -%}
+                </div>
+                <button type="button" class="variant-pills-btn variant-pills-btn--right" aria-label="Scroll right" style="display: none;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
               </div>
             </div>
           </div>
